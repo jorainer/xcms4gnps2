@@ -15,6 +15,9 @@ networking (FBMN) with GNPS2. Functionality from different packages from the
 RforMassSpectrometry package ecosystem are combined to visualize and process the
 data.
 
+For details and more in depth description of the various visualizations and
+analysis options as well as parameter choices see also the [Metabonaut](https://rformassspectrometry.github.io/Metabonaut) tutorials.
+
 # Required software packages
 
 The various software packages required for the analysis are defined and loaded
@@ -25,28 +28,137 @@ installed with `BiocManager::install(<package name>)`.
 library(Spectra) # main MS infrastructure for R
 library(MsExperiment) # container for MS data
 library(xcms)    # for preprocessing of LC-MS and LC-MS/MS data
+
+library(RColorBrewer) # to define colors
+library(pander)       # to format tables
 ```
 
 # Data import
 
-The data analyzed here is part of the MassIVE [MSV000090156]() data set. Before
-loading the data we define a `data.frame` with sample and experiment-specific
-information for the individual MS runs/data files.
+The data analyzed here is part of the MassIVE
+[MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
+data set. The full data set (raw data files) should first downloaded from the
+respective directory of the ftp server:
+[ftp://massive-ftp.ucsd.edu/v04/MSV000090156/](ftp://massive-ftp.ucsd.edu/v04/MSV000090156/).
+Here we will analyze the data from *Lab 2*. Before loading the data we define a
+`data.frame` with sample and experiment-specific information for the individual
+MS runs/data files. These should ideally comprise all relevant phenotypic but
+also technical information (e.g. injection index) to allow proper adjusting or
+modeling of the data.
 
 ```{r}
 pd <- data.frame(
-    file_name = ,
-    sample_name = ,
-    replicate = ,
-    injection_index = xxx
+    file_name = c("Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
+    sample_name = c("A15M", "A15M", "A15M",
+                    "A45M", "A45M", "A45M",
+                    "A5M", "A5M", "A5M",
+                    "M", "M", "M",
+                    "PPL"),
+    sample_desc = c("A15M_R1", "A15M_R2", "A15M_R3",
+                    "A45M_R1", "A45M_R2", "A45M_R3",
+                    "A5M_R1", "A5M_R2", "A5M_R3",
+                    "M_R1", "M_R2", "M_R3",
+                    "PPL_R1"),
+    replicate = c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1)
 )
 ```
 
+It is assumed that the full data folder was downloaded from MassIVE and stored
+within the *data* sub-folder of the present working directory. Below we define
+the path to the data files and load the data set.
+
+```{r}
+path <- file.path("data", "MSV000090156", "peak", "mzml", "POS_MSMS", "Lab_2")
+mse <- readMsExperiment(file.path(path, pd$file_name),
+                        sampleData = pd)
+mse
+```
+
+The samples and data files from the present data set are displayed in the table
+below. Note that in the R code block below we use the R *pipe* operator `|>` to
+avoid nested function calls and improve the readability of the code.
+
+```{r, results = "asis"}
+sampleData(mse)[, c("sample_name", "sample_desc", "replicate")] |>
+    as.data.frame() |>
+    pandoc.table(style = "rmarkdown", split.table = Inf)
+```
+
+We in addition also define different colors for the individual samples.
+
+```{r}
+#' Define a color for each unique original sample
+col <- sampleData(mse)$sample_name |>
+                     unique() |>
+                     length() |>
+                     brewer.pal("Set2")
+names(col) <- unique(sampleData(mse)$sample_name)
+
+#' Define a color for each data file/sample
+col_sample <- col[sampleData(mse)$sample_name]
+```
 
 # Data visualization and general quality assessment
 
-- BPC
-- BPS
+For data inspection and a general data overview we first create base peak
+chromatograms (BPC) and total ion chromatograms (TIC) of the data set using the
+`chromatograms()` functions specifying either `"max"` (for BPC) or `"sum"` (for
+TIC) as the function to aggregate the per-spectrum intensities.
+
+```{r}
+#' BPC
+bpc <- chromatogram(mse, aggregationFun = "max")
+
+plot(bpc, col = paste0(col_sample, 80), main = "BPC", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+```
+
+```{r}
+#' TIC
+tic <- chromatogram(mse, aggregationFun = "max")
+
+plot(tic, col = paste0(col_sample, 80), main = "TIC", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+```
+
+Based on the BPC and TIC there seems to be little retention time shifts between
+the samples. Also, no signal seems to be present before 20 seconds and after 850
+seconds. Thus, we below filter the data set to spectra acquired within this
+retention time range.
+
+```{r}
+mse <- filterSpectra(mse, filterRt, c(20, 850))
+```
+
+BPC and TIC aggregate data along the *m/z* dimension per spectrum (retention
+time) to compare the signal measured along the retention time. To compare the
+*mass* or ion content of the individual samples/measurement runs we in addition
+aggregate data along the retention time, for distinct *m/z* values.
+
+To this end we first bin each spectrum to get discrete and similar *m/z* values
+within the data set.
+
+```{r}
+s_bin <- spectra(mse) |>
+    filterMsLevel(1L) |>
+    bin(binSize = 0.02)
+```
+
+In addition to chromatographic data inspection we also investigate the mass
 
 # Data preprocessing
 
