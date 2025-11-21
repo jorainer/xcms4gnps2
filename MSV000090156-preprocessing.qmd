@@ -31,6 +31,7 @@ library(xcms)    # for preprocessing of LC-MS and LC-MS/MS data
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
+library(pheatmap)     # visualization of clustering results as heatmap
 ```
 
 # Data import
@@ -153,12 +154,47 @@ To this end we first bin each spectrum to get discrete and similar *m/z* values
 within the data set.
 
 ```{r}
+#' Bin mass peaks into into discrete m/z bins of 0.02 Da.
 s_bin <- spectra(mse) |>
     filterMsLevel(1L) |>
     bin(binSize = 0.02)
+
+#' Combine all spectra within the same sample into a single spectrum reporting
+#' the maximum intensity of all mass peaks with the same m/z bin
+bps <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = max)
+#' The same but reporting the sum of intensities per m/z bin
+tis <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = sum)
 ```
 
-In addition to chromatographic data inspection we also investigate the mass
+We have thus a single aggregated mass spectrum per sample. These spectra are
+plotted below.
+
+```{r}
+plotSpectra(bps)
+```
+
+The *mass content* of the samples seems to be similar, with the exception of the
+last file. We can also plot all spectra into the same plot, using a different
+color per sample.
+
+```{r}
+plotSpectraOverlay(bps, col = paste0(col_sample, 40))
+grid()
+legend("topright", col = col, legend = names(col), lty = 1)
+```
+
+We can also use these aggregated spectra to calculate spectra similarity between
+the individual samples and cluster them.
+
+```{r}
+sim <- compareSpectra(bps)
+rownames(sim) <- colnames(sim) <- sampleData(mse)$sample_desc
+pheatmap(sim)
+```
+
+A15M, A5M and M samples cluster together, separately from the A45M samples while
+the PPL_R1 sample has a distinct mass peak profile.
+
 
 # Data preprocessing
 
@@ -171,14 +207,336 @@ can be conducted to reduce the number of missing values integrating raw MS
 signal from the expected *m/z* by retention time areas of defined LC-MS
 features.
 
+Most methods in *xcms* are parallelized by default. It is thus advisable to
+globally configure the parallel processing setup. On Unix machines *multi-core*
+parallel processing can be used, that shares memory between the parallel
+processes. Windows supports only *socket-based* parallel processing and starts a
+separate R for each parallel process. Below we globally define the parallel
+processing setup depending on the operating system. For the present analysis we
+use 4 parallel processes.
+
+```{r}
+if (.Platform$OS.type == "unix") {
+    register(MulticoreParam(4))
+} else {
+    register(SnowParam(4))
+}
+```
+
 ## Chromatographic peak detection
 
 The aim of the chromatographic peak detection is to identify and quantify signal
 in the raw MS data space representing signal from ions of compounds present in
-a sample. Data processing is performed separately for each data file and signal
-along retention time axis are evaluated ....
+a sample. Data processing is performed separately for each data file and mass
+peak intensities with similar *m/z* are evaluated along retention time axis to
+identify chromatographic peaks. We use the *centWave* algorithm for peak
+detection. The most important parameter for *centWave* is the `peakwidth` which
+defines an approximate lower and upper expected width of chromatographic peaks
+in retention time dimension. Without any prior information, we need to derive
+this information from the data set. We therefore zoom into areas of the BPC that
+seem to contain signal from an ion.
+
+```{r}
+par(mfrow = c(2, 1))
+bpc <- chromatogram(mse, aggregationFun = "max")
+plot(bpc, col = paste0(col_sample, 80), lwd = 2)
+grid()
+
+#' identify a region to extract
+rtr_1 <- c(105, 130)
+abline(v = rtr_1, lty = 2)
+
+#' Identify the m/z with the largest intensity in that region:
+#' - restrict to MS1 data
+#' - filter the data by retention time
+#' - extract the data as a data.frame
+tmp <- spectra(mse) |>
+    filterMsLevel(1L) |>
+    filterRt(rtr_1) |>
+    longForm(columns = c("mz", "intensity"))
+#' Define a m/z range around the m/z with largest intensity
+mzr_1 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
+
+#' Extract an EIC for that RT and m/z region
+eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+The width of this chromatographic peaks is about 8 seconds. We evaluate a second
+signal at the and of the chromatogram.
+
+```{r}
+par(mfrow = c(2, 1))
+plot(bpc, col = paste0(col_sample, 80), lwd = 2)
+grid()
+
+#' identify a region to extract
+rtr_2 <- c(720, 770)
+abline(v = rtr_2, lty = 2)
+
+#' Identify the m/z with the largest intensity in that region:
+#' - restrict to MS1 data
+#' - filter the data by retention time
+#' - extract the data as a data.frame
+tmp <- spectra(mse) |>
+    filterMsLevel(1L) |>
+    filterRt(rtr_2) |>
+    longForm(columns = c("mz", "intensity"))
+#' Define a m/z range around the m/z with largest intensity
+mzr_2 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
+
+#' Extract an EIC for that RT and m/z region
+eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2)
+grid()
+
+```
+
+The width of the chromatographic peaks for that *m/z* slice seem to be around 15
+seconds. Also, there seems to be a considerable shift in retention times between
+the samples.
+
+Based on these two example signals we define the `peakdwidth` for the present
+data set to be between and 5 and 20 seconds. For a *real* data analysis it is
+suggested to evaluate more signals, also eventually of internal standards or
+ions of compounds that are expected to be present in the sample.
+
+A second potentially data set-specific parameter of the *centWave* algorithm is
+`ppm`. It defines the maximum allowed deviation in *m/z* dimension of mass peaks
+in consecutive spectra considered to represent signal from the same ion. This
+scattering of mass peak's *m/z* values can depend on the centroiding algorithm
+used. In addition, on TOF instruments, the scattering can depend on the
+intensity of the signal, with higher variation observed for low intensity peaks
+and increasing stability with higher signal. To illustrate this we below subset
+the full MS data from the first data file to the *m/z* and retention time range
+defined above and plot the individual mass peaks.
+
+```{r}
+mse[1L] |>
+    filterSpectra(filterMsLevel, 1L) |>
+    filterSpectra(filterRt, rt = rtr_1) |>
+    filterSpectra(filterMzRange, mz = mzr_1) |>
+    plot()
+```
+
+The individual mass peaks are shown in the lower panel in the plot above. For
+the present ion, the *m/z* values show a very low variance.
+
+We evaluate the signal also for the second *m/z* - retention time window defined
+above.
+
+```{r}
+mse[1L] |>
+    filterSpectra(filterMsLevel, 1L) |>
+    filterSpectra(filterRt, rt = rtr_2) |>
+    filterSpectra(filterMzRange, mz = mzr_2) |>
+    plot()
+```
+
+The scattering of *m/z* values looks larger, but is still below 0.001 Da. We
+nevertheless use a `ppm = 20` for the present data set - as we do not assume
+that ions from different compounds elute at the same time with a difference in
+ppm lower than 20.
+
+Below we define the settings for *centWave* and perform the chromatographic peak
+detection on the full data set. Note that it can also be helpful to test the
+different settings by performing peak detection on extracted ion chromatograms
+as described in
+[Metabonaut](https://rformassspectrometry.github.io/Metabonaut/). Parameter
+`chunkSize` defines the number of data files from which MS data should be loaded
+at a time. This parameter thus has an influence on the memory usage of the
+analysis.
+
+```{r}
+cwp <- CentWaveParam(
+    ppm = 20,
+    peakwidth = c(5, 20),
+    snthresh = 8,
+    integrate = 2,
+    mzdiff = 0.001
+)
+mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
+```
+
+In most cases it is also advisable to perform a *peak postprocessing* to remove
+artifacts of the *centWave* peak detection (e.g. overlapping or split
+peaks). Below we perform such peak refinement which will merge partially or
+completely overlapping chromatographic peak, if the intensity below both apexes
+is lower than a certain proportion of the apex intensity of the lower intensity
+peak.
+
+```{r}
+mnpp <- MergeNeighboringPeaksParam(
+    expandRt = 0,
+    expandMz = 0,
+    ppm = 0,
+    minProp = 0.75)
+mse <- refineChromPeaks(mse, mnpp, chunkSize = 4L)
+```
+
+We next compare the number of identified peaks per sample as well as their *m/z*
+and retention time widths.
+
+```{r}
+#' split the detected chrom peaks per sample
+pk_list <- split.data.frame(
+    chromPeaks(mse, columns = c("mzmin", "mzmax", "rtmin", "rtmax")),
+    chromPeaks(mse, columns = "sample")[, "sample"])
+#' calculate mz and rt widths
+pk_list <- lapply(pk_list, function(z) {
+    cbind(z, mz_width = z[, "mzmax"] - z[, "mzmin"],
+          mz_width_ppm = (z[, "mzmax"] - z[, "mzmin"]) * 1e6 / z[, "mzmax"],
+          rt_width = z[, "rtmax"] - z[, "rtmin"])
+})
+
+#' plot the information
+par(mfrow = c(3, 1), mar = c(0, 4.3, 1.5, 0.1))
+barplot(unlist(lapply(pk_list, nrow)),
+     col = col_sample,
+     ylab = "peak count", main = "Peak detection summary, mse", xaxt = "n")
+grid()
+legend("top", horiz = TRUE, col = col, pch = 15,
+       legend = names(col))
+par(mar = c(0, 4.3, 0, 0.1))
+vioplot(lapply(pk_list, function(z) z[, "mz_width_ppm"]), outline = FALSE,
+        ylab = "m/z width [ppm]", xaxt = "n",
+        col = col_sample)
+grid()
+vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
+        ylab = "rt width [s]", col = col_sample)
+grid()
+
+```
+
+The highest number of peaks was detected in the *PPL* sample. Apart from that
+sample, the numbers of detected peaks is comparable in the data set. Also the
+*m/z* width and the retention time widths. As expected, most of the identified
+chromatographic peaks are about 10 seconds wide. Also, their *m/z* width is
+below 10 ppm for most peaks, but some show also a larger *m/z* widths.
+
+We also evaluate the peak detection results on the two example *m/z* - retention
+time regions. Identified chromatographic peaks will be colored according to the
+sample group.
+
+```{r}
+eic_1 <- chromatogram(mse, mz = mzr_1, rt = rtr_1)
+
+#' define a color for each chromatographic peak
+col_peak <- col_sample[chromPeaks(eic_1)[, "sample"]]
+plot(eic_1, col = paste0(col_sample, 80),
+     peakBg = paste0(col_peak, 10),
+     peakCol = paste0(col_peak, 80))
+grid()
+```
+
+
+```{r}
+eic_2 <- chromatogram(mse, mz = mzr_2, rt = rtr_2)
+
+#' define a color for each chromatographic peak
+col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
+plot(eic_2, col = paste0(col_sample, 80),
+     peakBg = paste0(col_peak, 10),
+     peakCol = paste0(col_peak, 80))
+grid()
+```
+
 
 ## Retention time alignment
+
+The aim of the retention time alignment step is to reduce differences observed
+in the elution time of compounds between different LC-MS runs. A variety of
+methods for this have been proposed and some are also implemented in *xcms*. We
+use the most straight forward approach that aligns chromatographic runs based on
+retention times of *anchor peaks*, i.e., compounds present in most of the
+samples of an experiment. To define these anchor peaks we must however perform
+an initial correspondence analysis to group chromatographic peaks with similar
+*m/z* and retention time across samples. We use the *peak density* method for
+this, which we configure below using the `PeakDensityParam`. For the initial
+correspondence we used more relaxed settings, also putting all samples into the
+same *sample group*. The important parameters are `bw` and `binSize`. The former
+defines the tolerance of retention time similarity, the latter the similarity of
+*m/z* values for chromatographic peaks from different samples to be considered
+to represent signal from ions of the same compound. Setting `binSize` is
+straight forward - it depends on the resolution of the instrument and the
+expected similarity of *m/z* values for the same ion. We set it to a value of
+`binSize = 0.01`, hence all chromatographic peaks with a difference in *m/z*
+smaller than 0.01 would be evaluated. The `bw` parameter is a bit more difficult
+to define. It should be defined based on observed data in the experiment,
+ideally, on EICs of closely eluting compounds with the same *m/z*. In our
+example we use the second example *m/z* - retention time range, because it
+seemed to contain signal from the same compound, but with quite large shifts
+between data files. We below *simulate* a correspondence analysis on this EIC.
+Other parameters defined are `minFraction`, which defines the minimum required
+proportion of samples of one of the sample groups defined with parameter
+`sampleGroups` in which a chromatographic peak is present, and `ppm` which,
+together with `binSize` defines the maximal accepted difference in
+chromatographic peaks' *m/z* values to consider them for grouping.
+
+The *peak density* method groups chromatographic peaks into an LC-MS feature, if
+their *m/z* difference is smaller `binSize` (+ `ppm` of the *m/z*), the
+retention time of their apex is within one peak of the *peak density*
+curve and a chromatographic peak is present in at least `minFraction` of at
+least one of the sample groups defined with `sampleGroups`. Below we run a
+correspondence simulation with example settings.
+
+```{r}
+pdp <- PeakDensityParam(
+    sampleGroups = rep(1, length(mse)),
+    bw = 2,
+    minFraction = 0.2,
+    binSize = 0.01,
+    ppm = 10)
+
+col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+The upper panel of this plot shows the EIC, the lower panel the data considered
+for correspondence: it shows the retention time of the apex positions of all
+chromatographic peaks in that *m/z* slice on the x-axis against the sample in
+which the chromatographic peak was detected on the y-axis. The black solid line
+represents the *peak density estimate*, calculated based on the retention times
+of the chromatographic peaks and parameter `bw` with larger values of `bw`
+resulting in more smooth curves.
+
+With the used settings, in particular parameter `bw`, the present
+chromatographic peaks would be split into two separate LC-MS features (indicated
+with a grey rectangle in the lower panel). Assuming that all peaks in that
+region represent signal from ions of the same compound, we however want to group
+them into the same feature. We hence next increase the `bw` parameter and
+simulate the correspondence with these updated settings.
+
+```{r}
+pdp@bw <- 5
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+Changing `bw` to 5 changed the density curve, but we still defined two separate
+features.
+
+```{r}
+pdp@bw <- 7
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+With a `bw = 7` a single feature was defined.
+
+We use these parameter now for the initial correspondence analysis on the full
+data set.
+
+```{r}
+mse <- groupChromPeaks(mse, param = pdp)
+```
+
+
 
 ## Correspondence analysis
 
