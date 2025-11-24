@@ -1,9 +1,12 @@
 ---
-title: "xcms-based preprocessing of LC-MS/MS data for feature-based molecular
-networking with GNPS2"
+title: "xcms-based preprocessing of LC-MS/MS data for feature-based molecular networking with GNPS2"
+author: "Philippine Louail, Steffen Neumann, Johannes Rainer"
 format:
   html
-authors: Philippine Louail, Steffen Neumann, Johannes Rainer
+vignette: >
+  %\VignetteIndexEntry{xcms-based preprocessing for FBMN with GNPS2}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
@@ -78,11 +81,11 @@ pd <- data.frame(
 ```
 
 It is assumed that the full data folder was downloaded from MassIVE and stored
-within the *data* sub-folder of the present working directory. Below we define
-the path to the data files and load the data set.
+within a *data* folder in the user's home directory. Below we define the path to
+the data files and load the data set.
 
 ```{r}
-path <- file.path("data", "MSV000090156", "peak", "mzml", "POS_MSMS", "Lab_2")
+path <- file.path("~", "data", "MSV000090156", "peak", "mzml", "POS_MSMS", "Lab_2")
 mse <- readMsExperiment(file.path(path, pd$file_name),
                         sampleData = pd)
 mse
