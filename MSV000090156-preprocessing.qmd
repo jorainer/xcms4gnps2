@@ -32,6 +32,7 @@ library(xcms)    # for preprocessing of LC-MS and LC-MS/MS data
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
 library(pheatmap)     # visualization of clustering results as heatmap
+library(vioplot)      # to create *violin plots*
 ```
 
 # Data import
@@ -242,22 +243,23 @@ bpc <- chromatogram(mse, aggregationFun = "max")
 plot(bpc, col = paste0(col_sample, 80), lwd = 2)
 grid()
 
-#' identify a region to extract
+#' identify a retention time region to extract
 rtr_1 <- c(105, 130)
 abline(v = rtr_1, lty = 2)
 
-#' Identify the m/z with the largest intensity in that region:
+#' identify the m/z with the largest intensity in that region:
 #' - restrict to MS1 data
-#' - filter the data by retention time
-#' - extract the data as a data.frame
+#' - filter the MS data by retention time
+#' - extract the MS data as a data.frame
 tmp <- spectra(mse) |>
     filterMsLevel(1L) |>
     filterRt(rtr_1) |>
     longForm(columns = c("mz", "intensity"))
-#' Define a m/z range around the m/z with largest intensity
+
+#' define a m/z range around the m/z with largest intensity
 mzr_1 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
 
-#' Extract an EIC for that RT and m/z region
+#' extract an EIC for that RT and m/z region
 eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
 plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
 grid()
@@ -275,22 +277,22 @@ grid()
 rtr_2 <- c(720, 770)
 abline(v = rtr_2, lty = 2)
 
-#' Identify the m/z with the largest intensity in that region:
+#' identify the m/z with the largest intensity in that region:
 #' - restrict to MS1 data
-#' - filter the data by retention time
-#' - extract the data as a data.frame
+#' - filter the MS data by retention time
+#' - extract the MS data as a data.frame
 tmp <- spectra(mse) |>
     filterMsLevel(1L) |>
     filterRt(rtr_2) |>
     longForm(columns = c("mz", "intensity"))
-#' Define a m/z range around the m/z with largest intensity
+
+#' define a m/z range around the m/z with largest intensity
 mzr_2 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
 
-#' Extract an EIC for that RT and m/z region
+#' extract an EIC for that RT and m/z region
 eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
 plot(eic_2, col = paste0(col_sample, 80), lwd = 2)
 grid()
-
 ```
 
 The width of the chromatographic peaks for that *m/z* slice seem to be around 15
@@ -362,13 +364,13 @@ mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
 In most cases it is also advisable to perform a *peak postprocessing* to remove
 artifacts of the *centWave* peak detection (e.g. overlapping or split
 peaks). Below we perform such peak refinement which will merge partially or
-completely overlapping chromatographic peak, if the intensity below both apexes
-is lower than a certain proportion of the apex intensity of the lower intensity
-peak.
+completely overlapping chromatographic peak, or those that are less than 2
+seconds apart from each other, if the intensity below both apexes is lower than
+a certain proportion of the apex intensity of the lower intensity peak.
 
 ```{r}
 mnpp <- MergeNeighboringPeaksParam(
-    expandRt = 0,
+    expandRt = 1,
     expandMz = 0,
     ppm = 0,
     minProp = 0.75)
@@ -406,7 +408,6 @@ grid()
 vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
         ylab = "rt width [s]", col = col_sample)
 grid()
-
 ```
 
 The highest number of peaks was detected in the *PPL* sample. Apart from that
@@ -428,6 +429,8 @@ plot(eic_1, col = paste0(col_sample, 80),
      peakBg = paste0(col_peak, 10),
      peakCol = paste0(col_peak, 80))
 grid()
+legend("topright", col = col, lty = 1,
+       legend = names(col))
 ```
 
 
@@ -440,6 +443,8 @@ plot(eic_2, col = paste0(col_sample, 80),
      peakBg = paste0(col_peak, 10),
      peakCol = paste0(col_peak, 80))
 grid()
+legend("topright", col = col, lty = 1,
+       legend = names(col))
 ```
 
 
@@ -518,7 +523,7 @@ grid()
 ```
 
 Changing `bw` to 5 changed the density curve, but we still defined two separate
-features.
+features. We thus increase below `bw` to 7.
 
 ```{r}
 pdp@bw <- 7
@@ -527,15 +532,164 @@ plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-With a `bw = 7` a single feature was defined.
-
-We use these parameter now for the initial correspondence analysis on the full
-data set.
+With a `bw = 7` a single feature was defined. We use these parameter for the
+initial correspondence analysis on the full data set.
 
 ```{r}
 mse <- groupChromPeaks(mse, param = pdp)
 ```
 
+For the retention time alignment we use the before mentioned *peak groups*
+method that aligns LC runs by minimizing retention time differences of so called
+anchor peaks. This alignment method is very robust and also flexible, allowing
+for example to align samples based on within-experiment QC samples, or against
+external reference data or based on manually defined anchor peaks. See
+[Metabonaut](https://rformassspectrometry.github.io/Metabonaut) for examples and
+options. The method can be configured with the `PeakGroupsParam`. With
+`minFraction = 0.9` we below define anchor peaks as those LC-MS features for
+which a chromatographic peak was identified in 90% of the samples in the
+experiment. The observed retention time differences of these are used to model a
+curve along retention time dimension which can then be used to align the
+retention times of all samples. The smoothness of this curve along the retention
+time dimension can be configured with `span`, values between 0.4 and 0.7 work
+for most cases.
+
+```{r}
+pgp <- PeakGroupsParam(
+    minFraction = 0.90,
+    span = 0.4)
+mse <- adjustRtime(mse, param = pgp)
+```
+
+The effect of this alignment can be visualized with the `plotAdjustedRtime()`
+function. It plots the adjusted retention times of each sample on the x-axis
+against the difference between the adjusted and raw retention times on the
+y-axis as a solid line. Retention times of anchor peaks in each sample are
+indicated with individual data points. These should ideally be placed along the
+full retention time range of the experiment.
+
+```{r}
+#| fig-cap: "Retention time alignment results."
+#' visualize alignment results
+plotAdjustedRtime(mse, col = paste0(col_sample, 80),
+                  peakGroupsPch = 21, lwd = 2)
+grid()
+legend("topleft", col = col, lty = 1,
+       legend = names(col))
+```
+
+Anchor points span the full retention time range. Retention time adjustments for
+most samples were below 2-4 seconds, with the exception of 3 samples for which a
+considerably larger adjustment is present after 500 seconds, and the PPL sample
+with larger retention time differences after 650 seconds.
+
+We next evaluate the alignment results based on the BPC before and after
+alignment.
+
+```{r}
+#' create a BPC after adjustment; chromPeaks = "none" only creates the BPC
+#' without extracting also identified chromatographic peaks.
+bpc_adj <- chromatogram(mse, chromPeaks = "none", aggregationFun = "max")
+
+par(mfrow = c(2, 1))
+plot(bpc, col = paste0(col_sample, 80), main = "BPC, raw", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(bpc_adj, col = paste0(col_sample, 80), main = "BPC, adjusted", lwd = 2)
+grid()
+```
+
+Misalignment of signal at the later stage of the chromatography seems to be
+reduced. We in addition evaluate the effect of retention time alignment on the
+two example EICs.
+
+```{r}
+eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1, chromPeaks = "none")
+
+par(mfrow = c(2, 1))
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+For this early retention time range already the raw signal was aligned well.
+
+```{r}
+eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2, chromPeaks = "none")
+
+par(mfrow = c(2, 1))
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+This later retention time range shows clear, and strong, differences in
+retention times of 4 samples. While the *PPL* sample could be aligned quite well
+using the above settings, 3 samples still show shifts in retention times. We
+re-perform the alignment reducing the value for the `span` parameter to allow a
+more local alignment of the samples. We thus below first *undo* the retention
+time alignment, re-perform the initial correspondence analysis and perform the
+alignment with the changed settings for parameter `span`.
+
+```{r}
+#' remove retention time alignment results
+mse <- dropAdjustedRtime(mse)
+#' re-perform initial correspondence
+mse <- groupChromPeaks(mse, param = pdp)
+#' perform the alignment using updated settings
+pgp <- PeakGroupsParam(
+    minFraction = 0.90,
+    span = 0.1)
+mse <- adjustRtime(mse, param = pgp)
+```
+
+Evaluating the impact of changing this parameter.
+
+```{r}
+#| fig-cap: "Retention time alignment results."
+#' visualize alignment results
+plotAdjustedRtime(mse, col = paste0(col_sample, 80),
+                  peakGroupsPch = 21, lwd = 2)
+grid()
+legend("topleft", col = col, lty = 1,
+       legend = names(col))
+```
+
+A stronger alignment can be observed for the retention time area from 750 to 800
+seconds. The results for the first example EIC did not change.
+
+```{r}
+eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1, chromPeaks = "none")
+
+par(mfrow = c(2, 1))
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+While for the second EIC the alignment improved.
+
+```{r}
+eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2, chromPeaks = "none")
+
+par(mfrow = c(2, 1))
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+Note that it is not necessary that all samples are perfectly aligned. Some
+variation in retention time can be accounted for in the final correspondence
+analysis grouping the chromatographic peaks across samples to the LC-MS
+features.
 
 
 ## Correspondence analysis
