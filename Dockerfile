@@ -1,7 +1,7 @@
 FROM bioconductor/bioconductor_docker:RELEASE_3_22
 
-LABEL name="jorainer/xcms-gnps2" \
-      url="https://github.com/jorainer/xcms-gnps2" \
+LABEL name="jorainer/xcms4gnps2" \
+      url="https://github.com/jorainer/xcms4gnps2" \
       maintainer="johannes.rainer@gmail.com" \
       description="Docker container to run xcms-based preprocessing for GNPS2. This version bases on the Bioconductor release 3.22 docker image." \
       license="Artistic-2.0"

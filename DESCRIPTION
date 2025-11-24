@@ -39,8 +39,8 @@ Suggests:
     pheatmap,
     knitr,
     quarto
-URL: https://github.com/jorainer/xcms-gnps2/
-BugReports: https://github.com/jorainer/xcms-gnps2/issues/new
+URL: https://github.com/jorainer/xcms4gnps2/
+BugReports: https://github.com/jorainer/xcms4gnps2/issues/new
 BiocType: Workflow
 RoxygenNote: 7.3.3
 VignetteBuilder: quarto
