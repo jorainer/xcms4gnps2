@@ -16,8 +16,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     container: jorainer/xcms4gnps2:latest
-    # env:
-    #   GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       ## Set the R library to the directory matching the
