@@ -51,7 +51,6 @@ jobs:
         env:
           QUARTO_PRINT_STACK: true
           QUARTO_LOG_LEVEL: DEBUG
-          SPECTRIPY_USE_CONDA: FALSE
           QUARTO_R_QUIET: FALSE
         run: |
           install.packages("unixtools", repos = "http://www.rforge.net/")
