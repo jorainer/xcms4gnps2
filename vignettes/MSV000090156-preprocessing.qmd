@@ -833,7 +833,7 @@ single feature. At last we evaluate the expanded retention time region of the
 *m/z* range of the first example EIC.
 
 ```{r}
-#| "fig-cap: Correspondence results for an *m/z* slice with multiple closely eluting compounds."
+#| fig-cap: "Correspondence results for an *m/z* slice with multiple closely eluting compounds."
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
 
 col_peak <- col_sample[chromPeaks(a)[, "sample"]]
