@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/jorainer/xcms4gnps2/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/jorainer/xcms4gnps2/blob/main/DESCRIPTION)
 
 Louail P, Rainer J (2025). *xcms4gnps2: xcms-based data preprocessing
 for FBMN with GNPS2*. R package version 0.99.0,

@@ -1,9 +1,9 @@
-pandoc: '3.4'
-pkgdown: 2.2.0
-pkgdown_sha: ~
+pandoc: 3.8.2.1
+pkgdown: 2.2.0.9000
+pkgdown_sha: c07d935583c90125586821e3b39ed52f16593e42
 articles:
   MSV000090156-preprocessing: MSV000090156-preprocessing.html
-last_built: 2025-11-25T13:16Z
+last_built: 2025-11-25T15:15Z
 urls:
   reference: https://jorainer.github.io/xcms4gnps2/reference
   article: https://jorainer.github.io/xcms4gnps2/articles
