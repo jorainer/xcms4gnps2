@@ -13,8 +13,6 @@ COPY --chown=rstudio:rstudio . /home/rstudio/
 ## Global installation of required packages
 RUN Rscript -e "BiocManager::install(c('xcms', 'MsExperiment', 'mzR') , ask = FALSE, dependencies = c('Depends', 'Imports'), build_vignettes = FALSE)"
 
-## USER rstudio
-
 ## Download the data and store it to the local folder
 RUN wget -r ftp://massive-ftp.ucsd.edu/v04/MSV000090156/peak/mzml/POS_MSMS/Lab_2/* -P /data
 RUN chmod a+rx -R /data
