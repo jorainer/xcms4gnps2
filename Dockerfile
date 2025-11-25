@@ -21,6 +21,9 @@ RUN wget -r ftp://massive-ftp.ucsd.edu/v04/MSV000090156/peak/mzml/POS_MSMS/Lab_2
 ## root user needed for rstudio server properly working
 USER root
 
+## Create symbolic link to the data to allow relative paths in the vignette
+RUN ln -s /home/rstudio/data /root/data
+
 ## Install the current package with vignettes
 RUN Rscript -e "devtools::install('.', dependencies = c('Depends', 'Imports'), type = 'source', build_vignettes = TRUE, repos = BiocManager::repositories())"
 
