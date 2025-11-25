@@ -86,13 +86,12 @@ pd <- data.frame(
 
 To run this analysis the MS data files (in mzML format) above need to be
 available. In the example workflow, they were downloaded from the MassIVE ftp
-server and stored to a local folder *data/massive-ftp.ucsd.edu/v04* in the
-user's home directory. Below we define the path to the data files and load the
-data set. This needs to be adapted if the files were stored to a different
-folder.
+server and stored to a local folder */data/massive-ftp.ucsd.edu/v04*. Below we
+define the path to the data files and load the data set. This needs to be
+adapted if the files were stored to a different folder.
 
 ```{r}
-path <- file.path("~", "data", "massive-ftp.ucsd.edu", "v04",
+path <- file.path("/data", "massive-ftp.ucsd.edu", "v04",
                   "MSV000090156", "peak", "mzml", "POS_MSMS",
                   "Lab_2")
 mse <- readMsExperiment(file.path(path, pd$file_name),
