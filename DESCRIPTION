@@ -39,7 +39,7 @@ Suggests:
     pheatmap,
     knitr,
     quarto
-URL: https://github.com/jorainer/xcms4gnps2/
+URL: https://github.com/jorainer/xcms4gnps2/, https://jorainer.github.io/xcms4gnps2
 BugReports: https://github.com/jorainer/xcms4gnps2/issues/new
 BiocType: Workflow
 RoxygenNote: 7.3.3
