@@ -18,11 +18,11 @@ USER rstudio
 ## Download the data and store it to the local folder
 RUN wget -r ftp://massive-ftp.ucsd.edu/v04/MSV000090156/peak/mzml/POS_MSMS/Lab_2/* -P /home/rstudio/data
 
-## Install the current package with vignettes
-RUN Rscript -e "devtools::install('.', dependencies = c('Depends', 'Imports'), type = 'source', build_vignettes = TRUE, repos = BiocManager::repositories())"
-
 ## root user needed for rstudio server properly working
 USER root
+
+## Install the current package with vignettes
+RUN Rscript -e "devtools::install('.', dependencies = c('Depends', 'Imports'), type = 'source', build_vignettes = TRUE, repos = BiocManager::repositories())"
 
 ## Clean up
 RUN find vignettes/ -name "*.html" -type f -delete && find vignettes/ -name "*_files" -type d -exec rm -r {} + && \
