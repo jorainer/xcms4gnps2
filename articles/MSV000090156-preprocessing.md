@@ -1274,9 +1274,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 15:11:37 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 15:17:49 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 15:17:50 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 15:59:31 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 16:05:30 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 16:05:31 2025]
      ...2 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1380,9 +1380,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 15:11:37 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 15:17:49 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 15:17:50 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 15:59:31 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 16:05:30 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 16:05:31 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1434,9 +1434,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 15:11:37 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 15:17:49 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 15:17:50 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 15:59:31 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 16:05:30 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 16:05:31 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
@@ -1560,6 +1560,91 @@ export(ms2_cons, backend = MsBackendMgf(),
   R-package translating between R and Python MS data structures.
 
 ## Session information
+
+The R version and package versions used:
+
+``` r
+
+sessionInfo()
+```
+
+    R version 4.5.2 (2025-10-31)
+    Platform: x86_64-pc-linux-gnu
+    Running under: Ubuntu 24.04.3 LTS
+
+    Matrix products: default
+    BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
+    LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+
+    locale:
+     [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C
+     [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8
+     [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8
+     [7] LC_PAPER=en_US.UTF-8       LC_NAME=C
+     [9] LC_ADDRESS=C               LC_TELEPHONE=C
+    [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C
+
+    time zone: Etc/UTC
+    tzcode source: system (glibc)
+
+    attached base packages:
+    [1] stats4    stats     graphics  grDevices utils     datasets  methods
+    [8] base
+
+    other attached packages:
+     [1] vioplot_0.5.1       zoo_1.8-14          sm_2.2-6.0
+     [4] pheatmap_1.0.13     pander_0.6.6        RColorBrewer_1.1-3
+     [7] MsBackendMgf_1.18.0 xcms_4.8.0          Spectra_1.20.0
+    [10] BiocParallel_1.44.0 S4Vectors_0.48.0    BiocGenerics_0.56.0
+    [13] generics_0.1.4      MsExperiment_1.12.0 ProtGenerics_1.42.0
+
+    loaded via a namespace (and not attached):
+     [1] DBI_1.2.3                   rlang_1.1.6
+     [3] magrittr_2.0.4              clue_0.3-66
+     [5] MassSpecWavelet_1.76.0      matrixStats_1.5.0
+     [7] compiler_4.5.2              vctrs_0.6.5
+     [9] reshape2_1.4.5              stringr_1.6.0
+    [11] pkgconfig_2.0.3             MetaboCoreUtils_1.18.1
+    [13] crayon_1.5.3                fastmap_1.2.0
+    [15] XVector_0.50.0              rmarkdown_2.30
+    [17] preprocessCore_1.72.0       purrr_1.2.0
+    [19] xfun_0.54                   MultiAssayExperiment_1.36.1
+    [21] jsonlite_2.0.0              progress_1.2.3
+    [23] DelayedArray_0.36.0         parallel_4.5.2
+    [25] prettyunits_1.2.0           cluster_2.1.8.1
+    [27] R6_2.6.1                    stringi_1.8.7
+    [29] limma_3.66.0                GenomicRanges_1.62.0
+    [31] Rcpp_1.1.0                  Seqinfo_1.0.0
+    [33] SummarizedExperiment_1.40.0 iterators_1.0.14
+    [35] knitr_1.50                  IRanges_2.44.0
+    [37] BiocBaseUtils_1.12.0        Matrix_1.7-4
+    [39] igraph_2.2.1                tidyselect_1.2.1
+    [41] abind_1.4-8                 yaml_2.3.10
+    [43] doParallel_1.0.17           codetools_0.2-20
+    [45] affy_1.88.0                 lattice_0.22-7
+    [47] tibble_3.3.0                plyr_1.8.9
+    [49] Biobase_2.70.0              S7_0.2.1
+    [51] evaluate_1.0.5              pillar_1.11.1
+    [53] affyio_1.80.0               BiocManager_1.30.27
+    [55] MatrixGenerics_1.22.0       foreach_1.5.2
+    [57] MSnbase_2.36.0              MALDIquant_1.22.3
+    [59] ncdf4_1.24                  hms_1.1.4
+    [61] ggplot2_4.0.1               scales_1.4.0
+    [63] glue_1.8.0                  MsFeatures_1.18.0
+    [65] lazyeval_0.2.2              tools_4.5.2
+    [67] mzID_1.48.0                 data.table_1.17.8
+    [69] QFeatures_1.20.0            vsn_3.78.0
+    [71] mzR_2.44.0                  fs_1.6.6
+    [73] XML_3.99-0.20               grid_4.5.2
+    [75] impute_1.84.0               tidyr_1.3.1
+    [77] MsCoreUtils_1.21.0          PSMatch_1.14.0
+    [79] cli_3.6.5                   S4Arrays_1.10.0
+    [81] dplyr_1.1.4                 AnnotationFilter_1.34.0
+    [83] pcaMethods_2.2.0            gtable_0.3.6
+    [85] digest_0.6.39               SparseArray_1.10.2
+    [87] farver_2.1.2                htmltools_0.5.8.1
+    [89] lifecycle_1.0.4             statmod_1.5.1
+    [91] MASS_7.3-65                
 
 ## References
 
