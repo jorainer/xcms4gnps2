@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xcms4gnps2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,17 +78,18 @@
 
     <section class="section level2"><h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This document describes data inspection and preprocessing of an LC-MS/MS data set using <em>xcms</em> and export of the data for subsequent feature-based molecular networking (FBMN) with GNPS2. Functionality from different packages from the RforMassSpectrometry package ecosystem are combined to visualize and process the data.</p>
-<p>For details and more in depth description of the various visualizations and analysis options as well as parameter choices see also the <a href="https://rformassspectrometry.github.io/Metabonaut" class="external-link">Metabonaut</a> tutorials.</p>
+<p>This document describes data inspection and preprocessing of an LC-MS/MS data set using <em>xcms</em> <span class="citation" data-cites="louail_xcms_2025">(<a href="#ref-louail_xcms_2025" role="doc-biblioref">Louail, Brunius, et al. 2025</a>)</span> and export of the data for subsequent feature-based molecular networking (FBMN) with GNPS2. Functionality from different packages from the RforMassSpectrometry package ecosystem are combined to visualize and process the data.</p>
+<p>For details and more in depth description of the various visualizations and analysis options as well as parameter choices see also the <a href="https://rformassspectrometry.github.io/Metabonaut" class="external-link">Metabonaut</a> tutorials <span class="citation" data-cites="louail_rformassspectrometrymetabonaut_2025">(<a href="#ref-louail_rformassspectrometrymetabonaut_2025" role="doc-biblioref">Louail, Graeve, et al. 2025</a>)</span>.</p>
 <p>This analysis and the used settings should be considered <em>initial</em> with potential refinement and improvement based on discussions expected during integration of the analysis into the FBMS workflow.</p>
 </section><section class="section level2"><h2 id="required-software-packages">Required software packages<a class="anchor" aria-label="anchor" href="#required-software-packages"></a>
 </h2>
 <p>The various software packages required for the analysis are defined and loaded below. All packages are available through Bioconductor or CRAN and can be installed with <code>BiocManager::install(&lt;package name&gt;)</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/Spectra" class="external-link">Spectra</a></span><span class="op">)</span> <span class="co"># main MS infrastructure for R</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsExperiment" class="external-link">MsExperiment</a></span><span class="op">)</span> <span class="co"># container for MS data</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sneumann/xcms" class="external-link">xcms</a></span><span class="op">)</span>    <span class="co"># for preprocessing of LC-MS and LC-MS/MS data</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsExperiment" class="external-link">MsExperiment</a></span><span class="op">)</span> <span class="co"># container for MS data</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/Spectra" class="external-link">Spectra</a></span><span class="op">)</span>      <span class="co"># main MS infrastructure for R</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sneumann/xcms" class="external-link">xcms</a></span><span class="op">)</span>         <span class="co"># for preprocessing of LC-MS and LC-MS/MS data</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsBackendMgf" class="external-link">MsBackendMgf</a></span><span class="op">)</span> <span class="co"># to export MS data in MGF format</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span> <span class="co"># to define colors</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rapporter.github.io/pander/" class="external-link">pander</a></span><span class="op">)</span>       <span class="co"># to format tables</span></span>
@@ -1083,9 +1084,9 @@ Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
 Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
  ... 10 more files
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
  ...3 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1170,9 +1171,9 @@ Processing:
 3091         2   749.801      3791
  ... 40 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
  ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1221,9 +1222,9 @@ Processing:
 3089         2   749.801      3791
  ... 40 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
  ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1233,9 +1234,70 @@ Processing:
 <p>The <a href="https://bioconductor.org/packages/Spectra" class="external-link"><em>Spectra</em></a> package would provide many additional functions and options to process, scale or clean spectra. As an alternative, through the <a href="https://bioconductor.org/packages/SpectriPy" class="external-link"><em>SpectriPy</em></a> package, it would also be possible to apply Python-based functionality from e.g. the <em>matchms</em> Python library to <code>Spectra</code> objects.</p>
 </blockquote>
 </div>
+<p>At last we visualize the select data (i.e. features with associated MS2 spectra) in the <em>m/z</em> - retention time space. We use the <code><a href="https://rdrr.io/pkg/xcms/man/XcmsExperiment.html" class="external-link">featureArea()</a></code> function to get the feature boundaries and draw them as rectangles. The associated MS2 spectra (their precursor <em>m/z</em> and retention time value) are added as individual data points.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' define the feature boundaries</span></span>
+<span><span class="va">fa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XcmsExperiment.html" class="external-link">featureArea</a></span><span class="op">(</span><span class="va">mse</span>, features <span class="op">=</span> <span class="va">ms2_cons</span><span class="op">$</span><span class="va">feature_id</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#' plot feature areas as rectangles</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">fa</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rtmin"</span>, <span class="st">"rtmax"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>     ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">fa</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mzmin"</span>, <span class="st">"mzmax"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"retention time"</span>, ylab <span class="op">=</span> <span class="st">"m/z"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span>xleft <span class="op">=</span> <span class="va">fa</span><span class="op">[</span>, <span class="st">"rtmin"</span><span class="op">]</span>, xright <span class="op">=</span> <span class="va">fa</span><span class="op">[</span>, <span class="st">"rtmax"</span><span class="op">]</span>,</span>
+<span>     ybottom <span class="op">=</span> <span class="va">fa</span><span class="op">[</span>, <span class="st">"mzmin"</span><span class="op">]</span>, ytop <span class="op">=</span> <span class="va">fa</span><span class="op">[</span>, <span class="st">"mzmax"</span><span class="op">]</span>,</span>
+<span>     border <span class="op">=</span> <span class="st">"#00000080"</span><span class="op">)</span></span>
+<span><span class="co">#' add precursor m/z and retention times of MS2</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">$</span><span class="va">rtime</span>, <span class="va">ms2_cons</span><span class="op">$</span><span class="va">precursorMz</span>,</span>
+<span>       cex <span class="op">=</span> <span class="fl">0.5</span>, col <span class="op">=</span> <span class="st">"#0000ff40"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-61-1.png" width="912"></p>
+<figcaption>Feature areas (grey rectangles) and associated MS2 spectra (blue points) in the retention time - <em>m/z</em> space.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Thus, with a little bit of R coding we can easily create customized data visualizations.</p>
 </section><section class="section level2"><h2 id="formatting-and-exporting-data-for-fbms">Formatting and exporting data for FBMS<a class="anchor" aria-label="anchor" href="#formatting-and-exporting-data-for-fbms"></a>
 </h2>
-<p>We next export the feature abundance matrix and the fragment spectra for feature-based molecular networking with GNPS.</p>
+<p>We next export the feature abundance matrix and the fragment spectra for feature-based molecular networking with GNPS. Similar to the original workflow <span class="citation" data-cites="johannes_rainer_2025_17293665">(<a href="#ref-johannes_rainer_2025_17293665" role="doc-biblioref">Rainer and Louail 2025</a>)</span> described in <span class="citation" data-cites="nothias_feature-based_2020">(<a href="#ref-nothias_feature-based_2020" role="doc-biblioref">Nothias et al. 2020</a>)</span> we write the feature matrix to a tabulator delimited text file and the associated MS2 spectra to a file in Mascot Generic File (MGF) format. A future version of the workflow might use the mzTab-M format for the data exchange.</p>
+<p>We first compile the feature abundance matrix and export that to a txt file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' get feature definitions</span></span>
+<span><span class="va">fdef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">featureDefinitions</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mzmin"</span>, <span class="st">"mzmed"</span>, <span class="st">"mzmax"</span>,</span>
+<span>                                    <span class="st">"rtmin"</span>, <span class="st">"rtmed"</span>, <span class="st">"rtmax"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#' combine with the feature value table</span></span>
+<span><span class="va">fvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>feature_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">fdef</span><span class="op">)</span>, <span class="va">fdef</span>, <span class="va">fvals</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#' restrict the feature abundance matrix to features with MS2 spectra</span></span>
+<span><span class="va">fvals</span> <span class="op">&lt;-</span> <span class="va">fvals</span><span class="op">[</span><span class="va">ms2_cons</span><span class="op">$</span><span class="va">feature_id</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co">#' export the data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">fvals</span>, <span class="st">"xcms_ms2_features.txt"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>,</span>
+<span>            quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>We next reformat the information in the MS2 spectra restricting to data required by GNPS. The respective functionality is at present provided in the <a href="https://github.com/jorainer/xcms-gnps-tools" class="external-link">xcms-gnps-tools</a> GitHub repo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' load functions for GNPS-specific spectra formatting</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R"</span><span class="op">)</span></span>
+<span><span class="va">ms2_cons</span> <span class="op">&lt;-</span> <span class="fu">formatSpectraForGNPS</span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>And finally we export the MS2 spectra in MGF format.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' export the MS2 spectra in MGF format</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/Spectra.html" class="external-link">export</a></span><span class="op">(</span><span class="va">ms2_cons</span>, backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/MsBackendMgf/man/MsBackendMgf.html" class="external-link">MsBackendMgf</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>       file <span class="op">=</span> <span class="st">"xcms_ms2_spectra.mgf"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div>
+<blockquote>
+<p><strong>Spectra data export formats</strong></p>
+<p>The MGF format is only loosely defined with many different <em>dialects</em> being used. The <a href="https://bioconductor.org/packages/MsBackendMgf" class="external-link"><em>MsBackendMgf</em></a> package supports renaming or specifying spectra variables (metadata) for export to the MGF format. In addition, it would also allow to export also additional peak information, such as chemical formulas for individual fragments. As an alternative, also other export formats would be supported for <code>Spectra</code> objects, provided by packages such as the <a href="https://bioconductor.org/packages/MsBackendMsp" class="external-link"><em>MsBackendMsp</em></a> or <a href="https://bioconductor.org/packages/MsBackendMassbank" class="external-link"><em>MsBackendMassbank</em></a>. Upcoming formats, such as <em>specLib</em>, <em>mzPeak</em> or the updated mzTab-M format will be supported in future.</p>
+</blockquote>
+</div>
 </section><section class="section level2"><h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <ul>
@@ -1244,6 +1306,22 @@ Processing:
 <li>The quarto system would also allow combining R and Python functionality into the same workflow document with the <a href="https://github.com/RforMassSpectrometry/SpectriPy" class="external-link">SpectriPy</a> R-package translating between R and Python MS data structures.</li>
 </ul></section><section class="section level2"><h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
+</section><section class="section level2"><h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-louail_xcms_2025" class="csl-entry" role="listitem">
+Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, William Kumler, Norman Storz, Jan Stanstrup, Hendrik Treutler, et al. 2025. <span>“Xcms at 20 and Still in Peak Form: <span>Anchoring</span> a Complete Metabolomics Data Preprocessing and Analysis Software Ecosystem.”</span> ChemRxiv. <a href="https://doi.org/10.26434/chemrxiv-2025-2n2kh" class="external-link">https://doi.org/10.26434/chemrxiv-2025-2n2kh</a>.
+</div>
+<div id="ref-louail_rformassspectrometrymetabonaut_2025" class="csl-entry" role="listitem">
+Louail, Philippine, Marilyn De Graeve, Anna Tagliaferri, Vinicius Verri Hernandes, Daniel Marques de Sá e Silva, and Johannes Rainer. 2025. <span>“Rformassspectrometry/<span>Metabonaut</span>: V1.2.0.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.15554287" class="external-link">https://doi.org/10.5281/zenodo.15554287</a>.
+</div>
+<div id="ref-nothias_feature-based_2020" class="csl-entry" role="listitem">
+Nothias, Louis-Félix, Daniel Petras, Robin Schmid, Kai Dührkop, Johannes Rainer, Abinesh Sarvepalli, Ivan Protsyuk, et al. 2020. <span>“Feature-Based Molecular Networking in the <span>GNPS</span> Analysis Environment.”</span> <em>Nature Methods</em> 17 (9): 905–8. <a href="https://doi.org/10.1038/s41592-020-0933-6" class="external-link">https://doi.org/10.1038/s41592-020-0933-6</a>.
+</div>
+<div id="ref-johannes_rainer_2025_17293665" class="csl-entry" role="listitem">
+Rainer, Johannes, and Philippine Louail. 2025. <span>“Jorainer/Xcms-Gnps-Large-Scale: Preprocessing of a Large LC-MS/MS Data Set for Molecular Networking with GNPS.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.17293665" class="external-link">https://doi.org/10.5281/zenodo.17293665</a>.
+</div>
+</div>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);

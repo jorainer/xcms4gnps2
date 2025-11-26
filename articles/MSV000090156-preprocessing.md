@@ -3,7 +3,8 @@
 ## Introduction
 
 This document describes data inspection and preprocessing of an LC-MS/MS
-data set using *xcms* and export of the data for subsequent
+data set using *xcms* ([Louail, Brunius, et al.
+2025](#ref-louail_xcms_2025)) and export of the data for subsequent
 feature-based molecular networking (FBMN) with GNPS2. Functionality from
 different packages from the RforMassSpectrometry package ecosystem are
 combined to visualize and process the data.
@@ -11,7 +12,8 @@ combined to visualize and process the data.
 For details and more in depth description of the various visualizations
 and analysis options as well as parameter choices see also the
 [Metabonaut](https://rformassspectrometry.github.io/Metabonaut)
-tutorials.
+tutorials ([Louail, Graeve, et al.
+2025](#ref-louail_rformassspectrometrymetabonaut_2025)).
 
 This analysis and the used settings should be considered *initial* with
 potential refinement and improvement based on discussions expected
@@ -25,9 +27,10 @@ and can be installed with `BiocManager::install(<package name>)`.
 
 ``` r
 
-library(Spectra) # main MS infrastructure for R
 library(MsExperiment) # container for MS data
-library(xcms)    # for preprocessing of LC-MS and LC-MS/MS data
+library(Spectra)      # main MS infrastructure for R
+library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
+library(MsBackendMgf) # to export MS data in MGF format
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
@@ -1260,9 +1263,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1366,9 +1369,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1420,9 +1423,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
@@ -1434,10 +1437,105 @@ ms2_cons
 > would also be possible to apply Python-based functionality from
 > e.g. the *matchms* Python library to `Spectra` objects.
 
+At last we visualize the select data (i.e. features with associated MS2
+spectra) in the *m/z* - retention time space. We use the
+[`featureArea()`](https://rdrr.io/pkg/xcms/man/XcmsExperiment.html)
+function to get the feature boundaries and draw them as rectangles. The
+associated MS2 spectra (their precursor *m/z* and retention time value)
+are added as individual data points.
+
+``` r
+
+#' define the feature boundaries
+fa <- featureArea(mse, features = ms2_cons$feature_id)
+
+#' plot feature areas as rectangles
+plot(NA, NA, xlim = range(fa[, c("rtmin", "rtmax")]),
+     ylim = range(fa[, c("mzmin", "mzmax")]),
+     xlab = "retention time", ylab = "m/z")
+grid()
+rect(xleft = fa[, "rtmin"], xright = fa[, "rtmax"],
+     ybottom = fa[, "mzmin"], ytop = fa[, "mzmax"],
+     border = "#00000080")
+#' add precursor m/z and retention times of MS2
+points(ms2_cons$rtime, ms2_cons$precursorMz,
+       cex = 0.5, col = "#0000ff40")
+```
+
+![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-61-1.png)
+
+Feature areas (grey rectangles) and associated MS2 spectra (blue points)
+in the retention time - *m/z* space.
+
+Thus, with a little bit of R coding we can easily create customized data
+visualizations.
+
 ## Formatting and exporting data for FBMS
 
 We next export the feature abundance matrix and the fragment spectra for
-feature-based molecular networking with GNPS.
+feature-based molecular networking with GNPS. Similar to the original
+workflow ([Rainer and Louail 2025](#ref-johannes_rainer_2025_17293665))
+described in ([Nothias et al. 2020](#ref-nothias_feature-based_2020)) we
+write the feature matrix to a tabulator delimited text file and the
+associated MS2 spectra to a file in Mascot Generic File (MGF) format. A
+future version of the workflow might use the mzTab-M format for the data
+exchange.
+
+We first compile the feature abundance matrix and export that to a txt
+file.
+
+``` r
+
+#' get feature definitions
+fdef <- featureDefinitions(mse)[, c("mzmin", "mzmed", "mzmax",
+                                    "rtmin", "rtmed", "rtmax")]
+#' combine with the feature value table
+fvals <- cbind(feature_id = rownames(fdef), fdef, fvals)
+
+#' restrict the feature abundance matrix to features with MS2 spectra
+fvals <- fvals[ms2_cons$feature_id, ]
+
+#' export the data
+write.table(fvals, "xcms_ms2_features.txt", sep = "\t",
+            quote = FALSE, row.names = FALSE)
+```
+
+We next reformat the information in the MS2 spectra restricting to data
+required by GNPS. The respective functionality is at present provided in
+the [xcms-gnps-tools](https://github.com/jorainer/xcms-gnps-tools)
+GitHub repo.
+
+``` r
+
+#' load functions for GNPS-specific spectra formatting
+source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R")
+ms2_cons <- formatSpectraForGNPS(ms2_cons)
+```
+
+And finally we export the MS2 spectra in MGF format.
+
+``` r
+
+#' export the MS2 spectra in MGF format
+export(ms2_cons, backend = MsBackendMgf(),
+       file = "xcms_ms2_spectra.mgf")
+```
+
+> **Spectra data export formats**
+>
+> The MGF format is only loosely defined with many different *dialects*
+> being used. The
+> [*MsBackendMgf*](https://bioconductor.org/packages/MsBackendMgf)
+> package supports renaming or specifying spectra variables (metadata)
+> for export to the MGF format. In addition, it would also allow to
+> export also additional peak information, such as chemical formulas for
+> individual fragments. As an alternative, also other export formats
+> would be supported for `Spectra` objects, provided by packages such as
+> the [*MsBackendMsp*](https://bioconductor.org/packages/MsBackendMsp)
+> or
+> [*MsBackendMassbank*](https://bioconductor.org/packages/MsBackendMassbank).
+> Upcoming formats, such as *specLib*, *mzPeak* or the updated mzTab-M
+> format will be supported in future.
 
 ## Summary
 
@@ -1451,3 +1549,26 @@ feature-based molecular networking with GNPS.
   R-package translating between R and Python MS data structures.
 
 ## Session information
+
+## References
+
+Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, William Kumler,
+Norman Storz, Jan Stanstrup, Hendrik Treutler, et al. 2025. “Xcms at 20
+and Still in Peak Form: Anchoring a Complete Metabolomics Data
+Preprocessing and Analysis Software Ecosystem.” ChemRxiv.
+<https://doi.org/10.26434/chemrxiv-2025-2n2kh>.
+
+Louail, Philippine, Marilyn De Graeve, Anna Tagliaferri, Vinicius Verri
+Hernandes, Daniel Marques de Sá e Silva, and Johannes Rainer. 2025.
+“Rformassspectrometry/Metabonaut: V1.2.0.” Zenodo.
+<https://doi.org/10.5281/zenodo.15554287>.
+
+Nothias, Louis-Félix, Daniel Petras, Robin Schmid, Kai Dührkop, Johannes
+Rainer, Abinesh Sarvepalli, Ivan Protsyuk, et al. 2020. “Feature-Based
+Molecular Networking in the GNPS Analysis Environment.” *Nature Methods*
+17 (9): 905–8. <https://doi.org/10.1038/s41592-020-0933-6>.
+
+Rainer, Johannes, and Philippine Louail. 2025.
+“Jorainer/Xcms-Gnps-Large-Scale: Preprocessing of a Large LC-MS/MS Data
+Set for Molecular Networking with GNPS.” Zenodo.
+<https://doi.org/10.5281/zenodo.17293665>.

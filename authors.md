@@ -19,13 +19,13 @@ Source:
 [`DESCRIPTION`](https://github.com/jorainer/xcms4gnps2/blob/main/DESCRIPTION)
 
 Louail P, Rainer J (2025). *xcms4gnps2: xcms-based data preprocessing
-for FBMN with GNPS2*. R package version 0.99.2,
+for FBMN with GNPS2*. R package version 0.99.3,
 <https://github.com/jorainer/xcms4gnps2/>.
 
     @Manual{,
       title = {xcms4gnps2: xcms-based data preprocessing for FBMN with GNPS2},
       author = {Philippine Louail and Johannes Rainer},
       year = {2025},
-      note = {R package version 0.99.2},
+      note = {R package version 0.99.3},
       url = {https://github.com/jorainer/xcms4gnps2/},
     }
