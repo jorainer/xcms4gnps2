@@ -23,6 +23,8 @@ The various software packages required for the analysis are defined and
 loaded below. All packages are available through Bioconductor or CRAN
 and can be installed with `BiocManager::install(<package name>)`.
 
+Code
+
 ``` r
 
 library(Spectra) # main MS infrastructure for R
@@ -47,6 +49,8 @@ sample and experiment-specific information for the individual MS
 runs/data files. These should ideally comprise all relevant phenotypic
 but also technical information (e.g. injection index) to allow proper
 adjusting or modeling of the data.
+
+Code
 
 ``` r
 
@@ -85,6 +89,8 @@ MassIVE ftp server and stored to a local folder
 files and load the data set. This needs to be adapted if the files were
 stored to a different folder.
 
+Code
+
 ``` r
 
 path <- file.path("/data", "massive-ftp.ucsd.edu", "v04",
@@ -105,6 +111,8 @@ The samples and data files from the present data set are displayed in
 the table below. Note that in the R code block below we use the R *pipe*
 operator `|>` to avoid nested function calls and improve the readability
 of the code.
+
+Code
 
 ``` r
 
@@ -131,6 +139,8 @@ sampleData(mse)[, c("sample_name", "sample_desc", "replicate")] |>
 
 We in addition also define different colors for the individual samples.
 
+Code
+
 ``` r
 
 #' Define a color for each unique original sample
@@ -153,6 +163,8 @@ set using the
 functions specifying either `"max"` (for BPC) or `"sum"` (for TIC) as
 the function to aggregate the per-spectrum intensities.
 
+Code
+
 ``` r
 
 #' BPC
@@ -164,6 +176,8 @@ legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-6-1.png)
+
+Code
 
 ``` r
 
@@ -182,6 +196,8 @@ between the samples. Also, no signal seems to be present before 20
 seconds and after 850 seconds. Thus, we below filter the data set to
 spectra acquired within this retention time range.
 
+Code
+
 ``` r
 
 mse <- filterSpectra(mse, filterRt, c(20, 850))
@@ -195,6 +211,8 @@ retention time, for distinct *m/z* values.
 
 To this end we first bin each spectrum to get discrete and similar *m/z*
 values within the data set.
+
+Code
 
 ``` r
 
@@ -213,6 +231,8 @@ tis <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = sum)
 We have thus a single aggregated mass spectrum per sample. These *base
 peak spectra* are plotted below.
 
+Code
+
 ``` r
 
 par(mar = c(4.5, 4, 0, 0.5))
@@ -227,6 +247,8 @@ The *mass content* of the samples seems to be similar, with the
 exception of the last file. We can also plot all spectra into the same
 plot, using a different color per sample.
 
+Code
+
 ``` r
 
 plotSpectraOverlay(bps, col = paste0(col_sample, 40))
@@ -238,6 +260,8 @@ legend("topright", col = col, legend = names(col), lty = 1)
 
 We can also use these aggregated spectra to calculate spectra similarity
 between the individual samples and cluster them.
+
+Code
 
 ``` r
 
@@ -267,7 +291,7 @@ expected *m/z* by retention time areas of defined LC-MS features.
 Most methods in *xcms* are parallelized by default. Below we define the
 parallel processing setup for the present analysis.
 
-> **Parallel processing setup**
+> **Parallel processing details**
 >
 > It is generally advisable to configure the parallel processing setup
 > globally using
@@ -278,6 +302,8 @@ parallel processing setup for the present analysis.
 > parallel process. Below we globally define the parallel processing
 > setup depending on the operating system. For the present analysis we
 > use 4 parallel processes.
+
+Code
 
 ``` r
 
@@ -302,6 +328,8 @@ chromatographic peaks in retention time dimension. Without any prior
 information, we need to derive this information from the data set. We
 therefore zoom into areas of the BPC that seem to contain signal from an
 ion.
+
+Code
 
 ``` r
 
@@ -336,6 +364,8 @@ grid()
 
 The width of this chromatographic peaks is about 8 seconds. We evaluate
 a second signal at the and of the chromatogram.
+
+Code
 
 ``` r
 
@@ -394,6 +424,8 @@ defined above and plot the individual mass peaks.
 > on the intensity of the signal, with higher variation observed for low
 > intensity peaks and increasing stability with higher signal.
 
+Code
+
 ``` r
 
 mse[1L] |>
@@ -410,6 +442,8 @@ above. For the present ion, the *m/z* values show a very low variance.
 
 We evaluate the signal also for the second *m/z* - retention time window
 defined above.
+
+Code
 
 ``` r
 
@@ -436,6 +470,8 @@ Parameter `chunkSize` defines the number of data files from which MS
 data should be loaded at a time. This parameter thus has an influence on
 the memory usage of the analysis.
 
+Code
+
 ``` r
 
 cwp <- CentWaveParam(
@@ -456,6 +492,8 @@ are less than 2 seconds apart from each other, if the intensity below
 both apexes is lower than a certain proportion of the apex intensity of
 the lower intensity peak.
 
+Code
+
 ``` r
 
 mnpp <- MergeNeighboringPeaksParam(
@@ -468,6 +506,8 @@ mse <- refineChromPeaks(mse, mnpp, chunkSize = 4L)
 
 We next compare the number of identified peaks per sample as well as
 their *m/z* and retention time widths.
+
+Code
 
 ``` r
 
@@ -513,6 +553,8 @@ We also evaluate the peak detection results on the two example *m/z* -
 retention time regions. Identified chromatographic peaks will be colored
 according to the sample group.
 
+Code
+
 ``` r
 
 eic_1 <- chromatogram(mse, mz = mzr_1, rt = rtr_1)
@@ -528,6 +570,8 @@ legend("topright", col = col, lty = 1,
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-21-1.png)
+
+Code
 
 ``` r
 
@@ -595,6 +639,8 @@ most samples).
 > maximal accepted difference in chromatographic peaks’ *m/z* values to
 > consider them for grouping.
 
+Code
+
 ``` r
 
 pdp <- PeakDensityParam(
@@ -629,6 +675,8 @@ however want to group them into the same feature. We hence next increase
 the `bw` parameter and simulate the correspondence with these updated
 settings.
 
+Code
+
 ``` r
 
 pdp@bw <- 5
@@ -642,6 +690,8 @@ grid()
 Changing `bw` to 5 changed the density curve, but we still defined two
 separate features. We thus increase below `bw` to 7.
 
+Code
+
 ``` r
 
 pdp@bw <- 7
@@ -654,6 +704,8 @@ grid()
 
 With a `bw = 7` a single feature was defined. We use these parameter for
 the initial correspondence analysis on the full data set.
+
+Code
 
 ``` r
 
@@ -678,6 +730,8 @@ the retention times of all samples. The smoothness of this curve can be
 configured with parameter `span` (values between 0 and 1; values around
 0.5 work in most cases).
 
+Code
+
 ``` r
 
 pgp <- PeakGroupsParam(
@@ -693,6 +747,8 @@ x-axis against the difference between the adjusted and raw retention
 times on the y-axis as a solid line. Retention times of anchor peaks in
 each sample are indicated with individual data points. These should
 ideally be placed along the full retention time range of the experiment.
+
+Code
 
 ``` r
 
@@ -717,6 +773,8 @@ after 650 seconds.
 We next evaluate the alignment results based on the BPC before and after
 alignment.
 
+Code
+
 ``` r
 
 #' create a BPC after adjustment; chromPeaks = "none" only creates the BPC
@@ -739,6 +797,8 @@ Misalignment of signal at the later stage of the chromatography seems to
 be reduced. We in addition evaluate the effect of retention time
 alignment on the two example EICs.
 
+Code
+
 ``` r
 
 eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1, chromPeaks = "none")
@@ -758,6 +818,8 @@ alignment.
 
 For this early retention time range already the raw signal was well
 aligned.
+
+Code
 
 ``` r
 
@@ -785,6 +847,8 @@ the samples. We below first *undo* the retention time alignment,
 re-perform the initial correspondence analysis and perform the alignment
 with the changed settings for parameter `span`.
 
+Code
+
 ``` r
 
 #' remove retention time alignment results
@@ -799,6 +863,8 @@ mse <- adjustRtime(mse, param = pgp)
 ```
 
 Evaluating the impact of changing this parameter.
+
+Code
 
 ``` r
 
@@ -817,6 +883,8 @@ Retention time alignment results.
 A stronger alignment can be observed for the retention time area from
 750 to 800 seconds. The results for the first example EIC did not
 change.
+
+Code
 
 ``` r
 
@@ -838,6 +906,8 @@ First example EIC before (top) and after (bottom) retention time
 alignment.
 
 While for the second EIC the alignment improved.
+
+Code
 
 ``` r
 
@@ -874,6 +944,8 @@ results. Also, for the final correspondence we use the samples’
 peak is present in at least 67% of the replicates per sample (i.e., 2
 out of 3).
 
+Code
+
 ``` r
 
 #' Defining the settings for the peak density correspondence method
@@ -888,6 +960,8 @@ pdp <- PeakDensityParam(
 We evaluate these settings, in particular the effect of `bw` on the
 first example EIC.
 
+Code
+
 ``` r
 
 col_peak <- col_sample[chromPeaks(eic_1_adj)[, "sample"]]
@@ -900,6 +974,8 @@ grid()
 
 For that EIC the settings worked nicely. Simulating the correspondence
 for the second example EIC.
+
+Code
 
 ``` r
 
@@ -916,6 +992,8 @@ same feature. Ideally, correspondence parameters should also be
 simulated on more complex signals, e.g. regions with co- or closely
 eluting compounds. We below expand the retention time window for the
 *m/z* slice of the first example EIC.
+
+Code
 
 ``` r
 
@@ -937,6 +1015,8 @@ in the plot above. Unless we want that these signals are grouped
 together, we need to reduce the value of `bw`. Below we simulate a
 correspondence using `bw = 3`.
 
+Code
+
 ``` r
 
 pdp@bw <- 3
@@ -952,6 +1032,8 @@ features. We next evaluate whether with these updated setting we would
 still group the signal from the second example EIC into a single
 feature.
 
+Code
+
 ``` r
 
 col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
@@ -966,6 +1048,8 @@ All chromatographic peaks for this region were grouped into a single
 region. We thus proceed and use these settings for the correspondence
 analysis of the full data set.
 
+Code
+
 ``` r
 
 mse <- groupChromPeaks(mse, param = pdp)
@@ -978,6 +1062,8 @@ larger number of EICs/features should be checked. We below extract the
 first example EIC again and evaluate the correspondence results for it.
 Here it is important to set `simulate = FALSE` to show the actual
 results.
+
+Code
 
 ``` r
 
@@ -1000,6 +1086,8 @@ retention time (`"rtmed"`) of the feature is indicated with a dashed
 vertical line. We next evaluate the results also on the second example
 EIC.
 
+Code
+
 ``` r
 
 eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
@@ -1019,6 +1107,8 @@ Correspondence results for the second example EIC.
 Also for this retention time region, chromatographic peaks were grouped
 into a single feature. At last we evaluate the expanded retention time
 region of the *m/z* range of the first example EIC.
+
+Code
 
 ``` r
 
@@ -1049,6 +1139,8 @@ i.e., their *m/z* and retention time, the latter the actual abundance
 estimates in the different samples. We below count the number of
 features that were defined by the correspondence analysis:
 
+Code
+
 ``` r
 
 featureDefinitions(mse) |>
@@ -1066,6 +1158,8 @@ We can now extract the abundance estimates of all features with the
 [`featureValues()`](https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html)
 function. Below we extract this data matrix and assign the unique sample
 name as column names (by default the MS data file name is used).
+
+Code
 
 ``` r
 
@@ -1100,6 +1194,8 @@ chromatographic peak.
 
 Below we calculate and plot the number of missing values per sample.
 
+Code
+
 ``` r
 
 #' determine the number of missing values per sample and plot them
@@ -1127,6 +1223,8 @@ with the
 [`featureArea()`](https://rdrr.io/pkg/xcms/man/XcmsExperiment.html)
 function for the first 6 features:
 
+Code
+
 ``` r
 
 featureArea(mse,
@@ -1149,6 +1247,8 @@ boundaries.
 
 We below perform the gap-filling on the full data set.
 
+Code
+
 ``` r
 
 cpap <- ChromPeakAreaParam(minMzWidthPpm = 10)
@@ -1157,6 +1257,8 @@ mse <- fillChromPeaks(mse, param = cpap, chunkSize = 4L)
 
 We extract the feature values again and determine the number of missing
 values.
+
+Code
 
 ``` r
 
@@ -1179,6 +1281,8 @@ head(fvals)
     FT00004 10336613.6 6591140 3684237.3 6720029 8384267.6 6198111.3
     FT00005 10403154.3 5371937 3405332.8 5232400 8119441.8 2953772.8
     FT00006  7827918.6 6753662 5360799.4 4505007 7968544.6 6931111.8
+
+Code
 
 ``` r
 
