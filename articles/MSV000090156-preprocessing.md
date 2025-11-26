@@ -309,6 +309,7 @@ ion.
 
 ``` r
 
+#' extract BPC
 par(mfrow = c(2, 1))
 bpc <- chromatogram(mse, aggregationFun = "max")
 plot(bpc, col = paste0(col_sample, 80), lwd = 2)
@@ -337,6 +338,11 @@ grid()
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-14-1.png)
+
+Definition of an example region for EIC extraction. Upper panel: BPC,
+dashed vertical lines indicate the selected retention time region. Lower
+panel: EIC for the *m/z* region with the largest signal in the retention
+time window.
 
 The width of this chromatographic peaks is about 8 seconds. We evaluate
 a second signal at the and of the chromatogram.
@@ -370,6 +376,11 @@ grid()
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-15-1.png)
+
+Definition of an example region for EIC extraction. Upper panel: BPC,
+dashed vertical lines indicate the selected retention time region. Lower
+panel: EIC for the *m/z* region with the largest signal in the retention
+time window.
 
 The width of the chromatographic peaks for that *m/z* slice seem to be
 around 15 seconds. Also, there seems to be a considerable shift in
@@ -1263,9 +1274,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:55:25 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 15:01:25 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 15:01:26 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1369,9 +1380,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:55:25 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 15:01:25 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 15:01:26 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1423,9 +1434,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:55:25 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 15:01:25 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 15:01:26 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**

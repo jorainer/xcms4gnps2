@@ -64,7 +64,57 @@
 <div class="page-header"><h1 id="xcms-based-lc-msms-data-preprocessing-for-fbmn-with-gnps2">
 <em>xcms</em>-based LC-MS/MS data preprocessing for FBMN with GNPS2<a class="anchor" aria-label="anchor" href="#xcms-based-lc-msms-data-preprocessing-for-fbmn-with-gnps2"></a>
 </h1></div>
+<p><a href="https://creativecommons.org/licenses/by-nc/4.0/" class="external-link"><img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg" alt="License: CC BY-NC 4.0"></a><br><a href="https://hub.docker.com/repository/docker/jorainer/xcms4gnps2" class="external-link"><img src="https://img.shields.io/docker/v/jorainer/xcms4gnps2?label=docker%20image" alt="Docker Image Version (latest by date)"></a></p>
 <p>This repository contains an example workflow for preprocessing and preparation of an LC-MS/MS data set for feature-based molecular networking (FBMN) with GNPS2.</p>
+<div class="section level2">
+<h2 id="analysis-workflow">Analysis workflow<a class="anchor" aria-label="anchor" href="#analysis-workflow"></a>
+</h2>
+<div class="section level3">
+<h3 id="xcms-based-preprocessing-for-fbms-with-gnps">
+<a href="https://jorainer.github.io/xcms4gnps2/articles/MSV000090156-preprocessing.html">xcms-based preprocessing for FBMS with GNPS</a><a class="anchor" aria-label="anchor" href="#xcms-based-preprocessing-for-fbms-with-gnps"></a>
+</h3>
+<p>This workflow explains preprocessing of a public LC-MS/MS data set with <em>xcms</em> and export of the results for feature-based molecular networking with GNPS.</p>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="pushpin-reproducibility--usage">📌 Reproducibility &amp; Usage<a class="anchor" aria-label="anchor" href="#pushpin-reproducibility--usage"></a>
+</h2>
+<p>The workflow is available as pre-rendered webpage <a href="https://jorainer.github.io/xcms4gnps2">xcms4gnps</a>. In addition, a <a href="https://docker.com" class="external-link">docker</a> image is available allowing to run the workflow interactively:</p>
+<ul>
+<li>If you don’t already have, install <a href="https://www.docker.com/" class="external-link">docker</a>. Find installation information <a href="https://docs.docker.com/desktop/" class="external-link">here</a>.</li>
+<li>Get the <a href="https://hub.docker.com/r/jorainer/xcms4gnps2" class="external-link">docker image</a> of this tutorial e.g. from the command line with:</li>
+</ul>
+<pre><code>docker pull jorainer/xcms4gnps2:latest</code></pre>
+<ul>
+<li>Start the docker container, either through the Docker Desktop, or on the command line with</li>
+</ul>
+<pre><code>docker run -e PASSWORD=bioc -p 8787:8787 jorainer/xcms4gnps2:latest</code></pre>
+<ul>
+<li>Enter <a href="http://localhost:8787" class="external-link"><code>http://localhost:8787</code></a> in a web browser and log in with username <code>rstudio</code> and password <code>bioc</code>.</li>
+<li>In the RStudio server version: open any of the Quarto files in the <em>vignettes</em> folder and evaluate the R code blocks in that document.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="handshake-contribution">🤝 Contribution<a class="anchor" aria-label="anchor" href="#handshake-contribution"></a>
+</h2>
+<p>Interested in contributing? Please check out the <a href="https://rformassspectrometry.github.io/RforMassSpectrometry/articles/RforMassSpectrometry.html#contributions" class="external-link"><strong>RforMassSpectrometry Contributions Guide</strong></a>.</p>
+<div class="section level3">
+<h3 id="scroll-code-of-conduct">📜 Code of Conduct<a class="anchor" aria-label="anchor" href="#scroll-code-of-conduct"></a>
+</h3>
+<p>We follow the <a href="https://rformassspectrometry.github.io/RforMassSpectrometry/articles/RforMassSpectrometry.html#code-of-conduct" class="external-link"><strong>RforMassSpectrometry Code of Conduct</strong></a> to maintain an inclusive and respectful community.</p>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="raised_hands-acknowledgements">🙌 Acknowledgements<a class="anchor" aria-label="anchor" href="#raised_hands-acknowledgements"></a>
+</h2>
+<div class="float">
+<img src="https://github.com/rformassspectrometry/Metabonaut/raw/main/vignettes/images/EULogo.jpg" alt="EU Logo"><div class="figcaption">EU Logo</div>
+</div>
+<p>Part of this work is funded by the <strong>European Union</strong> under the <strong>HORIZON-MSCA-2021</strong> project <strong>101073062: HUMAN – Harmonising and Unifying Blood Metabolic Analysis Networks</strong>.</p>
+<p>🔗 Learn more: <a href="https://human-dn.eu/" class="external-link">HUMAN Project Website</a></p>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>

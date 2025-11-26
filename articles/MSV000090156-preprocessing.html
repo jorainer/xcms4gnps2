@@ -373,7 +373,8 @@
 <p>The aim of the chromatographic peak detection is to identify and quantify signal in the raw MS data space representing signal from ions of compounds present in a sample. Data processing is performed separately for each data file and mass peak intensities with similar <em>m/z</em> are evaluated along retention time axis to identify chromatographic peaks. We use the <em>centWave</em> algorithm for peak detection. The most important parameter for <em>centWave</em> is <code>peakwidth</code> which defines an approximate lower and upper expected width of chromatographic peaks in retention time dimension. Without any prior information, we need to derive this information from the data set. We therefore zoom into areas of the BPC that seem to contain signal from an ion.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">#' extract BPC</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">bpc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, aggregationFun <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bpc</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -399,9 +400,9 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-14-1.png" width="912"></p>
+<figcaption>Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the <em>m/z</em> region with the largest signal in the retention time window.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -433,9 +434,9 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-15-1.png" width="912"></p>
+<figcaption>Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the <em>m/z</em> region with the largest signal in the retention time window.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1084,9 +1085,9 @@ Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
 Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
  ... 10 more files
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:55:25 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 15:01:25 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 15:01:26 2025]
  ...3 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1171,9 +1172,9 @@ Processing:
 3091         2   749.801      3791
  ... 40 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:55:25 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 15:01:25 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 15:01:26 2025]
  ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1222,9 +1223,9 @@ Processing:
 3089         2   749.801      3791
  ... 40 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:07:53 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 14:13:47 2025]
- Filter: select MS level(s) 2 [Wed Nov 26 14:13:49 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 14:55:25 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 15:01:25 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 15:01:26 2025]
  ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
