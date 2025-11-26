@@ -14,3 +14,4 @@ vignettes/objects/
 *.log
 *.h5
 data/*
+*processing_files/
