@@ -206,20 +206,12 @@ s_bin <- spectra(mse) |>
 #' Combine all spectra within the same sample into a single spectrum reporting
 #' the maximum intensity of all mass peaks with the same m/z bin
 bps <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = max)
-```
-
-    Backend of the input object is read-only, will change that to an 'MsBackendMemory'
-
-``` r
-
 #' The same but reporting the sum of intensities per m/z bin
 tis <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = sum)
 ```
 
-    Backend of the input object is read-only, will change that to an 'MsBackendMemory'
-
-We have thus a single aggregated mass spectrum per sample. These spectra
-are plotted below.
+We have thus a single aggregated mass spectrum per sample. These *base
+peak spectra* are plotted below.
 
 ``` r
 
@@ -255,6 +247,8 @@ pheatmap(sim)
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-12-1.png)
+
+Similarity of *base peak spectra* of all samples in the experiment.
 
 A15M, A5M and M samples cluster together, separately from the A45M
 samples while the PPL_R1 sample has a distinct mass peak profile.
@@ -472,8 +466,6 @@ mnpp <- MergeNeighboringPeaksParam(
 mse <- refineChromPeaks(mse, mnpp, chunkSize = 4L)
 ```
 
-    Reduced from 106895 to 96227 chromatographic peaks.
-
 We next compare the number of identified peaks per sample as well as
 their *m/z* and retention time widths.
 
@@ -524,13 +516,6 @@ according to the sample group.
 ``` r
 
 eic_1 <- chromatogram(mse, mz = mzr_1, rt = rtr_1)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-``` r
 
 #' define a color for each chromatographic peak
 col_peak <- col_sample[chromPeaks(eic_1)[, "sample"]]
@@ -547,13 +532,6 @@ legend("topright", col = col, lty = 1,
 ``` r
 
 eic_2 <- chromatogram(mse, mz = mzr_2, rt = rtr_2)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-``` r
 
 #' define a color for each chromatographic peak
 col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
@@ -708,8 +686,6 @@ pgp <- PeakGroupsParam(
 mse <- adjustRtime(mse, param = pgp)
 ```
 
-    Performing retention time alignment using 888 anchor peaks.
-
 The effect of this alignment can be visualized with the
 [`plotAdjustedRtime()`](https://rdrr.io/pkg/xcms/man/plotAdjustedRtime.html)
 function. It plots the adjusted retention times of each sample on the
@@ -746,11 +722,6 @@ alignment.
 #' create a BPC after adjustment; chromPeaks = "none" only creates the BPC
 #' without extracting also identified chromatographic peaks.
 bpc_adj <- chromatogram(mse, chromPeaks = "none", aggregationFun = "max")
-```
-
-    Extracting chromatographic data
-
-``` r
 
 par(mfrow = c(2, 1))
 plot(bpc, col = paste0(col_sample, 80), main = "BPC, raw", lwd = 2)
@@ -771,11 +742,6 @@ alignment on the two example EICs.
 ``` r
 
 eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1, chromPeaks = "none")
-```
-
-    Extracting chromatographic data
-
-``` r
 
 par(mfrow = c(2, 1))
 plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
@@ -796,11 +762,6 @@ aligned.
 ``` r
 
 eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2, chromPeaks = "none")
-```
-
-    Extracting chromatographic data
-
-``` r
 
 par(mfrow = c(2, 1))
 plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
@@ -837,8 +798,6 @@ pgp <- PeakGroupsParam(
 mse <- adjustRtime(mse, param = pgp)
 ```
 
-    Performing retention time alignment using 888 anchor peaks.
-
 Evaluating the impact of changing this parameter.
 
 ``` r
@@ -862,13 +821,6 @@ change.
 ``` r
 
 eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-``` r
 
 par(mfrow = c(2, 1))
 #' Setting peakType = "none" prevents identified chromatographic peaks to be
@@ -890,13 +842,6 @@ While for the second EIC the alignment improved.
 ``` r
 
 eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-``` r
 
 par(mfrow = c(2, 1))
 plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
@@ -975,13 +920,6 @@ eluting compounds. We below expand the retention time window for the
 ``` r
 
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-``` r
 
 col_peak <- col_sample[chromPeaks(a)[, "sample"]]
 plotChromPeakDensity(a, param = pdp, col = col_sample,
@@ -1044,15 +982,6 @@ results.
 ``` r
 
 eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-    Processing features
-
-``` r
 
 #' plot the actual correspondence results by setting `simulate = FALSE`
 col_peak <- col_sample[chromPeaks(eic_1)[, "sample"]]
@@ -1074,15 +1003,6 @@ EIC.
 ``` r
 
 eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-    Processing features
-
-``` r
 
 #' plot the actual correspondence results by setting `simulate = FALSE`
 col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
@@ -1103,15 +1023,6 @@ region of the *m/z* range of the first example EIC.
 ``` r
 
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-    Processing features
-
-``` r
 
 col_peak <- col_sample[chromPeaks(a)[, "sample"]]
 plotChromPeakDensity(a, col = col_sample, peakCol = col_peak,
