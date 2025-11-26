@@ -156,6 +156,7 @@ seconds. Thus, we below filter the data set to spectra acquired within this
 retention time range.
 
 ```{r}
+#' filter the data set to a retention time range from 20 to 850 seconds
 mse <- filterSpectra(mse, filterRt, c(20, 850))
 ```
 
@@ -168,15 +169,15 @@ To this end we first bin each spectrum to get discrete and similar *m/z* values
 within the data set.
 
 ```{r}
-#' Bin mass peaks into into discrete m/z bins of 0.02 Da.
+#' bin mass peaks into into discrete m/z bins of 0.02 Da.
 s_bin <- spectra(mse) |>
     filterMsLevel(1L) |>
     bin(binSize = 0.02)
 
-#' Combine all spectra within the same sample into a single spectrum reporting
-#' the maximum intensity of all mass peaks with the same m/z bin
+#' combine all spectra within the same sample into a single spectrum
+#' reporting the maximum intensity of all mass peaks with the same m/z bin
 bps <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = max)
-#' The same but reporting the sum of intensities per m/z bin
+#' the same but reporting the sum of intensities per m/z bin
 tis <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = sum)
 ```
 
@@ -385,6 +386,7 @@ at a time. This parameter thus has an influence on the memory usage of the
 analysis.
 
 ```{r}
+#' configure and perform chromatographic peak detection
 cwp <- CentWaveParam(
     ppm = 20,
     peakwidth = c(5, 20),
@@ -403,6 +405,7 @@ seconds apart from each other, if the intensity below both apexes is lower than
 a certain proportion of the apex intensity of the lower intensity peak.
 
 ```{r}
+#' configure and perform *peak refinement*
 mnpp <- MergeNeighboringPeaksParam(
     expandRt = 1,
     expandMz = 0,
@@ -455,6 +458,7 @@ time regions. Identified chromatographic peaks will be colored according to the
 sample group.
 
 ```{r}
+#| fig-cap: "Chromatographic peak detection results on the first example EIC."
 eic_1 <- chromatogram(mse, mz = mzr_1, rt = rtr_1)
 
 #' define a color for each chromatographic peak
@@ -469,6 +473,7 @@ legend("topright", col = col, lty = 1,
 
 
 ```{r}
+#| fig-cap: "Chromatographic peak detection results on the second example EIC."
 eic_2 <- chromatogram(mse, mz = mzr_2, rt = rtr_2)
 
 #' define a color for each chromatographic peak
@@ -530,6 +535,7 @@ chromatographic peaks' *m/z* values to consider them for grouping.
 :::
 
 ```{r}
+#| fig-cap: "Correspondence analysis simulation on the second example EIC."
 pdp <- PeakDensityParam(
     sampleGroups = rep(1, length(mse)),
     bw = 2,
@@ -559,6 +565,7 @@ them into the same feature. We hence next increase the `bw` parameter and
 simulate the correspondence with these updated settings.
 
 ```{r}
+#| fig-cap: "Correspondence analysis simulation with `bw = 5`."
 pdp@bw <- 5
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
                      peakBg = paste0(col_peak, 40))
@@ -569,6 +576,7 @@ Changing `bw` to 5 changed the density curve, but we still defined two separate
 features. We thus increase below `bw` to 7.
 
 ```{r}
+#| fig-cap: "Correspondence analysis simulation with `bw = 7`."
 pdp@bw <- 7
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
                      peakBg = paste0(col_peak, 40))
@@ -579,6 +587,7 @@ With a `bw = 7` a single feature was defined. We use these parameter for the
 initial correspondence analysis on the full data set.
 
 ```{r}
+#' perform initial correspondence analysis to group chromatographic peaks
 mse <- groupChromPeaks(mse, param = pdp)
 ```
 
@@ -598,6 +607,7 @@ samples. The smoothness of this curve can be configured with parameter `span`
 (values between 0 and 1; values around 0.5 work in most cases).
 
 ```{r}
+#' configure and run retention time alignment
 pgp <- PeakGroupsParam(
     minFraction = 0.90,
     span = 0.4)
@@ -764,7 +774,7 @@ setting `minFraction = 0.67`, an LC-MS feature is defined if a chromatographic
 peak is present in at least 67% of the replicates per sample (i.e., 2 out of 3).
 
 ```{r}
-#' Defining the settings for the peak density correspondence method
+#' configure the *peak density* correspondence method
 pdp <- PeakDensityParam(
     sampleGroups = sampleData(mse)$sample_name,
     minFraction = 0.67,
@@ -777,6 +787,7 @@ We evaluate these settings, in particular the effect of `bw` on the first
 example EIC.
 
 ```{r}
+#| fig-cap: "Simulation of correspondence analysis on the first example EIC."
 col_peak <- col_sample[chromPeaks(eic_1_adj)[, "sample"]]
 plotChromPeakDensity(eic_1_adj, param = pdp, col = col_sample,
                      peakCol = col_peak, peakBg = paste0(col_peak, 40))
@@ -787,6 +798,7 @@ For that EIC the settings worked nicely. Simulating the correspondence for the
 second example EIC.
 
 ```{r}
+#| fig-cap: "Simulation of correspondence analysis on the second example EIC."
 col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
 plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
                      peakCol = col_peak, peakBg = paste0(col_peak, 40))
@@ -799,6 +811,7 @@ complex signals, e.g. regions with co- or closely eluting compounds. We below
 expand the retention time window for the *m/z* slice of the first example EIC.
 
 ```{r}
+#| fig-cap: "Simulation of correspondence analysis on an expanded RT window."
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
 
 col_peak <- col_sample[chromPeaks(a)[, "sample"]]
@@ -815,6 +828,7 @@ want that these signals are grouped together, we need to reduce the value of
 `bw`. Below we simulate a correspondence using `bw = 3`.
 
 ```{r}
+#| fig-cap: "Effect of changing to `bw = 3` for the correspondence analysis."
 pdp@bw <- 3
 plotChromPeakDensity(a, param = pdp, col = col_sample,
                      peakCol = col_peak, peakBg = paste0(col_peak, 40))
@@ -826,6 +840,7 @@ next evaluate whether with these updated setting we would still group the signal
 from the second example EIC into a single feature.
 
 ```{r}
+#| fig-cap: "Effect of `bw = 3` on correspondence results of the second example EIC."
 col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
 plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
                      peakCol = col_peak, peakBg = paste0(col_peak, 40))
@@ -837,6 +852,7 @@ thus proceed and use these settings for the correspondence analysis of the full
 data set.
 
 ```{r}
+#' perform correspondence analysis on the full data set
 mse <- groupChromPeaks(mse, param = pdp)
 ```
 
@@ -965,6 +981,7 @@ measured by the MS instrument within these *m/z* - retention time boundaries.
 We below perform the gap-filling on the full data set.
 
 ```{r}
+#' configure and perform gap-filling
 cpap <- ChromPeakAreaParam(minMzWidthPpm = 10)
 mse <- fillChromPeaks(mse, param = cpap, chunkSize = 4L)
 ```
@@ -989,9 +1006,131 @@ barplot(nas, main = "Number of missing values", col = col_sample)
 A considerable amount of values could thus be *rescued*.
 
 
+# Extract fragment spectra for LC-MS features
+
+After preprocessing, we next identify and extract the MS2 spectra for the
+defined LC-MS features. We use the `featureSpectra()` method, that identifies
+for each of the features' chromatographic peaks MS2 spectra (within the same
+sample!) with their retention time and precursor *m/z* within the retention time
+and *m/z* range of the chromatographic peak.
+
+```{r}
+#' identify MS2 spectra for features
+ms2 <- featureSpectra(mse)
+ms2
+```
+
+We can have multiple, or no, MS2 spectra per feature:
+
+```{r}
+#' count the number of MS2 spectra per feature
+ms2_count <- table(ms2$feature_id)
+
+#' the number of LC-MS features with at least one MS2 spectrum:
+length(ms2_count)
+
+#' the average number of MS2 spectra per feature:
+mean(ms2_count)
+```
+
+We next inspect some of the identified MS2 spectra.
+
+```{r}
+#| fig-cap: "MS2 spectra for one LC-MS feature."
+#| fig-width: 9.5
+#| fig-height: 9.5
+#' select MS2 spectra for the first feature
+a <- ms2[ms2$feature_id == ms2$feature_id[1]]
+
+#' plot the spectra
+plotSpectra(a)
+```
+
+All MS2 spectra look similar - we next calculate also a pairwise similarity
+between them and visualize the results as a heatmap.
+
+```{r}
+#| fig-cap: "Pairwise spectra similarity between MS2 spectra of one feature."
+#| fig-width: 9.5
+#| fig-height: 9.5
+#' calculate dot product similarity
+sim <- compareSpectra(a, ppm = 10, tolerance = 0)
+
+pheatmap(sim)
+```
+
+Similarity between all MS2 spectra is very high (above 0.92).
+
+We next combine the individual MS2 spectra of a feature to a single *consensus*
+spectrum.
+
+::: {.callout-note collapse="true"}
+## Options to combine spectra
+
+Multiple spectra can be combined into a single spectrum using the
+`combineSpectra()` function which provides a large number of options and
+parameters for this task, including the possibility to provide a custom function
+to combine the fragment peaks. By default (with parameter `peaks = "union"`),
+the combined spectrum contains **all** mass peaks of all input spectra. The
+option `peaks = "intersect"` allows to retain only peaks that are present in a
+certain proportion of input spectra. Parameters `ppm` and `tolerance` define the
+required similarity in the peaks' *m/z* value to be considered *the same*. The
+groups of spectra to be combined are specified with parameter `f` and a
+potential splitting of the input `Spectra` object for parallel processing with
+parameter `p`.
+:::
+
+As an example, we combine MS2 spectra keeping only mass peaks present in at
+least 75% of input spectra.
+
+```{r}
+#' define consensus spectra per feature
+ms2_cons <- combineSpectra(ms2, f = ms2$feature_id,
+                           p = rep(1, length(ms2)),
+                           peaks = "intersect",
+                           ppm = 10, minProp = 0.75)
+ms2_cons
+```
+
+We have thus now one consensus spectrum per feature. A summary of the numbers of
+peaks per consensus spectrum is shown below.
+
+```{r}
+#' overview on the number of peaks per spectrum
+quantile(lengths(ms2_cons))
+```
+
+The consensus spectrum for the first feature is shown below.
+
+```{r}
+#| fig-cap: "Consensus spectrum for the first feature."
+plotSpectra(ms2_cons[1], lwd = 2)
+grid()
+```
+
+We next filter the data and remove spectra with a single fragment peak.
+
+```{r}
+#' remove spectra with a single fragment peak
+ms2_cons <- ms2_cons[lengths(ms2_cons) > 1]
+ms2_cons
+```
+
+::: {.callout-note collapse="true"}
+## Additional spectra processing options
+
+The [*Spectra*](https://bioconductor.org/packages/Spectra) package would provide
+many additional functions and options to process, scale or clean spectra. As an
+alternative, through the
+[*SpectriPy*](https://bioconductor.org/packages/SpectriPy) package, it would
+also be possible to apply Python-based functionality from e.g. the *matchms*
+Python library to `Spectra` objects.
+:::
+
 # Formatting and exporting data for FBMS
 
-
+We next export the feature abundance matrix and the fragment spectra for
+feature-based molecular networking with GNPS.
 
 # Summary
 
