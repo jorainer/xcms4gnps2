@@ -1,5 +1,9 @@
 # xcms-gnps2 version 0.99
 
+## Changes in version 0.99.3
+
+- Add export for GNPS.
+
 ## Changes in version 0.99.2
 
 - Add MS2 spectra extraction section.
