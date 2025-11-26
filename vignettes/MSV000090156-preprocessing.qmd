@@ -269,6 +269,11 @@ this information from the data set. We therefore zoom into areas of the BPC that
 seem to contain signal from an ion.
 
 ```{r}
+#| fig-cap: "Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the *m/z* region with the largest signal in the retention time window."
+#| fig-width: 9.5
+#| fig-height: 9.5
+
+#' extract BPC
 par(mfrow = c(2, 1))
 bpc <- chromatogram(mse, aggregationFun = "max")
 plot(bpc, col = paste0(col_sample, 80), lwd = 2)
@@ -300,6 +305,10 @@ The width of this chromatographic peaks is about 8 seconds. We evaluate a second
 signal at the and of the chromatogram.
 
 ```{r}
+#| fig-cap: "Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the *m/z* region with the largest signal in the retention time window."
+#| fig-width: 9.5
+#| fig-height: 9.5
+
 par(mfrow = c(2, 1))
 plot(bpc, col = paste0(col_sample, 80), lwd = 2)
 grid()
