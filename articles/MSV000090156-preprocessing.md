@@ -26,95 +26,14 @@ and can be installed with `BiocManager::install(<package name>)`.
 ``` r
 
 library(Spectra) # main MS infrastructure for R
-```
-
-    Loading required package: S4Vectors
-
-    Loading required package: stats4
-
-    Loading required package: BiocGenerics
-
-    Loading required package: generics
-
-
-    Attaching package: 'generics'
-
-    The following objects are masked from 'package:base':
-
-        as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
-        setequal, union
-
-
-    Attaching package: 'BiocGenerics'
-
-    The following objects are masked from 'package:stats':
-
-        IQR, mad, sd, var, xtabs
-
-    The following objects are masked from 'package:base':
-
-        anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-        colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-        get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
-        order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-        rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
-        unsplit, which.max, which.min
-
-
-    Attaching package: 'S4Vectors'
-
-    The following object is masked from 'package:utils':
-
-        findMatches
-
-    The following objects are masked from 'package:base':
-
-        expand.grid, I, unname
-
-    Loading required package: BiocParallel
-
-``` r
-
 library(MsExperiment) # container for MS data
-```
-
-    Loading required package: ProtGenerics
-
-
-    Attaching package: 'ProtGenerics'
-
-    The following object is masked from 'package:stats':
-
-        smooth
-
-``` r
-
 library(xcms)    # for preprocessing of LC-MS and LC-MS/MS data
-```
-
-
-    This is xcms version 4.8.0 
-
-``` r
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
 library(pheatmap)     # visualization of clustering results as heatmap
 library(vioplot)      # to create *violin plots*
 ```
-
-    Loading required package: sm
-
-    Package 'sm', version 2.2-6.0: type help(sm) for summary information
-
-    Loading required package: zoo
-
-
-    Attaching package: 'zoo'
-
-    The following objects are masked from 'package:base':
-
-        as.Date, as.Date.numeric
 
 ## Data import
 
@@ -304,10 +223,13 @@ are plotted below.
 
 ``` r
 
-plotSpectra(bps)
+par(mar = c(4.5, 4, 0, 0.5))
+plotSpectra(bps, main = "")
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-10-1.png)
+
+Aggregated MS1 spectrum per sample.
 
 The *mass content* of the samples seems to be similar, with the
 exception of the last file. We can also plot all spectra into the same
@@ -348,13 +270,20 @@ analysis**. An additional **gap-filling** step can be conducted to
 reduce the number of missing values integrating raw MS signal from the
 expected *m/z* by retention time areas of defined LC-MS features.
 
-Most methods in *xcms* are parallelized by default. It is thus advisable
-to globally configure the parallel processing setup. On Unix machines
-*multi-core* parallel processing can be used, that shares memory between
-the parallel processes. Windows supports only *socket-based* parallel
-processing and starts a separate R for each parallel process. Below we
-globally define the parallel processing setup depending on the operating
-system. For the present analysis we use 4 parallel processes.
+Most methods in *xcms* are parallelized by default. Below we define the
+parallel processing setup for the present analysis.
+
+> **Parallel processing setup**
+>
+> It is generally advisable to configure the parallel processing setup
+> globally using
+> [`register()`](https://rdrr.io/pkg/BiocParallel/man/register.html). On
+> Unix machines *multi-core* parallel processing can be used, that
+> shares memory between the parallel processes. Windows supports only
+> *socket-based* parallel processing and starts a separate R for each
+> parallel process. Below we globally define the parallel processing
+> setup depending on the operating system. For the present analysis we
+> use 4 parallel processes.
 
 ``` r
 
@@ -373,9 +302,9 @@ of compounds present in a sample. Data processing is performed
 separately for each data file and mass peak intensities with similar
 *m/z* are evaluated along retention time axis to identify
 chromatographic peaks. We use the *centWave* algorithm for peak
-detection. The most important parameter for *centWave* is the
-`peakwidth` which defines an approximate lower and upper expected width
-of chromatographic peaks in retention time dimension. Without any prior
+detection. The most important parameter for *centWave* is `peakwidth`
+which defines an approximate lower and upper expected width of
+chromatographic peaks in retention time dimension. Without any prior
 information, we need to derive this information from the data set. We
 therefore zoom into areas of the BPC that seem to contain signal from an
 ion.
@@ -448,22 +377,28 @@ The width of the chromatographic peaks for that *m/z* slice seem to be
 around 15 seconds. Also, there seems to be a considerable shift in
 retention times between the samples.
 
-Based on these two example signals we define the `peakdwidth` for the
-present data set to be between and 5 and 20 seconds. For a *real* data
-analysis it is suggested to evaluate more signals, also eventually of
-internal standards or ions of compounds that are expected to be present
-in the sample.
+Based on these two example signals we define the `peakdwidth` parameter
+for the present data set to be between and 5 and 20 seconds. For a
+*real* data analysis it is suggested to evaluate more signals, also
+eventually of internal standards or ions of compounds that are expected
+to be present in the sample.
 
 A second potentially data set-specific parameter of the *centWave*
 algorithm is `ppm`. It defines the maximum allowed deviation in *m/z*
 dimension of mass peaks in consecutive spectra considered to represent
-signal from the same ion. This scattering of mass peak’s *m/z* values
-can depend on the centroiding algorithm used. In addition, on TOF
-instruments, the scattering can depend on the intensity of the signal,
-with higher variation observed for low intensity peaks and increasing
-stability with higher signal. To illustrate this we below subset the
-full MS data from the first data file to the *m/z* and retention time
-range defined above and plot the individual mass peaks.
+signal from the same ion. To illustrate this we below subset the full MS
+data from the first data file to the *m/z* and retention time range
+defined above and plot the individual mass peaks.
+
+> **Details on the `ppm` *centWave* parameter**
+>
+> The `ppm` parameter defines the expected (or observed) *m/z* deviation
+> of mass peaks representing signal from the same compound/ion in
+> consecutive spectra. This scattering of mass peak’s *m/z* values can
+> depend on the centroiding algorithm used or the precision of the MS
+> instrument. In addition, on TOF instruments, the scattering can depend
+> on the intensity of the signal, with higher variation observed for low
+> intensity peaks and increasing stability with higher signal.
 
 ``` r
 
@@ -641,38 +576,46 @@ implemented in *xcms*. We use the most straight forward approach that
 aligns chromatographic runs based on retention times of *anchor peaks*,
 i.e., compounds present in most of the samples of an experiment. To
 define these anchor peaks we must however perform an initial
-correspondence analysis to group chromatographic peaks with similar
-*m/z* and retention time across samples. We use the *peak density*
-method for this, which we configure below using the `PeakDensityParam`.
-For the initial correspondence we used more relaxed settings, also
-putting all samples into the same *sample group*. The important
-parameters are `bw` and `binSize`. The former defines the tolerance of
-retention time similarity, the latter the similarity of *m/z* values for
-chromatographic peaks from different samples to be considered to
-represent signal from ions of the same compound. Setting `binSize` is
-straight forward - it depends on the resolution of the instrument and
-the expected similarity of *m/z* values for the same ion. We set it to a
-value of `binSize = 0.01`, hence all chromatographic peaks with a
-difference in *m/z* smaller than 0.01 would be evaluated. The `bw`
-parameter is a bit more difficult to define. It should be defined based
-on observed data in the experiment, ideally, on EICs of closely eluting
-compounds with the same *m/z*. In our example we use the second example
-*m/z* - retention time range, because it seemed to contain signal from
-the same compound, but with quite large shifts between data files. We
-below *simulate* a correspondence analysis on this EIC. Other parameters
-defined are `minFraction`, which defines the minimum required proportion
-of samples of one of the sample groups defined with parameter
-`sampleGroups` in which a chromatographic peak is present, and `ppm`
-which, together with `binSize` defines the maximal accepted difference
-in chromatographic peaks’ *m/z* values to consider them for grouping.
+correspondence analysis and group chromatographic peaks with similar
+*m/z* and retention time across samples.
 
-The *peak density* method groups chromatographic peaks into an LC-MS
-feature, if their *m/z* difference is smaller `binSize` (+ `ppm` of the
-*m/z*), the retention time of their apex is within one peak of the *peak
-density* curve and a chromatographic peak is present in at least
-`minFraction` of at least one of the sample groups defined with
-`sampleGroups`. Below we run a correspondence simulation with example
-settings.
+We use the *peak density* correspondence method which groups
+chromatographic peaks into an LC-MS feature, if their *m/z* difference
+is smaller than `binSize` (+ `ppm` of the *m/z*), the retention time of
+their apex is within one peak of the *peak density* curve (which
+smoothness can be configured with parameter `bw`) and a chromatographic
+peak is present in at least `minFraction` of at least one of the sample
+groups defined with `sampleGroups`. For the initial correspondence we
+apply more relaxed settings and consider all samples to be in the same
+sample group (since we want to define anchor peaks that are present in
+most samples).
+
+> **Details on `PeakDensityParam` settings**
+>
+> The *peak density* correspondence method can be configured using the
+> `PeakDensityParam`. For an initial correspondence used for retention
+> time alignment more relaxed settings can be used, also putting all
+> samples into the same *sample group*. The important parameters are
+> `bw` and `binSize`. The former defines the tolerance of retention time
+> similarity, the latter the similarity of *m/z* values for
+> chromatographic peaks from different samples to be considered to
+> represent signal from ions of the same compound. Setting `binSize` is
+> straight forward - it depends on the resolution of the instrument and
+> the expected similarity of *m/z* values for the same ion. We set it to
+> a value of `binSize = 0.01`, hence all chromatographic peaks with a
+> difference in *m/z* smaller than 0.01 would be evaluated. The `bw`
+> parameter is a bit more difficult to define. It should be defined
+> based on observed data in the experiment, ideally, on EICs of closely
+> eluting compounds with the same *m/z*. In our example we use the
+> second example *m/z* - retention time range, because it seemed to
+> contain signal from the same compound, but with quite large shifts
+> between data files. We below *simulate* a correspondence analysis on
+> this EIC. Other parameters defined are `minFraction`, which defines
+> the minimum required proportion of samples of one of the sample groups
+> defined with parameter `sampleGroups` in which a chromatographic peak
+> is present, and `ppm` which, together with `binSize` defines the
+> maximal accepted difference in chromatographic peaks’ *m/z* values to
+> consider them for grouping.
 
 ``` r
 
@@ -746,15 +689,16 @@ robust and also flexible, allowing for example to align samples based on
 within-experiment QC samples, or against external reference data or
 based on manually defined anchor peaks. See
 [Metabonaut](https://rformassspectrometry.github.io/Metabonaut) for
-examples and options. The method can be configured with the
-`PeakGroupsParam`. With `minFraction = 0.9` we below define anchor peaks
-as those LC-MS features for which a chromatographic peak was identified
-in 90% of the samples in the experiment. The observed retention time
-differences of these are used to model a curve along retention time
-dimension which can then be used to align the retention times of all
-samples. The smoothness of this curve along the retention time dimension
-can be configured with `span`, values between 0.4 and 0.7 work for most
-cases.
+examples and options. The method can be configured with
+[`PeakGroupsParam()`](https://rdrr.io/pkg/xcms/man/adjustRtime.html).
+With `minFraction = 0.9` we below define anchor peaks as those LC-MS
+features (defined by the initial correspondence analysis) for which a
+chromatographic peak was identified in 90% of the samples of the whole
+experiment. The observed retention time differences of these are used to
+model a curve along retention time dimension which is then used to align
+the retention times of all samples. The smoothness of this curve can be
+configured with parameter `span` (values between 0 and 1; values around
+0.5 work in most cases).
 
 ``` r
 
@@ -818,6 +762,8 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-29-1.png)
 
+BPC before (top) and after (bottom) retention time alignment.
+
 Misalignment of signal at the later stage of the chromatography seems to
 be reduced. We in addition evaluate the effect of retention time
 alignment on the two example EICs.
@@ -841,8 +787,11 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-30-1.png)
 
-For this early retention time range already the raw signal was aligned
-well.
+First example EIC before (top) and after (bottom) retention time
+alignment.
+
+For this early retention time range already the raw signal was well
+aligned.
 
 ``` r
 
@@ -863,14 +812,17 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-31-1.png)
 
+Second example EIC before (top) and after (bottom) retention time
+alignment.
+
 This later retention time range shows clear, and strong, differences in
 retention times of 4 samples. While the *PPL* sample could be aligned
-quite well using the above settings, 3 samples still show shifts in
-retention times. We re-perform the alignment reducing the value for the
-`span` parameter to allow a more local alignment of the samples. We thus
-below first *undo* the retention time alignment, re-perform the initial
-correspondence analysis and perform the alignment with the changed
-settings for parameter `span`.
+quite well using the above settings, 3 samples still show considerable
+shifts in retention times. We thus re-perform the alignment reducing the
+value for the `span` parameter to switch to a more *local* alignment of
+the samples. We below first *undo* the retention time alignment,
+re-perform the initial correspondence analysis and perform the alignment
+with the changed settings for parameter `span`.
 
 ``` r
 
@@ -930,6 +882,9 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-34-1.png)
 
+First example EIC before (top) and after (bottom) retention time
+alignment.
+
 While for the second EIC the alignment improved.
 
 ``` r
@@ -953,6 +908,9 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-35-1.png)
 
+Second example EIC before (top) and after (bottom) retention time
+alignment.
+
 Note that in most cases it is not necessary that all samples are
 perfectly aligned. Some variation in retention time can be accounted for
 in the final correspondence analysis.
@@ -965,17 +923,18 @@ into LC-MS features. Signals are generally grouped together based on
 similarity of their *m/z* and retention times. We use the *peak density*
 method and, similarly to what we did in the previous section, we first
 evaluate the impact of different parameter settings on the expected
-results. Also, for the final correspondence we use the *sample_name* for
-parameter `sampleGroup`. Combined with setting `minFraction = 0.6`, an
-LC-MS feature is defined if a chromatographic peak is present in at
-least 60% of the replicates per sample.
+results. Also, for the final correspondence we use the samples’
+*sample_name* for parameter `sampleGroup`. Combined with setting
+`minFraction = 0.67`, an LC-MS feature is defined if a chromatographic
+peak is present in at least 67% of the replicates per sample (i.e., 2
+out of 3).
 
 ``` r
 
 #' Defining the settings for the peak density correspondence method
 pdp <- PeakDensityParam(
     sampleGroups = sampleData(mse)$sample_name,
-    minFraction = 0.6,
+    minFraction = 0.67,
     binSize = 0.01,
     ppm = 10,
     bw = 7)
@@ -1175,7 +1134,7 @@ result object using the
 and
 [`featureValues()`](https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html)
 functions. The former returns the *definition* of the LC-MS features,
-i.e. their *m/z* and retention time, the latter the actual abundance
+i.e., their *m/z* and retention time, the latter the actual abundance
 estimates in the different samples. We below count the number of
 features that were defined by the correspondence analysis:
 
@@ -1185,7 +1144,7 @@ featureDefinitions(mse) |>
     nrow()
 ```
 
-    [1] 18420
+    [1] 14808
 
 A quite large number of features was defined. This is mostly due to the
 setting for the `minFraction` parameter, which required a
@@ -1204,20 +1163,20 @@ colnames(fvals) <- sampleData(mse)$sample_desc
 head(fvals)
 ```
 
-             A15M_R1   A15M_R2 A15M_R3  A45M_R1 A45M_R2 A45M_R3  A5M_R1 A5M_R2
-    FT00001 164416.1        NA      NA       NA      NA      NA      NA     NA
-    FT00002       NA  505819.5      NA       NA      NA      NA      NA     NA
-    FT00003       NA        NA      NA       NA      NA      NA      NA     NA
-    FT00004       NA        NA      NA       NA      NA      NA      NA     NA
-    FT00005       NA        NA      NA       NA      NA      NA      NA     NA
-    FT00006       NA 3392535.0      NA 10258668      NA 9478585 5519297     NA
-              A5M_R3      M_R1     M_R2     M_R3    PPL_R1
-    FT00001       NA  307992.7       NA 193703.4        NA
-    FT00002 582024.2  539838.4 624712.1       NA        NA
-    FT00003       NA        NA       NA       NA  127518.4
-    FT00004       NA        NA       NA       NA  201678.3
-    FT00005       NA        NA       NA       NA  502676.9
-    FT00006       NA 3684237.3       NA       NA 6198111.3
+            A15M_R1 A15M_R2 A15M_R3  A45M_R1 A45M_R2 A45M_R3  A5M_R1 A5M_R2 A5M_R3
+    FT00001      NA      NA      NA       NA      NA      NA      NA     NA     NA
+    FT00002      NA      NA      NA       NA      NA      NA      NA     NA     NA
+    FT00003      NA      NA      NA       NA      NA      NA      NA     NA     NA
+    FT00004      NA 3392535      NA 10258668      NA 9478585 5519297     NA     NA
+    FT00005      NA      NA      NA  9521460      NA 6722026 2419544     NA     NA
+    FT00006      NA      NA      NA  4874998      NA 5897690 3338828     NA     NA
+               M_R1 M_R2 M_R3    PPL_R1
+    FT00001      NA   NA   NA  127518.4
+    FT00002      NA   NA   NA  201678.3
+    FT00003      NA   NA   NA  502676.9
+    FT00004 3684237   NA   NA 6198111.3
+    FT00005 3405333   NA   NA 2953772.8
+    FT00006      NA   NA   NA 6931111.8
 
 Columns in this abundance matrix are samples, rows features. For the
 present data set there are a large number of missing values. A missing
@@ -1267,11 +1226,11 @@ featureArea(mse,
             features = rownames(featureDefinitions(mse))[1:4])
 ```
 
-               mzmin    mzmax     rtmin     rtmax
-    FT00001 150.0268 150.0270  21.50778  35.61727
-    FT00002 150.0268 150.0272 471.63104 477.93682
-    FT00003 150.0268 150.0270 588.36721 594.23222
-    FT00004 150.0789 150.0791 166.75115 175.29982
+               mzmin    mzmax    rtmin    rtmax
+    FT00001 150.0268 150.0270 588.3672 594.2322
+    FT00002 150.0789 150.0791 166.7511 175.2998
+    FT00003 150.0912 150.0916 245.4199 254.4996
+    FT00004 150.1022 150.1030 812.2422 837.7419
 
 Thus, for gap-filling, missing values are replaced with the integrated
 signal measured by the MS instrument within these *m/z* - retention time
@@ -1295,20 +1254,20 @@ colnames(fvals) <- sampleData(mse)$sample_desc
 head(fvals)
 ```
 
-              A15M_R1   A15M_R2    A15M_R3    A45M_R1   A45M_R2   A45M_R3    A5M_R1
-    FT00001  164416.1  211160.7   179495.0   242782.1  176330.8  186166.2  150508.0
-    FT00002  386495.6  505819.5   450297.8   248672.5  214443.2  352505.0  618923.7
-    FT00003        NA        NA         NA         NA        NA        NA        NA
-    FT00004        NA        NA         NA         NA        NA        NA        NA
-    FT00005  725629.5  395193.8   609652.6   709672.0  712048.4  325696.1  582689.3
-    FT00006 6667479.8 3392535.0 10874295.1 10258668.4 9681633.2 9478584.9 5519297.2
-                A5M_R2    A5M_R3      M_R1      M_R2      M_R3    PPL_R1
-    FT00001   174531.5  236839.0  307992.7  146941.7  193703.4  784328.6
-    FT00002   565708.8  582024.2  539838.4  624712.1  429943.2        NA
-    FT00003         NA        NA   56655.1        NA        NA  127518.4
-    FT00004         NA        NA        NA        NA        NA  201678.3
-    FT00005   737115.2  653138.0  470292.9  357432.0  463980.4  502676.9
-    FT00006 10336613.6 6591140.0 3684237.3 6720028.6 8384267.6 6198111.3
+              A15M_R1   A15M_R2    A15M_R3  A45M_R1   A45M_R2   A45M_R3    A5M_R1
+    FT00001        NA        NA         NA       NA        NA        NA        NA
+    FT00002        NA        NA         NA       NA        NA        NA        NA
+    FT00003  725629.5  395193.8   609652.6   709672  712048.4  325696.1  582689.3
+    FT00004 6667479.8 3392535.0 10874295.1 10258668 9681633.2 9478584.9 5519297.2
+    FT00005 4424076.9 5594730.1  8961144.0  9521460 7483711.7 6722025.8 2419544.4
+    FT00006 5058937.4 6075048.7  8164059.6  4874998 7531471.2 5897690.0 3338828.4
+                A5M_R2  A5M_R3      M_R1    M_R2      M_R3    PPL_R1
+    FT00001         NA      NA   56655.1      NA        NA  127518.4
+    FT00002         NA      NA        NA      NA        NA  201678.3
+    FT00003   737115.2  653138  470292.9  357432  463980.4  502676.9
+    FT00004 10336613.6 6591140 3684237.3 6720029 8384267.6 6198111.3
+    FT00005 10403154.3 5371937 3405332.8 5232400 8119441.8 2953772.8
+    FT00006  7827918.6 6753662 5360799.4 4505007 7968544.6 6931111.8
 
 ``` r
 

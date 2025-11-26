@@ -78,114 +78,20 @@
 <p>The various software packages required for the analysis are defined and loaded below. All packages are available through Bioconductor or CRAN and can be installed with <code>BiocManager::install(&lt;package name&gt;)</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/Spectra" class="external-link">Spectra</a></span><span class="op">)</span> <span class="co"># main MS infrastructure for R</span></span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: S4Vectors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: stats4</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: BiocGenerics</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: generics</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'generics'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
-    setequal, union</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'BiocGenerics'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:stats':
-
-    IQR, mad, sd, var, xtabs</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-    get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
-    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-    rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
-    unsplit, which.max, which.min</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'S4Vectors'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:utils':
-
-    findMatches</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    expand.grid, I, unname</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: BiocParallel</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsExperiment" class="external-link">MsExperiment</a></span><span class="op">)</span> <span class="co"># container for MS data</span></span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: ProtGenerics</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'ProtGenerics'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:stats':
-
-    smooth</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sneumann/xcms" class="external-link">xcms</a></span><span class="op">)</span>    <span class="co"># for preprocessing of LC-MS and LC-MS/MS data</span></span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-This is xcms version 4.8.0 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span> <span class="co"># to define colors</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/Spectra" class="external-link">Spectra</a></span><span class="op">)</span> <span class="co"># main MS infrastructure for R</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsExperiment" class="external-link">MsExperiment</a></span><span class="op">)</span> <span class="co"># container for MS data</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sneumann/xcms" class="external-link">xcms</a></span><span class="op">)</span>    <span class="co"># for preprocessing of LC-MS and LC-MS/MS data</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span> <span class="co"># to define colors</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rapporter.github.io/pander/" class="external-link">pander</a></span><span class="op">)</span>       <span class="co"># to format tables</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">pheatmap</span><span class="op">)</span>     <span class="co"># visualization of clustering results as heatmap</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TomKellyGenetics/vioplot" class="external-link">vioplot</a></span><span class="op">)</span>      <span class="co"># to create *violin plots*</span></span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: sm</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Package 'sm', version 2.2-6.0: type help(sm) for summary information</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: zoo</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'zoo'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    as.Date, as.Date.numeric</code></pre>
-</div>
 </div>
 </section><section class="section level2"><h2 id="data-import">Data import<a class="anchor" aria-label="anchor" href="#data-import"></a>
 </h2>
 <p>The data analyzed here is part of the MassIVE <a href="https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696" class="external-link">MSV000090156</a> data set. The full data set (raw data files) should first downloaded from the respective directory of the ftp server: <a href="ftp://massive-ftp.ucsd.edu/v04/MSV000090156/">ftp://massive-ftp.ucsd.edu/v04/MSV000090156/</a>. Here we will analyze the data from <em>Lab 2</em>. Before loading the data we define a <code>data.frame</code> with sample and experiment-specific information for the individual MS runs/data files. These should ideally comprise all relevant phenotypic but also technical information (e.g. injection index) to allow proper adjusting or modeling of the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    file_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML"</span>,</span>
 <span>                  <span class="st">"Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML"</span>,</span>
@@ -215,7 +121,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>To run this analysis the MS data files (in mzML format) above need to be available. In the example workflow, they were downloaded from the MassIVE ftp server and stored to a local folder <em>/data/massive-ftp.ucsd.edu/v04</em>. Below we define the path to the data files and load the data set. This needs to be adapted if the files were stored to a different folder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/data"</span>, <span class="st">"massive-ftp.ucsd.edu"</span>, <span class="st">"v04"</span>,</span>
 <span>                  <span class="st">"MSV000090156"</span>, <span class="st">"peak"</span>, <span class="st">"mzml"</span>, <span class="st">"POS_MSMS"</span>,</span>
 <span>                  <span class="st">"Lab_2"</span><span class="op">)</span></span>
@@ -231,7 +137,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </div>
 <p>The samples and data files from the present data set are displayed in the table below. Note that in the R code block below we use the R <em>pipe</em> operator <code>|&gt;</code> to avoid nested function calls and improve the readability of the code.</p>
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_name"</span>, <span class="st">"sample_desc"</span>, <span class="st">"replicate"</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/pander/man/pandoc.table.return.html" class="external-link">pandoc.table</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"rmarkdown"</span>, split.table <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div>
@@ -331,7 +237,7 @@ Attaching package: 'zoo'</code></pre>
 </table>
 <p>We in addition also define different colors for the individual samples.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Define a color for each unique original sample</span></span>
 <span><span class="va">col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_name</span> <span class="op">|&gt;</span></span>
 <span>                     <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -346,7 +252,7 @@ Attaching package: 'zoo'</code></pre>
 </h2>
 <p>For data inspection and a general data overview we first create base peak chromatograms (BPC) and total ion chromatograms (TIC) of the data set using the <code><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatograms()</a></code> functions specifying either <code>"max"</code> (for BPC) or <code>"sum"</code> (for TIC) as the function to aggregate the per-spectrum intensities.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' BPC</span></span>
 <span><span class="va">bpc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, aggregationFun <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
 <span></span>
@@ -361,7 +267,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' TIC</span></span>
 <span><span class="va">tic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, aggregationFun <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
 <span></span>
@@ -377,13 +283,13 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>Based on the BPC and TIC there seems to be little retention time shifts between the samples. Also, no signal seems to be present before 20 seconds and after 850 seconds. Thus, we below filter the data set to spectra acquired within this retention time range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">mse</span>, <span class="va">filterRt</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">850</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>BPC and TIC aggregate data along the <em>m/z</em> dimension per spectrum (retention time) to compare the signal measured along the retention time. To compare the <em>mass</em> or ion content of the individual samples/measurement runs we in addition aggregate data along the retention time, for distinct <em>m/z</em> values.</p>
 <p>To this end we first bin each spectrum to get discrete and similar <em>m/z</em> values within the data set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Bin mass peaks into into discrete m/z bins of 0.02 Da.</span></span>
 <span><span class="va">s_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">spectra</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">filterMsLevel</a></span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -395,7 +301,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Backend of the input object is read-only, will change that to an 'MsBackendMemory'</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' The same but reporting the sum of intensities per m/z bin</span></span>
 <span><span class="va">tis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/combineSpectra.html" class="external-link">combineSpectra</a></span><span class="op">(</span><span class="va">s_bin</span>, f <span class="op">=</span> <span class="va">s_bin</span><span class="op">$</span><span class="va">dataOrigin</span>, intensityFun <span class="op">=</span> <span class="va">sum</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -404,18 +310,19 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>We have thus a single aggregated mass spectrum per sample. These spectra are plotted below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">bps</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">4</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">bps</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-10-1.png" width="912"></p>
+<figcaption>Aggregated MS1 spectrum per sample.</figcaption></figure>
 </div>
 </div>
 </div>
 <p>The <em>mass content</em> of the samples seems to be similar, with the exception of the last file. We can also plot all spectra into the same plot, using a different color per sample.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectraOverlay</a></span><span class="op">(</span><span class="va">bps</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
@@ -428,7 +335,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>We can also use these aggregated spectra to calculate spectra similarity between the individual samples and cluster them.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">compareSpectra</a></span><span class="op">(</span><span class="va">bps</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_desc</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span></span></code></pre></div>
@@ -443,9 +350,15 @@ Attaching package: 'zoo'</code></pre>
 </section><section class="section level2"><h2 id="data-preprocessing">Data preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a>
 </h2>
 <p>Data preprocessing is the first step in the analysis of LC-MS data processing and analyzing the raw MS data to result in a two-dimensional quantification table of LC-MS <em>features</em> in the various samples of the experiment. This process consists of 3 main steps: <strong>chromatographic peak detection</strong>, <strong>retention time alignment</strong> and <strong>correspondence analysis</strong>. An additional <strong>gap-filling</strong> step can be conducted to reduce the number of missing values integrating raw MS signal from the expected <em>m/z</em> by retention time areas of defined LC-MS features.</p>
-<p>Most methods in <em>xcms</em> are parallelized by default. It is thus advisable to globally configure the parallel processing setup. On Unix machines <em>multi-core</em> parallel processing can be used, that shares memory between the parallel processes. Windows supports only <em>socket-based</em> parallel processing and starts a separate R for each parallel process. Below we globally define the parallel processing setup depending on the operating system. For the present analysis we use 4 parallel processes.</p>
+<p>Most methods in <em>xcms</em> are parallelized by default. Below we define the parallel processing setup for the present analysis.</p>
+<div>
+<blockquote>
+<p><strong>Parallel processing setup</strong></p>
+<p>It is generally advisable to configure the parallel processing setup globally using <code><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register()</a></code>. On Unix machines <em>multi-core</em> parallel processing can be used, that shares memory between the parallel processes. Windows supports only <em>socket-based</em> parallel processing and starts a separate R for each parallel process. Below we globally define the parallel processing setup depending on the operating system. For the present analysis we use 4 parallel processes.</p>
+</blockquote>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">.Platform</span><span class="op">$</span><span class="va">OS.type</span> <span class="op">==</span> <span class="st">"unix"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/MulticoreParam-class.html" class="external-link">MulticoreParam</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
@@ -454,9 +367,9 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <section class="level2"><h3 id="chromatographic-peak-detection">Chromatographic peak detection<a class="anchor" aria-label="anchor" href="#chromatographic-peak-detection"></a>
 </h3>
-<p>The aim of the chromatographic peak detection is to identify and quantify signal in the raw MS data space representing signal from ions of compounds present in a sample. Data processing is performed separately for each data file and mass peak intensities with similar <em>m/z</em> are evaluated along retention time axis to identify chromatographic peaks. We use the <em>centWave</em> algorithm for peak detection. The most important parameter for <em>centWave</em> is the <code>peakwidth</code> which defines an approximate lower and upper expected width of chromatographic peaks in retention time dimension. Without any prior information, we need to derive this information from the data set. We therefore zoom into areas of the BPC that seem to contain signal from an ion.</p>
+<p>The aim of the chromatographic peak detection is to identify and quantify signal in the raw MS data space representing signal from ions of compounds present in a sample. Data processing is performed separately for each data file and mass peak intensities with similar <em>m/z</em> are evaluated along retention time axis to identify chromatographic peaks. We use the <em>centWave</em> algorithm for peak detection. The most important parameter for <em>centWave</em> is <code>peakwidth</code> which defines an approximate lower and upper expected width of chromatographic peaks in retention time dimension. Without any prior information, we need to derive this information from the data set. We therefore zoom into areas of the BPC that seem to contain signal from an ion.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">bpc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, aggregationFun <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bpc</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -491,7 +404,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>The width of this chromatographic peaks is about 8 seconds. We evaluate a second signal at the and of the chromatogram.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bpc</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -524,10 +437,16 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </div>
 <p>The width of the chromatographic peaks for that <em>m/z</em> slice seem to be around 15 seconds. Also, there seems to be a considerable shift in retention times between the samples.</p>
-<p>Based on these two example signals we define the <code>peakdwidth</code> for the present data set to be between and 5 and 20 seconds. For a <em>real</em> data analysis it is suggested to evaluate more signals, also eventually of internal standards or ions of compounds that are expected to be present in the sample.</p>
-<p>A second potentially data set-specific parameter of the <em>centWave</em> algorithm is <code>ppm</code>. It defines the maximum allowed deviation in <em>m/z</em> dimension of mass peaks in consecutive spectra considered to represent signal from the same ion. This scattering of mass peak’s <em>m/z</em> values can depend on the centroiding algorithm used. In addition, on TOF instruments, the scattering can depend on the intensity of the signal, with higher variation observed for low intensity peaks and increasing stability with higher signal. To illustrate this we below subset the full MS data from the first data file to the <em>m/z</em> and retention time range defined above and plot the individual mass peaks.</p>
+<p>Based on these two example signals we define the <code>peakdwidth</code> parameter for the present data set to be between and 5 and 20 seconds. For a <em>real</em> data analysis it is suggested to evaluate more signals, also eventually of internal standards or ions of compounds that are expected to be present in the sample.</p>
+<p>A second potentially data set-specific parameter of the <em>centWave</em> algorithm is <code>ppm</code>. It defines the maximum allowed deviation in <em>m/z</em> dimension of mass peaks in consecutive spectra considered to represent signal from the same ion. To illustrate this we below subset the full MS data from the first data file to the <em>m/z</em> and retention time range defined above and plot the individual mass peaks.</p>
+<div>
+<blockquote>
+<p><strong>Details on the <code>ppm</code> <em>centWave</em> parameter</strong></p>
+<p>The <code>ppm</code> parameter defines the expected (or observed) <em>m/z</em> deviation of mass peaks representing signal from the same compound/ion in consecutive spectra. This scattering of mass peak’s <em>m/z</em> values can depend on the centroiding algorithm used or the precision of the MS instrument. In addition, on TOF instruments, the scattering can depend on the intensity of the signal, with higher variation observed for low intensity peaks and increasing stability with higher signal.</p>
+</blockquote>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mse</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">filterMsLevel</span>, <span class="fl">1L</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">filterRt</span>, rt <span class="op">=</span> <span class="va">rtr_1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -543,7 +462,7 @@ Attaching package: 'zoo'</code></pre>
 <p>The individual mass peaks are shown in the lower panel in the plot above. For the present ion, the <em>m/z</em> values show a very low variance.</p>
 <p>We evaluate the signal also for the second <em>m/z</em> - retention time window defined above.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mse</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">filterMsLevel</span>, <span class="fl">1L</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">filterRt</span>, rt <span class="op">=</span> <span class="va">rtr_2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -559,7 +478,7 @@ Attaching package: 'zoo'</code></pre>
 <p>The scattering of <em>m/z</em> values looks larger, but is still below 0.001 Da. We nevertheless use a <code>ppm = 20</code> for the present data set - as we do not assume that ions from different compounds elute at the same time with a difference in ppm lower than 20.</p>
 <p>Below we define the settings for <em>centWave</em> and perform the chromatographic peak detection on the full data set. Note that it can also be helpful to test the different settings by performing peak detection on extracted ion chromatograms as described in <a href="https://rformassspectrometry.github.io/Metabonaut/" class="external-link">Metabonaut</a>. Parameter <code>chunkSize</code> defines the number of data files from which MS data should be loaded at a time. This parameter thus has an influence on the memory usage of the analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cwp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/findChromPeaks-centWave.html" class="external-link">CentWaveParam</a></span><span class="op">(</span></span>
 <span>    ppm <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    peakwidth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">20</span><span class="op">)</span>,</span>
@@ -571,7 +490,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>In most cases it is also advisable to perform a <em>peak postprocessing</em> to remove artifacts of the <em>centWave</em> peak detection (e.g. overlapping or split peaks). Below we perform such peak refinement which will merge partially or completely overlapping chromatographic peak, or those that are less than 2 seconds apart from each other, if the intensity below both apexes is lower than a certain proportion of the apex intensity of the lower intensity peak.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mnpp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/refineChromPeaks.html" class="external-link">MergeNeighboringPeaksParam</a></span><span class="op">(</span></span>
 <span>    expandRt <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    expandMz <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -584,7 +503,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>We next compare the number of identified peaks per sample as well as their <em>m/z</em> and retention time widths.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' split the detected chrom peaks per sample</span></span>
 <span><span class="va">pk_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split.data.frame</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mzmin"</span>, <span class="st">"mzmax"</span>, <span class="st">"rtmin"</span>, <span class="st">"rtmax"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -622,7 +541,7 @@ Attaching package: 'zoo'</code></pre>
 <p>The highest number of peaks was detected in the <em>PPL</em> sample. Apart from that sample, the numbers of detected peaks is comparable in the data set. Also the <em>m/z</em> width and the retention time widths. As expected, most of the identified chromatographic peaks are about 10 seconds wide. Also, their <em>m/z</em> width is below 10 ppm for most peaks, but some show also a larger <em>m/z</em> widths.</p>
 <p>We also evaluate the peak detection results on the two example <em>m/z</em> - retention time regions. Identified chromatographic peaks will be colored according to the sample group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, mz <span class="op">=</span> <span class="va">mzr_1</span>, rt <span class="op">=</span> <span class="va">rtr_1</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -630,7 +549,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing chromatographic peaks</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' define a color for each chromatographic peak</span></span>
 <span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_1</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>,</span>
@@ -647,7 +566,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, mz <span class="op">=</span> <span class="va">mzr_2</span>, rt <span class="op">=</span> <span class="va">rtr_2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -655,7 +574,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing chromatographic peaks</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' define a color for each chromatographic peak</span></span>
 <span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_2</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>,</span>
@@ -673,10 +592,16 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </section><section class="level2"><h3 id="retention-time-alignment">Retention time alignment<a class="anchor" aria-label="anchor" href="#retention-time-alignment"></a>
 </h3>
-<p>The aim of the retention time alignment step is to reduce differences observed in the elution time of compounds between different LC-MS runs. A variety of methods for this have been proposed and some are also implemented in <em>xcms</em>. We use the most straight forward approach that aligns chromatographic runs based on retention times of <em>anchor peaks</em>, i.e., compounds present in most of the samples of an experiment. To define these anchor peaks we must however perform an initial correspondence analysis to group chromatographic peaks with similar <em>m/z</em> and retention time across samples. We use the <em>peak density</em> method for this, which we configure below using the <code>PeakDensityParam</code>. For the initial correspondence we used more relaxed settings, also putting all samples into the same <em>sample group</em>. The important parameters are <code>bw</code> and <code>binSize</code>. The former defines the tolerance of retention time similarity, the latter the similarity of <em>m/z</em> values for chromatographic peaks from different samples to be considered to represent signal from ions of the same compound. Setting <code>binSize</code> is straight forward - it depends on the resolution of the instrument and the expected similarity of <em>m/z</em> values for the same ion. We set it to a value of <code>binSize = 0.01</code>, hence all chromatographic peaks with a difference in <em>m/z</em> smaller than 0.01 would be evaluated. The <code>bw</code> parameter is a bit more difficult to define. It should be defined based on observed data in the experiment, ideally, on EICs of closely eluting compounds with the same <em>m/z</em>. In our example we use the second example <em>m/z</em> - retention time range, because it seemed to contain signal from the same compound, but with quite large shifts between data files. We below <em>simulate</em> a correspondence analysis on this EIC. Other parameters defined are <code>minFraction</code>, which defines the minimum required proportion of samples of one of the sample groups defined with parameter <code>sampleGroups</code> in which a chromatographic peak is present, and <code>ppm</code> which, together with <code>binSize</code> defines the maximal accepted difference in chromatographic peaks’ <em>m/z</em> values to consider them for grouping.</p>
-<p>The <em>peak density</em> method groups chromatographic peaks into an LC-MS feature, if their <em>m/z</em> difference is smaller <code>binSize</code> (+ <code>ppm</code> of the <em>m/z</em>), the retention time of their apex is within one peak of the <em>peak density</em> curve and a chromatographic peak is present in at least <code>minFraction</code> of at least one of the sample groups defined with <code>sampleGroups</code>. Below we run a correspondence simulation with example settings.</p>
+<p>The aim of the retention time alignment step is to reduce differences observed in the elution time of compounds between different LC-MS runs. A variety of methods for this have been proposed and some are also implemented in <em>xcms</em>. We use the most straight forward approach that aligns chromatographic runs based on retention times of <em>anchor peaks</em>, i.e., compounds present in most of the samples of an experiment. To define these anchor peaks we must however perform an initial correspondence analysis and group chromatographic peaks with similar <em>m/z</em> and retention time across samples.</p>
+<p>We use the <em>peak density</em> correspondence method which groups chromatographic peaks into an LC-MS feature, if their <em>m/z</em> difference is smaller than <code>binSize</code> (+ <code>ppm</code> of the <em>m/z</em>), the retention time of their apex is within one peak of the <em>peak density</em> curve (which smoothness can be configured with parameter <code>bw</code>) and a chromatographic peak is present in at least <code>minFraction</code> of at least one of the sample groups defined with <code>sampleGroups</code>. For the initial correspondence we apply more relaxed settings and consider all samples to be in the same sample group (since we want to define anchor peaks that are present in most samples).</p>
+<div>
+<blockquote>
+<p><strong>Details on <code>PeakDensityParam</code> settings</strong></p>
+<p>The <em>peak density</em> correspondence method can be configured using the <code>PeakDensityParam</code>. For an initial correspondence used for retention time alignment more relaxed settings can be used, also putting all samples into the same <em>sample group</em>. The important parameters are <code>bw</code> and <code>binSize</code>. The former defines the tolerance of retention time similarity, the latter the similarity of <em>m/z</em> values for chromatographic peaks from different samples to be considered to represent signal from ions of the same compound. Setting <code>binSize</code> is straight forward - it depends on the resolution of the instrument and the expected similarity of <em>m/z</em> values for the same ion. We set it to a value of <code>binSize = 0.01</code>, hence all chromatographic peaks with a difference in <em>m/z</em> smaller than 0.01 would be evaluated. The <code>bw</code> parameter is a bit more difficult to define. It should be defined based on observed data in the experiment, ideally, on EICs of closely eluting compounds with the same <em>m/z</em>. In our example we use the second example <em>m/z</em> - retention time range, because it seemed to contain signal from the same compound, but with quite large shifts between data files. We below <em>simulate</em> a correspondence analysis on this EIC. Other parameters defined are <code>minFraction</code>, which defines the minimum required proportion of samples of one of the sample groups defined with parameter <code>sampleGroups</code> in which a chromatographic peak is present, and <code>ppm</code> which, together with <code>binSize</code> defines the maximal accepted difference in chromatographic peaks’ <em>m/z</em> values to consider them for grouping.</p>
+</blockquote>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">PeakDensityParam</a></span><span class="op">(</span></span>
 <span>    sampleGroups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    bw <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -698,7 +623,7 @@ Attaching package: 'zoo'</code></pre>
 <p>The upper panel of this plot shows the EIC, the lower panel the data considered for correspondence: it shows the retention time of the apex positions of all chromatographic peaks in that <em>m/z</em> slice on the x-axis against the sample in which the chromatographic peak was detected on the y-axis. The black solid line represents the <em>peak density estimate</em>, calculated based on the retention times of the chromatographic peaks and parameter <code>bw</code> with larger values of <code>bw</code> resulting in more smooth curves.</p>
 <p>With the used settings, in particular parameter <code>bw</code>, the present chromatographic peaks would be split into two separate LC-MS features (indicated with a grey rectangle in the lower panel). Assuming that all peaks in that region represent signal from ions of the same compound, we however want to group them into the same feature. We hence next increase the <code>bw</code> parameter and simulate the correspondence with these updated settings.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdp</span><span class="op">@</span><span class="va">bw</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -712,7 +637,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>Changing <code>bw</code> to 5 changed the density curve, but we still defined two separate features. We thus increase below <code>bw</code> to 7.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdp</span><span class="op">@</span><span class="va">bw</span> <span class="op">&lt;-</span> <span class="fl">7</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -726,12 +651,12 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>With a <code>bw = 7</code> a single feature was defined. We use these parameter for the initial correspondence analysis on the full data set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">groupChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pdp</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>For the retention time alignment we use the before mentioned <em>peak groups</em> method that aligns LC runs by minimizing retention time differences of so called anchor peaks. This alignment method is very robust and also flexible, allowing for example to align samples based on within-experiment QC samples, or against external reference data or based on manually defined anchor peaks. See <a href="https://rformassspectrometry.github.io/Metabonaut" class="external-link">Metabonaut</a> for examples and options. The method can be configured with the <code>PeakGroupsParam</code>. With <code>minFraction = 0.9</code> we below define anchor peaks as those LC-MS features for which a chromatographic peak was identified in 90% of the samples in the experiment. The observed retention time differences of these are used to model a curve along retention time dimension which can then be used to align the retention times of all samples. The smoothness of this curve along the retention time dimension can be configured with <code>span</code>, values between 0.4 and 0.7 work for most cases.</p>
+<p>For the retention time alignment we use the before mentioned <em>peak groups</em> method that aligns LC runs by minimizing retention time differences of so called anchor peaks. This alignment method is very robust and also flexible, allowing for example to align samples based on within-experiment QC samples, or against external reference data or based on manually defined anchor peaks. See <a href="https://rformassspectrometry.github.io/Metabonaut" class="external-link">Metabonaut</a> for examples and options. The method can be configured with <code><a href="https://rdrr.io/pkg/xcms/man/adjustRtime.html" class="external-link">PeakGroupsParam()</a></code>. With <code>minFraction = 0.9</code> we below define anchor peaks as those LC-MS features (defined by the initial correspondence analysis) for which a chromatographic peak was identified in 90% of the samples of the whole experiment. The observed retention time differences of these are used to model a curve along retention time dimension which is then used to align the retention times of all samples. The smoothness of this curve can be configured with parameter <code>span</code> (values between 0 and 1; values around 0.5 work in most cases).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pgp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/adjustRtime.html" class="external-link">PeakGroupsParam</a></span><span class="op">(</span></span>
 <span>    minFraction <span class="op">=</span> <span class="fl">0.90</span>,</span>
 <span>    span <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
@@ -742,7 +667,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>The effect of this alignment can be visualized with the <code><a href="https://rdrr.io/pkg/xcms/man/plotAdjustedRtime.html" class="external-link">plotAdjustedRtime()</a></code> function. It plots the adjusted retention times of each sample on the x-axis against the difference between the adjusted and raw retention times on the y-axis as a solid line. Retention times of anchor peaks in each sample are indicated with individual data points. These should ideally be placed along the full retention time range of the experiment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' visualize alignment results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotAdjustedRtime.html" class="external-link">plotAdjustedRtime</a></span><span class="op">(</span><span class="va">mse</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>,</span>
 <span>                  peakGroupsPch <span class="op">=</span> <span class="fl">21</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -759,14 +684,14 @@ Attaching package: 'zoo'</code></pre>
 <p>Anchor points span the full retention time range. Retention time adjustments for most samples were below 2-4 seconds, with the exception of 3 samples for which a considerably larger adjustment is present after 500 seconds, and the PPL sample with larger retention time differences after 650 seconds.</p>
 <p>We next evaluate the alignment results based on the BPC before and after alignment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' create a BPC after adjustment; chromPeaks = "none" only creates the BPC</span></span>
 <span><span class="co">#' without extracting also identified chromatographic peaks.</span></span>
 <span><span class="va">bpc_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, chromPeaks <span class="op">=</span> <span class="st">"none"</span>, aggregationFun <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bpc</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"BPC, raw"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -774,20 +699,20 @@ Attaching package: 'zoo'</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bpc_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"BPC, adjusted"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-29-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-29-1.png" width="912"></p>
+<figcaption>BPC before (top) and after (bottom) retention time alignment.</figcaption></figure>
 </div>
 </div>
 </div>
 <p>Misalignment of signal at the later stage of the chromatography seems to be reduced. We in addition evaluate the effect of retention time alignment on the two example EICs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_1_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, rt <span class="op">=</span> <span class="va">rtr_1</span>, mz <span class="op">=</span> <span class="va">mzr_1</span>, chromPeaks <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -795,20 +720,20 @@ Attaching package: 'zoo'</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-30-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-30-1.png" width="912"></p>
+<figcaption>First example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
 </div>
 </div>
 </div>
-<p>For this early retention time range already the raw signal was aligned well.</p>
+<p>For this early retention time range already the raw signal was well aligned.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_2_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, rt <span class="op">=</span> <span class="va">rtr_2</span>, mz <span class="op">=</span> <span class="va">mzr_2</span>, chromPeaks <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -816,15 +741,15 @@ Attaching package: 'zoo'</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-31-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-31-1.png" width="912"></p>
+<figcaption>Second example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
 </div>
 </div>
 </div>
-<p>This later retention time range shows clear, and strong, differences in retention times of 4 samples. While the <em>PPL</em> sample could be aligned quite well using the above settings, 3 samples still show shifts in retention times. We re-perform the alignment reducing the value for the <code>span</code> parameter to allow a more local alignment of the samples. We thus below first <em>undo</em> the retention time alignment, re-perform the initial correspondence analysis and perform the alignment with the changed settings for parameter <code>span</code>.</p>
+<p>This later retention time range shows clear, and strong, differences in retention times of 4 samples. While the <em>PPL</em> sample could be aligned quite well using the above settings, 3 samples still show considerable shifts in retention times. We thus re-perform the alignment reducing the value for the <code>span</code> parameter to switch to a more <em>local</em> alignment of the samples. We below first <em>undo</em> the retention time alignment, re-perform the initial correspondence analysis and perform the alignment with the changed settings for parameter <code>span</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' remove retention time alignment results</span></span>
 <span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">dropAdjustedRtime</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span></span>
 <span><span class="co">#' re-perform initial correspondence</span></span>
@@ -840,7 +765,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>Evaluating the impact of changing this parameter.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' visualize alignment results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotAdjustedRtime.html" class="external-link">plotAdjustedRtime</a></span><span class="op">(</span><span class="va">mse</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>,</span>
 <span>                  peakGroupsPch <span class="op">=</span> <span class="fl">21</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -856,7 +781,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>A stronger alignment can be observed for the retention time area from 750 to 800 seconds. The results for the first example EIC did not change.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_1_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, rt <span class="op">=</span> <span class="va">rtr_1</span>, mz <span class="op">=</span> <span class="va">mzr_1</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -864,7 +789,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing chromatographic peaks</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#' Setting peakType = "none" prevents identified chromatographic peaks to be</span></span>
 <span><span class="co">#' indicated in the plot.</span></span>
@@ -874,15 +799,15 @@ Attaching package: 'zoo'</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-34-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-34-1.png" width="912"></p>
+<figcaption>First example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
 </div>
 </div>
 </div>
 <p>While for the second EIC the alignment improved.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_2_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, rt <span class="op">=</span> <span class="va">rtr_2</span>, mz <span class="op">=</span> <span class="va">mzr_2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -890,7 +815,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing chromatographic peaks</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -898,29 +823,29 @@ Attaching package: 'zoo'</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-35-1.png" width="672"></p>
-</figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-35-1.png" width="912"></p>
+<figcaption>Second example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
 </div>
 </div>
 </div>
 <p>Note that in most cases it is not necessary that all samples are perfectly aligned. Some variation in retention time can be accounted for in the final correspondence analysis.</p>
 </section><section class="level2"><h3 id="correspondence-analysis">Correspondence analysis<a class="anchor" aria-label="anchor" href="#correspondence-analysis"></a>
 </h3>
-<p>The correspondence analysis groups chromatographic peaks from different samples, all assumed to represent signal from ions of the same compound, into LC-MS features. Signals are generally grouped together based on similarity of their <em>m/z</em> and retention times. We use the <em>peak density</em> method and, similarly to what we did in the previous section, we first evaluate the impact of different parameter settings on the expected results. Also, for the final correspondence we use the <em>sample_name</em> for parameter <code>sampleGroup</code>. Combined with setting <code>minFraction = 0.6</code>, an LC-MS feature is defined if a chromatographic peak is present in at least 60% of the replicates per sample.</p>
+<p>The correspondence analysis groups chromatographic peaks from different samples, all assumed to represent signal from ions of the same compound, into LC-MS features. Signals are generally grouped together based on similarity of their <em>m/z</em> and retention times. We use the <em>peak density</em> method and, similarly to what we did in the previous section, we first evaluate the impact of different parameter settings on the expected results. Also, for the final correspondence we use the samples’ <em>sample_name</em> for parameter <code>sampleGroup</code>. Combined with setting <code>minFraction = 0.67</code>, an LC-MS feature is defined if a chromatographic peak is present in at least 67% of the replicates per sample (i.e., 2 out of 3).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Defining the settings for the peak density correspondence method</span></span>
 <span><span class="va">pdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">PeakDensityParam</a></span><span class="op">(</span></span>
 <span>    sampleGroups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_name</span>,</span>
-<span>    minFraction <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>    minFraction <span class="op">=</span> <span class="fl">0.67</span>,</span>
 <span>    binSize <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>    ppm <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    bw <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>We evaluate these settings, in particular the effect of <code>bw</code> on the first example EIC.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_1_adj</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_1_adj</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>,</span>
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -934,7 +859,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>For that EIC the settings worked nicely. Simulating the correspondence for the second example EIC.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_2_adj</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2_adj</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>,</span>
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -948,7 +873,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>Also for the second EIC all chromatographic peaks got grouped into the same feature. Ideally, correspondence parameters should also be simulated on more complex signals, e.g. regions with co- or closely eluting compounds. We below expand the retention time window for the <em>m/z</em> slice of the first example EIC.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, mz <span class="op">=</span> <span class="va">mzr_1</span>, rt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">150</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -956,7 +881,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing chromatographic peaks</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">a</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>,</span>
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -970,7 +895,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>There seem to be signal from 3 different compounds in that <em>m/z</em> slice. Using the settings above, in particular with <code>bw = 7</code> the apparently different chromatographic signals at about 105 and 115 seconds are grouped into the same LC-MS feature as indicated with the grey rectangle in the plot above. Unless we want that these signals are grouped together, we need to reduce the value of <code>bw</code>. Below we simulate a correspondence using <code>bw = 3</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pdp</span><span class="op">@</span><span class="va">bw</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">a</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>,</span>
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -984,7 +909,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>With <code>bw = 3</code> we successfully grouped the signals into 3 distinct features. We next evaluate whether with these updated setting we would still group the signal from the second example EIC into a single feature.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_2_adj</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2_adj</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>,</span>
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
@@ -998,12 +923,12 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>All chromatographic peaks for this region were grouped into a single region. We thus proceed and use these settings for the correspondence analysis of the full data set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">groupChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pdp</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>It is advised to check the results again after correspondence analysis, also to evaluate the impact of the other settings like <code>binSize</code> and <code>ppm</code> and assure validity of the defined LC-MS features. Ideally, a larger number of EICs/features should be checked. We below extract the first example EIC again and evaluate the correspondence results for it. Here it is important to set <code>simulate = FALSE</code> to show the actual results.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, rt <span class="op">=</span> <span class="va">rtr_1</span>, mz <span class="op">=</span> <span class="va">mzr_1</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -1014,7 +939,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing features</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb100"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' plot the actual correspondence results by setting `simulate = FALSE`</span></span>
 <span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_1</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_1</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
@@ -1030,7 +955,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>All chromatographic peaks were grouped into the same feature. The retention time (<code>"rtmed"</code>) of the feature is indicated with a dashed vertical line. We next evaluate the results also on the second example EIC.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eic_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, rt <span class="op">=</span> <span class="va">rtr_2</span>, mz <span class="op">=</span> <span class="va">mzr_2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -1041,7 +966,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing features</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb105"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' plot the actual correspondence results by setting `simulate = FALSE`</span></span>
 <span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">eic_2</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
@@ -1057,7 +982,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 <p>Also for this retention time region, chromatographic peaks were grouped into a single feature. At last we evaluate the expanded retention time region of the <em>m/z</em> range of the first example EIC.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">chromatogram</a></span><span class="op">(</span><span class="va">mse</span>, mz <span class="op">=</span> <span class="va">mzr_1</span>, rt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">150</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Extracting chromatographic data</code></pre>
@@ -1068,7 +993,7 @@ Attaching package: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing features</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb110"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_peak</span> <span class="op">&lt;-</span> <span class="va">col_sample</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">chromPeaks</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span><span class="op">[</span>, <span class="st">"sample"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">a</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span>,</span>
@@ -1082,43 +1007,43 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </div>
 <p>For this region, chromatographic peaks were grouped into 3 distinct features.</p>
-<p>The results from the correspondence analysis can be extracted from the result object using the <code><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">featureDefinitions()</a></code> and <code><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html" class="external-link">featureValues()</a></code> functions. The former returns the <em>definition</em> of the LC-MS features, i.e. their <em>m/z</em> and retention time, the latter the actual abundance estimates in the different samples. We below count the number of features that were defined by the correspondence analysis:</p>
+<p>The results from the correspondence analysis can be extracted from the result object using the <code><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">featureDefinitions()</a></code> and <code><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html" class="external-link">featureValues()</a></code> functions. The former returns the <em>definition</em> of the LC-MS features, i.e., their <em>m/z</em> and retention time, the latter the actual abundance estimates in the different samples. We below count the number of features that were defined by the correspondence analysis:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">featureDefinitions</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 18420</code></pre>
+<pre><code>[1] 14808</code></pre>
 </div>
 </div>
 <p>A quite large number of features was defined. This is mostly due to the setting for the <code>minFraction</code> parameter, which required a chromatographic peak to be detected in only 2 out of the 3 replicates for each individual sample to define, and combine them into, a feature.</p>
 <p>We can now extract the abundance estimates of all features with the <code><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html" class="external-link">featureValues()</a></code> function. Below we extract this data matrix and assign the unique sample name as column names (by default the MS data file name is used).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html" class="external-link">featureValues</a></span><span class="op">(</span><span class="va">mse</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">fvals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_desc</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fvals</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>         A15M_R1   A15M_R2 A15M_R3  A45M_R1 A45M_R2 A45M_R3  A5M_R1 A5M_R2
-FT00001 164416.1        NA      NA       NA      NA      NA      NA     NA
-FT00002       NA  505819.5      NA       NA      NA      NA      NA     NA
-FT00003       NA        NA      NA       NA      NA      NA      NA     NA
-FT00004       NA        NA      NA       NA      NA      NA      NA     NA
-FT00005       NA        NA      NA       NA      NA      NA      NA     NA
-FT00006       NA 3392535.0      NA 10258668      NA 9478585 5519297     NA
-          A5M_R3      M_R1     M_R2     M_R3    PPL_R1
-FT00001       NA  307992.7       NA 193703.4        NA
-FT00002 582024.2  539838.4 624712.1       NA        NA
-FT00003       NA        NA       NA       NA  127518.4
-FT00004       NA        NA       NA       NA  201678.3
-FT00005       NA        NA       NA       NA  502676.9
-FT00006       NA 3684237.3       NA       NA 6198111.3</code></pre>
+<pre><code>        A15M_R1 A15M_R2 A15M_R3  A45M_R1 A45M_R2 A45M_R3  A5M_R1 A5M_R2 A5M_R3
+FT00001      NA      NA      NA       NA      NA      NA      NA     NA     NA
+FT00002      NA      NA      NA       NA      NA      NA      NA     NA     NA
+FT00003      NA      NA      NA       NA      NA      NA      NA     NA     NA
+FT00004      NA 3392535      NA 10258668      NA 9478585 5519297     NA     NA
+FT00005      NA      NA      NA  9521460      NA 6722026 2419544     NA     NA
+FT00006      NA      NA      NA  4874998      NA 5897690 3338828     NA     NA
+           M_R1 M_R2 M_R3    PPL_R1
+FT00001      NA   NA   NA  127518.4
+FT00002      NA   NA   NA  201678.3
+FT00003      NA   NA   NA  502676.9
+FT00004 3684237   NA   NA 6198111.3
+FT00005 3405333   NA   NA 2953772.8
+FT00006      NA   NA   NA 6931111.8</code></pre>
 </div>
 </div>
 <p>Columns in this abundance matrix are samples, rows features. For the present data set there are a large number of missing values. A missing value indicates failure to detect a chromatographic peak for the <em>m/z</em> - retention time region of a feature in a sample. This can have multiple reasons: the compound might simply not be present in the sample or the original signal is too noisy, to low in abundance, or does not fit the expected shape for the peak detection algorithm to identify a chromatographic peak.</p>
 <p>Below we calculate and plot the number of missing values per sample.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' determine the number of missing values per sample and plot them</span></span>
 <span><span class="va">nas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">fvals</span>, MARGIN <span class="op">=</span> <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -1135,7 +1060,7 @@ FT00006       NA 3684237.3       NA       NA 6198111.3</code></pre>
 </h3>
 <p>To reduce the number of missing values and avoid data imputation we perform <em>gap-filling</em>: in samples with a missing value for a feature (i.e., in which no chromatographic peak was detected) we integrate all intensities measured within the <em>m/z</em> - retention time area of the feature. By default, this area is defined as the 25% to 75% quantile of the lower, respectively upper <em>m/z</em> (and retention time) boundary of all chromatographic peaks of a feature. As an example we calculate this area with the <code><a href="https://rdrr.io/pkg/xcms/man/XcmsExperiment.html" class="external-link">featureArea()</a></code> function for the first 6 features:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb116"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XcmsExperiment.html" class="external-link">featureArea</a></span><span class="op">(</span><span class="va">mse</span>,</span>
 <span>            mzmin <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">z</span>, probs <span class="op">=</span> <span class="fl">0.25</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>            mzmax <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">z</span>, probs <span class="op">=</span> <span class="fl">0.75</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -1143,45 +1068,45 @@ FT00006       NA 3684237.3       NA       NA 6198111.3</code></pre>
 <span>            rtmax <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">z</span>, probs <span class="op">=</span> <span class="fl">0.75</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-class.html" class="external-link">featureDefinitions</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           mzmin    mzmax     rtmin     rtmax
-FT00001 150.0268 150.0270  21.50778  35.61727
-FT00002 150.0268 150.0272 471.63104 477.93682
-FT00003 150.0268 150.0270 588.36721 594.23222
-FT00004 150.0789 150.0791 166.75115 175.29982</code></pre>
+<pre><code>           mzmin    mzmax    rtmin    rtmax
+FT00001 150.0268 150.0270 588.3672 594.2322
+FT00002 150.0789 150.0791 166.7511 175.2998
+FT00003 150.0912 150.0916 245.4199 254.4996
+FT00004 150.1022 150.1030 812.2422 837.7419</code></pre>
 </div>
 </div>
 <p>Thus, for gap-filling, missing values are replaced with the integrated signal measured by the MS instrument within these <em>m/z</em> - retention time boundaries.</p>
 <p>We below perform the gap-filling on the full data set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cpap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/fillChromPeaks.html" class="external-link">ChromPeakAreaParam</a></span><span class="op">(</span>minMzWidthPpm <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/fillChromPeaks.html" class="external-link">fillChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">cpap</span>, chunkSize <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>We extract the feature values again and determine the number of missing values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/XCMSnExp-peak-grouping-results.html" class="external-link">featureValues</a></span><span class="op">(</span><span class="va">mse</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">fvals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_desc</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fvals</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          A15M_R1   A15M_R2    A15M_R3    A45M_R1   A45M_R2   A45M_R3    A5M_R1
-FT00001  164416.1  211160.7   179495.0   242782.1  176330.8  186166.2  150508.0
-FT00002  386495.6  505819.5   450297.8   248672.5  214443.2  352505.0  618923.7
-FT00003        NA        NA         NA         NA        NA        NA        NA
-FT00004        NA        NA         NA         NA        NA        NA        NA
-FT00005  725629.5  395193.8   609652.6   709672.0  712048.4  325696.1  582689.3
-FT00006 6667479.8 3392535.0 10874295.1 10258668.4 9681633.2 9478584.9 5519297.2
-            A5M_R2    A5M_R3      M_R1      M_R2      M_R3    PPL_R1
-FT00001   174531.5  236839.0  307992.7  146941.7  193703.4  784328.6
-FT00002   565708.8  582024.2  539838.4  624712.1  429943.2        NA
-FT00003         NA        NA   56655.1        NA        NA  127518.4
-FT00004         NA        NA        NA        NA        NA  201678.3
-FT00005   737115.2  653138.0  470292.9  357432.0  463980.4  502676.9
-FT00006 10336613.6 6591140.0 3684237.3 6720028.6 8384267.6 6198111.3</code></pre>
+<pre><code>          A15M_R1   A15M_R2    A15M_R3  A45M_R1   A45M_R2   A45M_R3    A5M_R1
+FT00001        NA        NA         NA       NA        NA        NA        NA
+FT00002        NA        NA         NA       NA        NA        NA        NA
+FT00003  725629.5  395193.8   609652.6   709672  712048.4  325696.1  582689.3
+FT00004 6667479.8 3392535.0 10874295.1 10258668 9681633.2 9478584.9 5519297.2
+FT00005 4424076.9 5594730.1  8961144.0  9521460 7483711.7 6722025.8 2419544.4
+FT00006 5058937.4 6075048.7  8164059.6  4874998 7531471.2 5897690.0 3338828.4
+            A5M_R2  A5M_R3      M_R1    M_R2      M_R3    PPL_R1
+FT00001         NA      NA   56655.1      NA        NA  127518.4
+FT00002         NA      NA        NA      NA        NA  201678.3
+FT00003   737115.2  653138  470292.9  357432  463980.4  502676.9
+FT00004 10336613.6 6591140 3684237.3 6720029 8384267.6 6198111.3
+FT00005 10403154.3 5371937 3405332.8 5232400 8119441.8 2953772.8
+FT00006  7827918.6 6753662 5360799.4 4505007 7968544.6 6931111.8</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' determine the number of missing values per sample and plot them</span></span>
 <span><span class="va">nas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">fvals</span>, MARGIN <span class="op">=</span> <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
