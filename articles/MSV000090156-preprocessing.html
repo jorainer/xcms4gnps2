@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xcms4gnps2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -292,21 +292,22 @@
 <p>Based on the BPC and TIC there seems to be little retention time shifts between the samples. Also, no signal seems to be present before 20 seconds and after 850 seconds. Thus, we below filter the data set to spectra acquired within this retention time range.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">mse</span>, <span class="va">filterRt</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">850</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#' filter the data set to a retention time range from 20 to 850 seconds</span></span>
+<span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">mse</span>, <span class="va">filterRt</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">850</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>BPC and TIC aggregate data along the <em>m/z</em> dimension per spectrum (retention time) to compare the signal measured along the retention time. To compare the <em>mass</em> or ion content of the individual samples/measurement runs we in addition aggregate data along the retention time, for distinct <em>m/z</em> values.</p>
 <p>To this end we first bin each spectrum to get discrete and similar <em>m/z</em> values within the data set.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' Bin mass peaks into into discrete m/z bins of 0.02 Da.</span></span>
+<code class="sourceCode R"><span><span class="co">#' bin mass peaks into into discrete m/z bins of 0.02 Da.</span></span>
 <span><span class="va">s_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">spectra</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">filterMsLevel</a></span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">bin</a></span><span class="op">(</span>binSize <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#' Combine all spectra within the same sample into a single spectrum reporting</span></span>
-<span><span class="co">#' the maximum intensity of all mass peaks with the same m/z bin</span></span>
+<span><span class="co">#' combine all spectra within the same sample into a single spectrum</span></span>
+<span><span class="co">#' reporting the maximum intensity of all mass peaks with the same m/z bin</span></span>
 <span><span class="va">bps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/combineSpectra.html" class="external-link">combineSpectra</a></span><span class="op">(</span><span class="va">s_bin</span>, f <span class="op">=</span> <span class="va">s_bin</span><span class="op">$</span><span class="va">dataOrigin</span>, intensityFun <span class="op">=</span> <span class="va">max</span><span class="op">)</span></span>
-<span><span class="co">#' The same but reporting the sum of intensities per m/z bin</span></span>
+<span><span class="co">#' the same but reporting the sum of intensities per m/z bin</span></span>
 <span><span class="va">tis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/combineSpectra.html" class="external-link">combineSpectra</a></span><span class="op">(</span><span class="va">s_bin</span>, f <span class="op">=</span> <span class="va">s_bin</span><span class="op">$</span><span class="va">dataOrigin</span>, intensityFun <span class="op">=</span> <span class="va">sum</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>We have thus a single aggregated mass spectrum per sample. These <em>base peak spectra</em> are plotted below.</p>
@@ -480,7 +481,8 @@
 <p>Below we define the settings for <em>centWave</em> and perform the chromatographic peak detection on the full data set. Note that it can also be helpful to test the different settings by performing peak detection on extracted ion chromatograms as described in <a href="https://rformassspectrometry.github.io/Metabonaut/" class="external-link">Metabonaut</a>. Parameter <code>chunkSize</code> defines the number of data files from which MS data should be loaded at a time. This parameter thus has an influence on the memory usage of the analysis.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cwp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/findChromPeaks-centWave.html" class="external-link">CentWaveParam</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co">#' configure and perform chromatographic peak detection</span></span>
+<span><span class="va">cwp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/findChromPeaks-centWave.html" class="external-link">CentWaveParam</a></span><span class="op">(</span></span>
 <span>    ppm <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    peakwidth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">20</span><span class="op">)</span>,</span>
 <span>    snthresh <span class="op">=</span> <span class="fl">8</span>,</span>
@@ -492,7 +494,8 @@
 <p>In most cases it is also advisable to perform a <em>peak postprocessing</em> to remove artifacts of the <em>centWave</em> peak detection (e.g. overlapping or split peaks). Below we perform such peak refinement which will merge partially or completely overlapping chromatographic peak, or those that are less than 2 seconds apart from each other, if the intensity below both apexes is lower than a certain proportion of the apex intensity of the lower intensity peak.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mnpp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/refineChromPeaks.html" class="external-link">MergeNeighboringPeaksParam</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co">#' configure and perform *peak refinement*</span></span>
+<span><span class="va">mnpp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/refineChromPeaks.html" class="external-link">MergeNeighboringPeaksParam</a></span><span class="op">(</span></span>
 <span>    expandRt <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    expandMz <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    ppm <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -551,9 +554,9 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
-</figure>
+<figcaption>Chromatographic peak detection results on the first example EIC.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -570,9 +573,9 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
-</figure>
+<figcaption>Chromatographic peak detection results on the second example EIC.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -600,9 +603,9 @@
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
-</figure>
+<figcaption>Correspondence analysis simulation on the second example EIC.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -615,9 +618,9 @@
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-24-1.png" width="672"></p>
-</figure>
+<figcaption>Correspondence analysis simulation with <code>bw = 5</code>.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -629,21 +632,23 @@
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-25-1.png" width="672"></p>
-</figure>
+<figcaption>Correspondence analysis simulation with <code>bw = 7</code>.</figcaption></figure>
 </div>
 </div>
 </div>
 <p>With a <code>bw = 7</code> a single feature was defined. We use these parameter for the initial correspondence analysis on the full data set.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">groupChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pdp</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#' perform initial correspondence analysis to group chromatographic peaks</span></span>
+<span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">groupChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pdp</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>For the retention time alignment we use the before mentioned <em>peak groups</em> method that aligns LC runs by minimizing retention time differences of so called anchor peaks. This alignment method is very robust and also flexible, allowing for example to align samples based on within-experiment QC samples, or against external reference data or based on manually defined anchor peaks. See <a href="https://rformassspectrometry.github.io/Metabonaut" class="external-link">Metabonaut</a> for examples and options. The method can be configured with <code><a href="https://rdrr.io/pkg/xcms/man/adjustRtime.html" class="external-link">PeakGroupsParam()</a></code>. With <code>minFraction = 0.9</code> we below define anchor peaks as those LC-MS features (defined by the initial correspondence analysis) for which a chromatographic peak was identified in 90% of the samples of the whole experiment. The observed retention time differences of these are used to model a curve along retention time dimension which is then used to align the retention times of all samples. The smoothness of this curve can be configured with parameter <code>span</code> (values between 0 and 1; values around 0.5 work in most cases).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pgp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/adjustRtime.html" class="external-link">PeakGroupsParam</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co">#' configure and run retention time alignment</span></span>
+<span><span class="va">pgp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/adjustRtime.html" class="external-link">PeakGroupsParam</a></span><span class="op">(</span></span>
 <span>    minFraction <span class="op">=</span> <span class="fl">0.90</span>,</span>
 <span>    span <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
 <span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/adjustRtime.html" class="external-link">adjustRtime</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pgp</span><span class="op">)</span></span></code></pre></div>
@@ -794,7 +799,7 @@
 <p>The correspondence analysis groups chromatographic peaks from different samples, all assumed to represent signal from ions of the same compound, into LC-MS features. Signals are generally grouped together based on similarity of their <em>m/z</em> and retention times. We use the <em>peak density</em> method and, similarly to what we did in the previous section, we first evaluate the impact of different parameter settings on the expected results. Also, for the final correspondence we use the samples’ <em>sample_name</em> for parameter <code>sampleGroup</code>. Combined with setting <code>minFraction = 0.67</code>, an LC-MS feature is defined if a chromatographic peak is present in at least 67% of the replicates per sample (i.e., 2 out of 3).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' Defining the settings for the peak density correspondence method</span></span>
+<code class="sourceCode R"><span><span class="co">#' configure the *peak density* correspondence method</span></span>
 <span><span class="va">pdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">PeakDensityParam</a></span><span class="op">(</span></span>
 <span>    sampleGroups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_name</span>,</span>
 <span>    minFraction <span class="op">=</span> <span class="fl">0.67</span>,</span>
@@ -810,9 +815,9 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-37-1.png" width="672"></p>
-</figure>
+<figcaption>Simulation of correspondence analysis on the first example EIC.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -824,9 +829,9 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-38-1.png" width="672"></p>
-</figure>
+<figcaption>Simulation of correspondence analysis on the second example EIC.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -840,9 +845,9 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-39-1.png" width="672"></p>
-</figure>
+<figcaption>Simulation of correspondence analysis on an expanded RT window.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -854,9 +859,9 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-40-1.png" width="672"></p>
-</figure>
+<figcaption>Effect of changing to <code>bw = 3</code> for the correspondence analysis.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -868,16 +873,17 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-41-1.png" width="672"></p>
-</figure>
+<figcaption>Effect of <code>bw = 3</code> on correspondence results of the second example EIC.</figcaption></figure>
 </div>
 </div>
 </div>
 <p>All chromatographic peaks for this region were grouped into a single region. We thus proceed and use these settings for the correspondence analysis of the full data set.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">groupChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pdp</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#' perform correspondence analysis on the full data set</span></span>
+<span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/groupChromPeaks.html" class="external-link">groupChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">pdp</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>It is advised to check the results again after correspondence analysis, also to evaluate the impact of the other settings like <code>binSize</code> and <code>ppm</code> and assure validity of the defined LC-MS features. Ideally, a larger number of EICs/features should be checked. We below extract the first example EIC again and evaluate the correspondence results for it. Here it is important to set <code>simulate = FALSE</code> to show the actual results.</p>
 <div class="cell">
@@ -1005,7 +1011,8 @@ FT00004 150.1022 150.1030 812.2422 837.7419</code></pre>
 <p>We below perform the gap-filling on the full data set.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cpap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/fillChromPeaks.html" class="external-link">ChromPeakAreaParam</a></span><span class="op">(</span>minMzWidthPpm <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">#' configure and perform gap-filling</span></span>
+<span><span class="va">cpap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/fillChromPeaks.html" class="external-link">ChromPeakAreaParam</a></span><span class="op">(</span>minMzWidthPpm <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/fillChromPeaks.html" class="external-link">fillChromPeaks</a></span><span class="op">(</span><span class="va">mse</span>, param <span class="op">=</span> <span class="va">cpap</span>, chunkSize <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>We extract the feature values again and determine the number of missing values.</p>
@@ -1045,8 +1052,190 @@ FT00006  7827918.6 6753662 5360799.4 4505007 7968544.6 6931111.8</code></pre>
 </div>
 </div>
 <p>A considerable amount of values could thus be <em>rescued</em>.</p>
-</section></section><section class="section level2"><h2 id="formatting-and-exporting-data-for-fbms">Formatting and exporting data for FBMS<a class="anchor" aria-label="anchor" href="#formatting-and-exporting-data-for-fbms"></a>
+</section></section><section class="section level2"><h2 id="extract-fragment-spectra-for-lc-ms-features">Extract fragment spectra for LC-MS features<a class="anchor" aria-label="anchor" href="#extract-fragment-spectra-for-lc-ms-features"></a>
 </h2>
+<p>After preprocessing, we next identify and extract the MS2 spectra for the defined LC-MS features. We use the <code><a href="https://rdrr.io/pkg/xcms/man/featureSpectra.html" class="external-link">featureSpectra()</a></code> method, that identifies for each of the features’ chromatographic peaks MS2 spectra (within the same sample!) with their retention time and precursor <em>m/z</em> within the retention time and <em>m/z</em> range of the chromatographic peak.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' identify MS2 spectra for features</span></span>
+<span><span class="va">ms2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xcms/man/featureSpectra.html" class="external-link">featureSpectra</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span></span>
+<span><span class="va">ms2</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MSn data (Spectra) with 21917 spectra in a MsBackendMzR backend:
+        msLevel     rtime scanIndex
+      &lt;integer&gt; &lt;numeric&gt; &lt;integer&gt;
+1             2   169.361       834
+2             2   169.909       837
+3             2   170.225       844
+4             2   169.786       845
+5             2   169.721       844
+...         ...       ...       ...
+21913         2   748.486      3747
+21914         2   747.600      3748
+21915         2   744.174      3679
+21916         2   748.223      3744
+21917         2   749.801      3791
+ ... 40 more variables/columns.
+
+file(s):
+Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML
+Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
+Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
+ ... 10 more files
+Processing:
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+ ...3 more processings. Use 'processingLog' to list all. </code></pre>
+</div>
+</div>
+<p>We can have multiple, or no, MS2 spectra per feature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' count the number of MS2 spectra per feature</span></span>
+<span><span class="va">ms2_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">ms2</span><span class="op">$</span><span class="va">feature_id</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#' the number of LC-MS features with at least one MS2 spectrum:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ms2_count</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3091</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' the average number of MS2 spectra per feature:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">ms2_count</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7.090586</code></pre>
+</div>
+</div>
+<p>We next inspect some of the identified MS2 spectra.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' select MS2 spectra for the first feature</span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="va">ms2</span><span class="op">[</span><span class="va">ms2</span><span class="op">$</span><span class="va">feature_id</span> <span class="op">==</span> <span class="va">ms2</span><span class="op">$</span><span class="va">feature_id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">#' plot the spectra</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-55-1.png" width="912"></p>
+<figcaption>MS2 spectra for one LC-MS feature.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>All MS2 spectra look similar - we next calculate also a pairwise similarity between them and visualize the results as a heatmap.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' calculate dot product similarity</span></span>
+<span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">compareSpectra</a></span><span class="op">(</span><span class="va">a</span>, ppm <span class="op">=</span> <span class="fl">10</span>, tolerance <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-56-1.png" width="912"></p>
+<figcaption>Pairwise spectra similarity between MS2 spectra of one feature.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Similarity between all MS2 spectra is very high (above 0.92).</p>
+<p>We next combine the individual MS2 spectra of a feature to a single <em>consensus</em> spectrum.</p>
+<div>
+<blockquote>
+<p><strong>Options to combine spectra</strong></p>
+<p>Multiple spectra can be combined into a single spectrum using the <code><a href="https://rdrr.io/pkg/Spectra/man/combineSpectra.html" class="external-link">combineSpectra()</a></code> function which provides a large number of options and parameters for this task, including the possibility to provide a custom function to combine the fragment peaks. By default (with parameter <code>peaks = "union"</code>), the combined spectrum contains <strong>all</strong> mass peaks of all input spectra. The option <code>peaks = "intersect"</code> allows to retain only peaks that are present in a certain proportion of input spectra. Parameters <code>ppm</code> and <code>tolerance</code> define the required similarity in the peaks’ <em>m/z</em> value to be considered <em>the same</em>. The groups of spectra to be combined are specified with parameter <code>f</code> and a potential splitting of the input <code>Spectra</code> object for parallel processing with parameter <code>p</code>.</p>
+</blockquote>
+</div>
+<p>As an example, we combine MS2 spectra keeping only mass peaks present in at least 75% of input spectra.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' define consensus spectra per feature</span></span>
+<span><span class="va">ms2_cons</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/combineSpectra.html" class="external-link">combineSpectra</a></span><span class="op">(</span><span class="va">ms2</span>, f <span class="op">=</span> <span class="va">ms2</span><span class="op">$</span><span class="va">feature_id</span>,</span>
+<span>                           p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ms2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                           peaks <span class="op">=</span> <span class="st">"intersect"</span>,</span>
+<span>                           ppm <span class="op">=</span> <span class="fl">10</span>, minProp <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span></span>
+<span><span class="va">ms2_cons</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MSn data (Spectra) with 3091 spectra in a MsBackendMemory backend:
+       msLevel     rtime scanIndex
+     &lt;integer&gt; &lt;numeric&gt; &lt;integer&gt;
+1            2  169.3607       834
+2            2  147.8949       725
+3            2   35.3421       164
+4            2  836.9768      4221
+5            2  310.3339      1548
+...        ...       ...       ...
+3087         2   610.293      3053
+3088         2   608.046      3050
+3089         2   794.229      3958
+3090         2   744.275      3673
+3091         2   749.801      3791
+ ... 40 more variables/columns.
+Processing:
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+ ...4 more processings. Use 'processingLog' to list all. </code></pre>
+</div>
+</div>
+<p>We have thus now one consensus spectrum per feature. A summary of the numbers of peaks per consensus spectrum is shown below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' overview on the number of peaks per spectrum</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   0%   25%   50%   75%  100%
+  1.0  66.5 102.0 146.0 463.0 </code></pre>
+</div>
+</div>
+<p>The consensus spectrum for the first feature is shown below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-59-1.png" width="672"></p>
+<figcaption>Consensus spectrum for the first feature.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>We next filter the data and remove spectra with a single fragment peak.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' remove spectra with a single fragment peak</span></span>
+<span><span class="va">ms2_cons</span> <span class="op">&lt;-</span> <span class="va">ms2_cons</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">ms2_cons</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MSn data (Spectra) with 3089 spectra in a MsBackendMemory backend:
+       msLevel     rtime scanIndex
+     &lt;integer&gt; &lt;numeric&gt; &lt;integer&gt;
+1            2  169.3607       834
+2            2  147.8949       725
+3            2   35.3421       164
+4            2  836.9768      4221
+5            2  310.3339      1548
+...        ...       ...       ...
+3085         2   610.293      3053
+3086         2   608.046      3050
+3087         2   794.229      3958
+3088         2   744.275      3673
+3089         2   749.801      3791
+ ... 40 more variables/columns.
+Processing:
+ Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
+ Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+ ...4 more processings. Use 'processingLog' to list all. </code></pre>
+</div>
+</div>
+<div>
+<blockquote>
+<p><strong>Additional spectra processing options</strong></p>
+<p>The <a href="https://bioconductor.org/packages/Spectra" class="external-link"><em>Spectra</em></a> package would provide many additional functions and options to process, scale or clean spectra. As an alternative, through the <a href="https://bioconductor.org/packages/SpectriPy" class="external-link"><em>SpectriPy</em></a> package, it would also be possible to apply Python-based functionality from e.g. the <em>matchms</em> Python library to <code>Spectra</code> objects.</p>
+</blockquote>
+</div>
+</section><section class="section level2"><h2 id="formatting-and-exporting-data-for-fbms">Formatting and exporting data for FBMS<a class="anchor" aria-label="anchor" href="#formatting-and-exporting-data-for-fbms"></a>
+</h2>
+<p>We next export the feature abundance matrix and the fragment spectra for feature-based molecular networking with GNPS.</p>
 </section><section class="section level2"><h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <ul>

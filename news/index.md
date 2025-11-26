@@ -2,6 +2,10 @@
 
 ## xcms-gnps2 version 0.99
 
+### Changes in version 0.99.2
+
+- Add MS2 spectra extraction section.
+
 ### Changes in version 0.99.1
 
 - Move details into collapsable elements.

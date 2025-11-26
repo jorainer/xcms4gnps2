@@ -184,6 +184,7 @@ spectra acquired within this retention time range.
 
 ``` r
 
+#' filter the data set to a retention time range from 20 to 850 seconds
 mse <- filterSpectra(mse, filterRt, c(20, 850))
 ```
 
@@ -198,15 +199,15 @@ values within the data set.
 
 ``` r
 
-#' Bin mass peaks into into discrete m/z bins of 0.02 Da.
+#' bin mass peaks into into discrete m/z bins of 0.02 Da.
 s_bin <- spectra(mse) |>
     filterMsLevel(1L) |>
     bin(binSize = 0.02)
 
-#' Combine all spectra within the same sample into a single spectrum reporting
-#' the maximum intensity of all mass peaks with the same m/z bin
+#' combine all spectra within the same sample into a single spectrum
+#' reporting the maximum intensity of all mass peaks with the same m/z bin
 bps <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = max)
-#' The same but reporting the sum of intensities per m/z bin
+#' the same but reporting the sum of intensities per m/z bin
 tis <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = sum)
 ```
 
@@ -438,6 +439,7 @@ the memory usage of the analysis.
 
 ``` r
 
+#' configure and perform chromatographic peak detection
 cwp <- CentWaveParam(
     ppm = 20,
     peakwidth = c(5, 20),
@@ -458,6 +460,7 @@ the lower intensity peak.
 
 ``` r
 
+#' configure and perform *peak refinement*
 mnpp <- MergeNeighboringPeaksParam(
     expandRt = 1,
     expandMz = 0,
@@ -529,6 +532,8 @@ legend("topright", col = col, lty = 1,
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-21-1.png)
 
+Chromatographic peak detection results on the first example EIC.
+
 ``` r
 
 eic_2 <- chromatogram(mse, mz = mzr_2, rt = rtr_2)
@@ -544,6 +549,8 @@ legend("topright", col = col, lty = 1,
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-22-1.png)
+
+Chromatographic peak detection results on the second example EIC.
 
 ### Retention time alignment
 
@@ -612,6 +619,8 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-23-1.png)
 
+Correspondence analysis simulation on the second example EIC.
+
 The upper panel of this plot shows the EIC, the lower panel the data
 considered for correspondence: it shows the retention time of the apex
 positions of all chromatographic peaks in that *m/z* slice on the x-axis
@@ -639,6 +648,8 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-24-1.png)
 
+Correspondence analysis simulation with `bw = 5`.
+
 Changing `bw` to 5 changed the density curve, but we still defined two
 separate features. We thus increase below `bw` to 7.
 
@@ -652,11 +663,14 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-25-1.png)
 
+Correspondence analysis simulation with `bw = 7`.
+
 With a `bw = 7` a single feature was defined. We use these parameter for
 the initial correspondence analysis on the full data set.
 
 ``` r
 
+#' perform initial correspondence analysis to group chromatographic peaks
 mse <- groupChromPeaks(mse, param = pdp)
 ```
 
@@ -680,6 +694,7 @@ configured with parameter `span` (values between 0 and 1; values around
 
 ``` r
 
+#' configure and run retention time alignment
 pgp <- PeakGroupsParam(
     minFraction = 0.90,
     span = 0.4)
@@ -876,7 +891,7 @@ out of 3).
 
 ``` r
 
-#' Defining the settings for the peak density correspondence method
+#' configure the *peak density* correspondence method
 pdp <- PeakDensityParam(
     sampleGroups = sampleData(mse)$sample_name,
     minFraction = 0.67,
@@ -898,6 +913,8 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-37-1.png)
 
+Simulation of correspondence analysis on the first example EIC.
+
 For that EIC the settings worked nicely. Simulating the correspondence
 for the second example EIC.
 
@@ -910,6 +927,8 @@ grid()
 ```
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-38-1.png)
+
+Simulation of correspondence analysis on the second example EIC.
 
 Also for the second EIC all chromatographic peaks got grouped into the
 same feature. Ideally, correspondence parameters should also be
@@ -929,6 +948,8 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-39-1.png)
 
+Simulation of correspondence analysis on an expanded RT window.
+
 There seem to be signal from 3 different compounds in that *m/z* slice.
 Using the settings above, in particular with `bw = 7` the apparently
 different chromatographic signals at about 105 and 115 seconds are
@@ -947,6 +968,8 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-40-1.png)
 
+Effect of changing to `bw = 3` for the correspondence analysis.
+
 With `bw = 3` we successfully grouped the signals into 3 distinct
 features. We next evaluate whether with these updated setting we would
 still group the signal from the second example EIC into a single
@@ -962,12 +985,15 @@ grid()
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-41-1.png)
 
+Effect of `bw = 3` on correspondence results of the second example EIC.
+
 All chromatographic peaks for this region were grouped into a single
 region. We thus proceed and use these settings for the correspondence
 analysis of the full data set.
 
 ``` r
 
+#' perform correspondence analysis on the full data set
 mse <- groupChromPeaks(mse, param = pdp)
 ```
 
@@ -1151,6 +1177,7 @@ We below perform the gap-filling on the full data set.
 
 ``` r
 
+#' configure and perform gap-filling
 cpap <- ChromPeakAreaParam(minMzWidthPpm = 10)
 mse <- fillChromPeaks(mse, param = cpap, chunkSize = 4L)
 ```
@@ -1194,7 +1221,223 @@ Number of missing feature values per sample after gap-filling.
 
 A considerable amount of values could thus be *rescued*.
 
+## Extract fragment spectra for LC-MS features
+
+After preprocessing, we next identify and extract the MS2 spectra for
+the defined LC-MS features. We use the
+[`featureSpectra()`](https://rdrr.io/pkg/xcms/man/featureSpectra.html)
+method, that identifies for each of the features’ chromatographic peaks
+MS2 spectra (within the same sample!) with their retention time and
+precursor *m/z* within the retention time and *m/z* range of the
+chromatographic peak.
+
+``` r
+
+#' identify MS2 spectra for features
+ms2 <- featureSpectra(mse)
+ms2
+```
+
+    MSn data (Spectra) with 21917 spectra in a MsBackendMzR backend:
+            msLevel     rtime scanIndex
+          <integer> <numeric> <integer>
+    1             2   169.361       834
+    2             2   169.909       837
+    3             2   170.225       844
+    4             2   169.786       845
+    5             2   169.721       844
+    ...         ...       ...       ...
+    21913         2   748.486      3747
+    21914         2   747.600      3748
+    21915         2   744.174      3679
+    21916         2   748.223      3744
+    21917         2   749.801      3791
+     ... 40 more variables/columns.
+
+    file(s):
+    Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML
+    Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
+    Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
+     ... 10 more files
+    Processing:
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+     ...3 more processings. Use 'processingLog' to list all. 
+
+We can have multiple, or no, MS2 spectra per feature:
+
+``` r
+
+#' count the number of MS2 spectra per feature
+ms2_count <- table(ms2$feature_id)
+
+#' the number of LC-MS features with at least one MS2 spectrum:
+length(ms2_count)
+```
+
+    [1] 3091
+
+``` r
+
+#' the average number of MS2 spectra per feature:
+mean(ms2_count)
+```
+
+    [1] 7.090586
+
+We next inspect some of the identified MS2 spectra.
+
+``` r
+
+#' select MS2 spectra for the first feature
+a <- ms2[ms2$feature_id == ms2$feature_id[1]]
+
+#' plot the spectra
+plotSpectra(a)
+```
+
+![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-55-1.png)
+
+MS2 spectra for one LC-MS feature.
+
+All MS2 spectra look similar - we next calculate also a pairwise
+similarity between them and visualize the results as a heatmap.
+
+``` r
+
+#' calculate dot product similarity
+sim <- compareSpectra(a, ppm = 10, tolerance = 0)
+
+pheatmap(sim)
+```
+
+![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-56-1.png)
+
+Pairwise spectra similarity between MS2 spectra of one feature.
+
+Similarity between all MS2 spectra is very high (above 0.92).
+
+We next combine the individual MS2 spectra of a feature to a single
+*consensus* spectrum.
+
+> **Options to combine spectra**
+>
+> Multiple spectra can be combined into a single spectrum using the
+> [`combineSpectra()`](https://rdrr.io/pkg/Spectra/man/combineSpectra.html)
+> function which provides a large number of options and parameters for
+> this task, including the possibility to provide a custom function to
+> combine the fragment peaks. By default (with parameter
+> `peaks = "union"`), the combined spectrum contains **all** mass peaks
+> of all input spectra. The option `peaks = "intersect"` allows to
+> retain only peaks that are present in a certain proportion of input
+> spectra. Parameters `ppm` and `tolerance` define the required
+> similarity in the peaks’ *m/z* value to be considered *the same*. The
+> groups of spectra to be combined are specified with parameter `f` and
+> a potential splitting of the input `Spectra` object for parallel
+> processing with parameter `p`.
+
+As an example, we combine MS2 spectra keeping only mass peaks present in
+at least 75% of input spectra.
+
+``` r
+
+#' define consensus spectra per feature
+ms2_cons <- combineSpectra(ms2, f = ms2$feature_id,
+                           p = rep(1, length(ms2)),
+                           peaks = "intersect",
+                           ppm = 10, minProp = 0.75)
+ms2_cons
+```
+
+    MSn data (Spectra) with 3091 spectra in a MsBackendMemory backend:
+           msLevel     rtime scanIndex
+         <integer> <numeric> <integer>
+    1            2  169.3607       834
+    2            2  147.8949       725
+    3            2   35.3421       164
+    4            2  836.9768      4221
+    5            2  310.3339      1548
+    ...        ...       ...       ...
+    3087         2   610.293      3053
+    3088         2   608.046      3050
+    3089         2   794.229      3958
+    3090         2   744.275      3673
+    3091         2   749.801      3791
+     ... 40 more variables/columns.
+    Processing:
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+     ...4 more processings. Use 'processingLog' to list all. 
+
+We have thus now one consensus spectrum per feature. A summary of the
+numbers of peaks per consensus spectrum is shown below.
+
+``` r
+
+#' overview on the number of peaks per spectrum
+quantile(lengths(ms2_cons))
+```
+
+       0%   25%   50%   75%  100%
+      1.0  66.5 102.0 146.0 463.0 
+
+The consensus spectrum for the first feature is shown below.
+
+``` r
+
+plotSpectra(ms2_cons[1], lwd = 2)
+grid()
+```
+
+![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-59-1.png)
+
+Consensus spectrum for the first feature.
+
+We next filter the data and remove spectra with a single fragment peak.
+
+``` r
+
+#' remove spectra with a single fragment peak
+ms2_cons <- ms2_cons[lengths(ms2_cons) > 1]
+ms2_cons
+```
+
+    MSn data (Spectra) with 3089 spectra in a MsBackendMemory backend:
+           msLevel     rtime scanIndex
+         <integer> <numeric> <integer>
+    1            2  169.3607       834
+    2            2  147.8949       725
+    3            2   35.3421       164
+    4            2  836.9768      4221
+    5            2  310.3339      1548
+    ...        ...       ...       ...
+    3085         2   610.293      3053
+    3086         2   608.046      3050
+    3087         2   794.229      3958
+    3088         2   744.275      3673
+    3089         2   749.801      3791
+     ... 40 more variables/columns.
+    Processing:
+     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 13:02:32 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 13:08:35 2025]
+     Filter: select MS level(s) 2 [Wed Nov 26 13:08:36 2025]
+     ...4 more processings. Use 'processingLog' to list all. 
+
+> **Additional spectra processing options**
+>
+> The [*Spectra*](https://bioconductor.org/packages/Spectra) package
+> would provide many additional functions and options to process, scale
+> or clean spectra. As an alternative, through the
+> [*SpectriPy*](https://bioconductor.org/packages/SpectriPy) package, it
+> would also be possible to apply Python-based functionality from
+> e.g. the *matchms* Python library to `Spectra` objects.
+
 ## Formatting and exporting data for FBMS
+
+We next export the feature abundance matrix and the fragment spectra for
+feature-based molecular networking with GNPS.
 
 ## Summary
 
