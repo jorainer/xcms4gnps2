@@ -14,8 +14,6 @@ env:
 
 permissions:
   contents: write   # only needed if building requires repository content
-  pages: write     # required by actions/deploy-pages
-  id-token: write  # only needed if any step requires OIDC (keep if using OIDC)
 
 jobs:
   build-and-deploy:
