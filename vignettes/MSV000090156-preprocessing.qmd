@@ -1,7 +1,9 @@
 ---
 title: "xcms-based preprocessing of LC-MS/MS data for feature-based molecular networking with GNPS2"
 author: "Philippine Louail, Steffen Neumann, Johannes Rainer"
-format: html
+format:
+  html:
+    minimal: false
 knitr:
   opts_chunk:
     message: false
