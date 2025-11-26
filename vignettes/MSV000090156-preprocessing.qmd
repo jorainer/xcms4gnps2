@@ -9,19 +9,22 @@ vignette: >
   %\VignetteIndexEntry{xcms-based preprocessing for FBMN with GNPS2}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+bibliography: references.bib
 ---
 
 
 # Introduction
 
 This document describes data inspection and preprocessing of an LC-MS/MS data
-set using *xcms* and export of the data for subsequent feature-based molecular
-networking (FBMN) with GNPS2. Functionality from different packages from the
-RforMassSpectrometry package ecosystem are combined to visualize and process the
-data.
+set using *xcms* [@louail_xcms_2025] and export of the data for subsequent
+feature-based molecular networking (FBMN) with GNPS2. Functionality from
+different packages from the RforMassSpectrometry package ecosystem are combined
+to visualize and process the data.
 
 For details and more in depth description of the various visualizations and
-analysis options as well as parameter choices see also the [Metabonaut](https://rformassspectrometry.github.io/Metabonaut) tutorials.
+analysis options as well as parameter choices see also the
+[Metabonaut](https://rformassspectrometry.github.io/Metabonaut) tutorials
+[@louail_rformassspectrometrymetabonaut_2025].
 
 This analysis and the used settings should be considered *initial* with
 potential refinement and improvement based on discussions expected during
@@ -34,9 +37,10 @@ below. All packages are available through Bioconductor or CRAN and can be
 installed with `BiocManager::install(<package name>)`.
 
 ```{r, message = FALSE}
-library(Spectra) # main MS infrastructure for R
 library(MsExperiment) # container for MS data
-library(xcms)    # for preprocessing of LC-MS and LC-MS/MS data
+library(Spectra)      # main MS infrastructure for R
+library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
+library(MsBackendMgf) # to export MS data in MGF format
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
@@ -1130,7 +1134,65 @@ Python library to `Spectra` objects.
 # Formatting and exporting data for FBMS
 
 We next export the feature abundance matrix and the fragment spectra for
-feature-based molecular networking with GNPS.
+feature-based molecular networking with GNPS. Similar to the original workflow
+[@johannes_rainer_2025_17293665] described in [@nothias_feature-based_2020] we
+write the feature matrix to a tabulator delimited text file and the associated
+MS2 spectra to a file in Mascot Generic File (MGF) format. A future version of
+the workflow might use the mzTab-M format for the data exchange.
+
+We first compile the feature abundance matrix and export that to a txt file.
+
+```{r}
+#' get feature definitions
+fdef <- featureDefinitions(mse)[, c("mzmin", "mzmed", "mzmax",
+                                    "rtmin", "rtmed", "rtmax")]
+#' combine with the feature value table
+fvals <- cbind(feature_id = rownames(fdef), fdef, fvals)
+
+#' restrict the feature abundance matrix to features with MS2 spectra
+fvals <- fvals[ms2_cons$feature_id, ]
+
+#' export the data
+write.table(fvals, "xcms_ms2_features.txt", sep = "\t",
+            quote = FALSE, row.names = FALSE)
+```
+
+We next reformat the information in the MS2 spectra restricting to data required
+by GNPS. The respective functionality is at present provided in the
+[xcms-gnps-tools](https://github.com/jorainer/xcms-gnps-tools) GitHub repo.
+
+```{r}
+#' load functions for GNPS-specific spectra formatting
+source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R")
+ms2_cons <- formatSpectraForGNPS(ms2_cons)
+```
+
+And finally we export the MS2 spectra in MGF format.
+
+```{r}
+#' export the MS2 spectra in MGF format
+export(ms2_cons, backend = MsBackendMgf(),
+       file = "xcms_ms2_spectra.mgf"))
+```
+
+::: {.callout-note collapse="true"}
+## Spectra data export formats
+
+The MGF format is only loosely defined with many different *dialects* being
+used. The [*MsBackendMgf*](https://bioconductor.org/packages/MsBackendMgf)
+package supports renaming or specifying spectra variables (metadata) for export
+to the MGF format. In addition, it would also allow to export also additional
+peak information, such as chemical formulas for individual fragments. As an
+alternative, also other export formats would be supported for `Spectra` objects,
+provided by packages such as the
+[*MsBackendMsp*](https://bioconductor.org/packages/MsBackendMsp) or
+[*MsBackendMassbank*](https://bioconductor.org/packages/MsBackendMassbank). Upcoming
+formats, such as *specLib*, *mzPeak* or the updated mzTab-M format will be
+supported in future.
+
+:::
+
+
 
 # Summary
 
@@ -1144,3 +1206,6 @@ feature-based molecular networking with GNPS.
   translating between R and Python MS data structures.
 
 # Session information
+
+
+# References
