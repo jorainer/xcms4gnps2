@@ -1251,7 +1251,7 @@ supported in future.
 The R version and package versions used:
 
 ```{r}
-sessionInformation()
+sessionInfo()
 ```
 
 # References
