@@ -1,7 +1,9 @@
 ---
 title: "xcms-based preprocessing of LC-MS/MS data for feature-based molecular networking with GNPS2"
 author: "Philippine Louail, Steffen Neumann, Johannes Rainer"
-format: html
+format:
+  html:
+    code-fold: show
 knitr:
   opts_chunk:
     message: false
@@ -232,7 +234,7 @@ Most methods in *xcms* are parallelized by default. Below we define the parallel
 processing setup for the present analysis.
 
 ::: {.callout-note collapse="true"}
-## Parallel processing setup
+## Parallel processing details
 
 It is generally advisable to configure the parallel processing setup globally
 using `register()`. On Unix machines *multi-core* parallel processing can be
