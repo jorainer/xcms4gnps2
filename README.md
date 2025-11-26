@@ -2,14 +2,14 @@
 
 [![License: CC BY-NC
 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)\
-![docker pulls](https://img.shields.io/docker/pulls/jorainer/xcms4gnps2)
-[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/jorainer/xcms4gnps2?label=docker%20image)](https://hub.docker.com/repository/docker/jorainer/xcms4gnps2)
+![docker pulls](https://img.shields.io/docker/pulls/jorainer/xcms4gnps2)\
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/jorainer/xcms4gnps2?label=docker%20image)](https://hub.docker.com/repository/docker/jorainer/xcms4gnps2)\
 
 This repository contains an example workflow for preprocessing and preparation
 of an LC-MS/MS data set for feature-based molecular networking (FBMN) with
 GNPS2.
 
-## Workflow
+## Analysis workflow
 
 ### [xcms-based preprocessing for FBMS with GNPS](https://jorainer.github.io/xcms4gnps2/articles/MSV000090156-preprocessing.html)
 
