@@ -1131,6 +1131,36 @@ also be possible to apply Python-based functionality from e.g. the *matchms*
 Python library to `Spectra` objects.
 :::
 
+At last we visualize the select data (i.e. features with associated MS2 spectra)
+in the *m/z* - retention time space. We use the `featureArea()` function to get
+the feature boundaries and draw them as rectangles. The associated MS2 spectra
+(their precursor *m/z* and retention time value) are added as individual data
+points.
+
+```{r}
+#| fig-cap: "Feature areas (grey rectangles) and associated MS2 spectra (blue points) in the retention time - *m/z* space."
+#| fig-width: 9.5
+#| fig-height: 9.5
+#' define the feature boundaries
+fa <- featureArea(mse, features = ms2_cons$feature_id)
+
+#' plot feature areas as rectangles
+plot(NA, NA, xlim = range(fa[, c("rtmin", "rtmax")]),
+     ylim = range(fa[, c("mzmin", "mzmax")]),
+     xlab = "retention time", ylab = "m/z")
+grid()
+rect(xleft = fa[, "rtmin"], xright = fa[, "rtmax"],
+     ybottom = fa[, "mzmin"], ytop = fa[, "mzmax"],
+     border = "#00000080")
+#' add precursor m/z and retention times of MS2
+points(ms2_cons$rtime, ms2_cons$precursorMz,
+       cex = 0.5, col = "#0000ff40")
+```
+
+Thus, with a little bit of R coding we can easily create customized data
+visualizations.
+
+
 # Formatting and exporting data for FBMS
 
 We next export the feature abundance matrix and the fragment spectra for
@@ -1172,7 +1202,7 @@ And finally we export the MS2 spectra in MGF format.
 ```{r}
 #' export the MS2 spectra in MGF format
 export(ms2_cons, backend = MsBackendMgf(),
-       file = "xcms_ms2_spectra.mgf"))
+       file = "xcms_ms2_spectra.mgf")
 ```
 
 ::: {.callout-note collapse="true"}
