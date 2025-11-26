@@ -1248,5 +1248,10 @@ supported in future.
 
 # Session information
 
+The R version and package versions used:
+
+```{r}
+sessionInformation()
+```
 
 # References

@@ -2,8 +2,6 @@ url: https://jorainer.github.io/xcms4gnps2/
 template:
   light-switch: true
   bootstrap: 5
-  bslib:
-    bootswatch: flatly
 structure:
   right:
   - search
