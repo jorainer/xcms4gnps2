@@ -1,6 +1,9 @@
 url: https://jorainer.github.io/xcms4gnps2/
 template:
+  light-switch: true
   bootstrap: 5
+  theme: gruvbox-light
+  theme-dark: gruvbox-dark
   bslib:
     bootswatch: flatly
 structure:

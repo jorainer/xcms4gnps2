@@ -1,8 +1,10 @@
 ---
 title: "xcms-based preprocessing of LC-MS/MS data for feature-based molecular networking with GNPS2"
 author: "Philippine Louail, Steffen Neumann, Johannes Rainer"
-format:
-  html
+format: html
+knitr:
+  opts_chunk:
+    message: false
 vignette: >
   %\VignetteIndexEntry{xcms-based preprocessing for FBMN with GNPS2}
   %\VignetteEngine{quarto::html}
@@ -178,8 +180,8 @@ bps <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = max)
 tis <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = sum)
 ```
 
-We have thus a single aggregated mass spectrum per sample. These spectra are
-plotted below.
+We have thus a single aggregated mass spectrum per sample. These *base peak
+spectra* are plotted below.
 
 ```{r}
 #| fig-cap: "Aggregated MS1 spectrum per sample."
@@ -203,6 +205,9 @@ We can also use these aggregated spectra to calculate spectra similarity between
 the individual samples and cluster them.
 
 ```{r}
+#| fig-cap: "Similarity of *base peak spectra* of all samples in the experiment."
+#| fig-width: 9.5
+#| fig-height: 9.5
 sim <- compareSpectra(bps)
 rownames(sim) <- colnames(sim) <- sampleData(mse)$sample_desc
 pheatmap(sim)
@@ -226,7 +231,7 @@ features.
 Most methods in *xcms* are parallelized by default. Below we define the parallel
 processing setup for the present analysis.
 
-::: {.callout-note appearance="simple" collapse="true"}
+::: {.callout-note collapse="true"}
 ## Parallel processing setup
 
 It is generally advisable to configure the parallel processing setup globally
