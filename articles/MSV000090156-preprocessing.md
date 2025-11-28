@@ -509,11 +509,11 @@ legend("top", horiz = TRUE, col = col, pch = 15,
        legend = names(col))
 par(mar = c(0, 4.3, 0, 0.1))
 vioplot(lapply(pk_list, function(z) z[, "mz_width_ppm"]), outline = FALSE,
-        ylab = "m/z width [ppm]", xaxt = "n",
+        ylab = "m/z width [ppm]", xaxt = "n", line = 3,
         col = col_sample)
 grid()
 vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
-        ylab = "rt width [s]", col = col_sample)
+        ylab = "rt width [s]", col = col_sample, line = 3)
 grid()
 ```
 
@@ -1274,10 +1274,10 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 16:51:02 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 16:57:08 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 16:57:09 2025]
-     ...3 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Fri Nov 28 14:08:38 2025]
+     Filter: select MS level(s) 2 [Fri Nov 28 14:14:35 2025]
+     Filter: select MS level(s) 2 [Fri Nov 28 14:14:36 2025]
+     ...2 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
 
@@ -1380,10 +1380,10 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 16:51:02 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 16:57:08 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 16:57:09 2025]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Fri Nov 28 14:08:38 2025]
+     Filter: select MS level(s) 2 [Fri Nov 28 14:14:35 2025]
+     Filter: select MS level(s) 2 [Fri Nov 28 14:14:36 2025]
+     ...3 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
 numbers of peaks per consensus spectrum is shown below.
@@ -1434,10 +1434,10 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Nov 26 16:51:02 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 16:57:08 2025]
-     Filter: select MS level(s) 2 [Wed Nov 26 16:57:09 2025]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Fri Nov 28 14:08:38 2025]
+     Filter: select MS level(s) 2 [Fri Nov 28 14:14:35 2025]
+     Filter: select MS level(s) 2 [Fri Nov 28 14:14:36 2025]
+     ...3 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
 >
@@ -1498,10 +1498,10 @@ file.
 ``` r
 
 #' get feature definitions
-fdef <- featureDefinitions(mse)[, c("mzmin", "mzmed", "mzmax",
-                                    "rtmin", "rtmed", "rtmax")]
+fdef <- featureDefinitions(mse)[, c("mzmed", "mzmin", "mzmax",
+                                    "rtmed", "rtmin", "rtmax")]
 #' combine with the feature value table
-fvals <- cbind(feature_id = rownames(fdef), fdef, fvals)
+fvals <- cbind(Row.names = rownames(fdef), fdef, fvals)
 
 #' restrict the feature abundance matrix to features with MS2 spectra
 fvals <- fvals[ms2_cons$feature_id, ]
@@ -1641,7 +1641,7 @@ sessionInfo()
     [79] cli_3.6.5                   S4Arrays_1.10.0
     [81] dplyr_1.1.4                 AnnotationFilter_1.34.0
     [83] pcaMethods_2.2.0            gtable_0.3.6
-    [85] digest_0.6.39               SparseArray_1.10.2
+    [85] digest_0.6.39               SparseArray_1.10.3
     [87] farver_2.1.2                htmltools_0.5.8.1
     [89] lifecycle_1.0.4             statmod_1.5.1
     [91] MASS_7.3-65                
