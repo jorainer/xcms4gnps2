@@ -454,11 +454,11 @@ legend("top", horiz = TRUE, col = col, pch = 15,
        legend = names(col))
 par(mar = c(0, 4.3, 0, 0.1))
 vioplot(lapply(pk_list, function(z) z[, "mz_width_ppm"]), outline = FALSE,
-        ylab = "m/z width [ppm]", xaxt = "n",
+        ylab = "m/z width [ppm]", xaxt = "n", line = 3,
         col = col_sample)
 grid()
 vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
-        ylab = "rt width [s]", col = col_sample)
+        ylab = "rt width [s]", col = col_sample, line = 3)
 grid()
 ```
 
@@ -1185,10 +1185,10 @@ We first compile the feature abundance matrix and export that to a txt file.
 
 ```{r}
 #' get feature definitions
-fdef <- featureDefinitions(mse)[, c("mzmin", "mzmed", "mzmax",
-                                    "rtmin", "rtmed", "rtmax")]
+fdef <- featureDefinitions(mse)[, c("mzmed", "mzmin", "mzmax",
+                                    "rtmed", "rtmin", "rtmax")]
 #' combine with the feature value table
-fvals <- cbind(feature_id = rownames(fdef), fdef, fvals)
+fvals <- cbind(Row.names = rownames(fdef), fdef, fvals)
 
 #' restrict the feature abundance matrix to features with MS2 spectra
 fvals <- fvals[ms2_cons$feature_id, ]
