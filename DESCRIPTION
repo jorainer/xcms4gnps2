@@ -1,6 +1,6 @@
 Package: xcms4gnps2
 Title: xcms-based data preprocessing for FBMN with GNPS2
-Version: 0.99.3
+Version: 0.99.4
 Authors@R:
     c(person(given = "Philippine", family = "Louail",
             email = "philippine.louail@outlook.com",
