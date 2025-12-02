@@ -1,0 +1,1718 @@
+---
+title: "LC-MS/MS data preprocessing with *xcms*"
+author:
+  - name: Philippine Louail
+    orcid: 0009-0007-5429-6846
+    affiliations:
+      - id: IfB
+        name: Institute for Biomedicine, Eurac Research
+  - name: Johannes Rainer
+    orcid: 0000-0002-6977-7147
+    affiliations:
+      - ref: IfB
+from: markdown+emoji
+format:
+  revealjs:
+    theme: default
+    transition: fade
+    transition-speed: fast
+    logo: images/R4MassSpec-logo.png
+    embed-resources: true
+    scrollable: true
+    nostretch: true
+    smaller: true
+    auto-stretch: false
+---
+
+## Overview
+
+::: {.incremental}
+- **Plan**: perform & explain preprocessing of LC-MS/MS data.
+- Data: part of the MassIVE
+  [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
+  data set.
+:::
+
+## Overview
+
+- **Plan**: perform & explain preprocessing of LC-MS/MS data.
+- Data: part of the MassIVE
+  [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
+  data set.
+- R libraries used in this analysis:
+
+```{r, message = FALSE}
+#| echo: true
+library(MsExperiment) # container for MS data
+library(Spectra)      # main MS infrastructure for R
+library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
+library(MsBackendMgf) # to export MS data in MGF format
+
+library(RColorBrewer) # to define colors
+library(pander)       # to format tables
+library(pheatmap)     # visualization of clustering results as heatmap
+library(vioplot)      # to create *violin plots*
+```
+
+## Data import
+
+- Define a `data.frame` with file names and sample information:
+
+```{r}
+#| echo: true
+pd <- data.frame(
+    file_name = c("Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML",
+                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
+                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
+                  "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
+    sample_name = c("A15M", "A15M", "A15M",
+                    "A45M", "A45M", "A45M",
+                    "A5M", "A5M", "A5M",
+                    "M", "M", "M",
+                    "PPL"),
+    sample_desc = c("A15M_R1", "A15M_R2", "A15M_R3",
+                    "A45M_R1", "A45M_R2", "A45M_R3",
+                    "A5M_R1", "A5M_R2", "A5M_R3",
+                    "M_R1", "M_R2", "M_R3",
+                    "PPL_R1"),
+    replicate = c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1)
+)
+```
+
+::: {.callout-note .center appearance="simple"}
+Provide all technical and biologically relevant information.
+:::
+
+## Data import
+
+- Define the path to the (downloaded) data files and *initialize* the data
+  container.
+
+```{r}
+#| echo: true
+#| code-line-numbers: "1-4|1-7|1-8"
+#| results: false
+#' define path to the data files
+path <- file.path("/data", "massive-ftp.ucsd.edu", "v04",
+                  "MSV000090156", "peak", "mzml", "POS_MSMS",
+                  "Lab_2")
+#' initialize data container for the experiment
+mse <- readMsExperiment(file.path(path, pd$file_name),
+                        sampleData = pd)
+mse
+```
+
+. . .
+
+```{r}
+#| echo: false
+mse
+```
+
+. . .
+
+::: {.callout-note appearance="simple"}
+MS data **not** loaded into memory.
+:::
+
+# Initial data inspection
+
+## Base peak chromatogram
+
+```{r}
+#' Define a color for each unique original sample
+col <- sampleData(mse)$sample_name |>
+                     unique() |>
+                     length() |>
+                     brewer.pal("Set2")
+names(col) <- unique(sampleData(mse)$sample_name)
+
+#' Define a color for each data file/sample
+col_sample <- col[sampleData(mse)$sample_name]
+```
+
+- Are LC performances comparable? Are there problematic samples/injections?
+- BPC: largest intensity per retention time (spectrum).
+
+. . .
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-7"
+#' calculate base peak chromatogram
+bpc <- chromatogram(mse, aggregationFun = "max")
+
+#' plot the BPC
+plot(bpc, col = paste0(col_sample, 80), main = "BPC", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#' calculate base peak chromatogram
+bpc <- chromatogram(mse, aggregationFun = "max")
+
+#' plot the BPC
+plot(bpc, col = paste0(col_sample, 80), main = "BPC", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+```
+
+::: {.callout-note .center appearance="simple" title=""}
+- Chromatograms look similar, with exception of one sample.
+- No signal seems present after 850 seconds.
+:::
+
+## Base peak chromatogram
+
+- Restrict the data to a specific retention time range.
+
+```{r filterSpectra,filterRt}
+#| code-line-numbers: "1|1-4"
+#| echo: true
+#| eval: false
+#' indicate the range in the plot
+abline(v = c(20, 850), lty = 2)
+
+#' restrict to retention time range 20-850 seconds
+mse <- filterSpectra(mse, filterRt, c(20, 850))
+```
+
+```{r}
+#| echo: false
+plot(bpc, col = paste0(col_sample, 80), main = "BPC", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+abline(v = c(20, 850), lty = 2)
+mse <- filterSpectra(mse, filterRt, c(20, 850))
+```
+
+## Base peak chromatogram
+
+- Restrict the data to a specific retention time range.
+
+```{r}
+#| echo: true
+#' extract BPC again
+bpc <- chromatogram(mse, aggregationFun = "max")
+
+plot(bpc, col = paste0(col_sample, 80), main = "BPC", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+```
+
+## Base peak spectrum
+
+- Is the *ion content* of samples comparable?
+- BPS: largest intensity per *m/z* value (bin).
+
+. . .
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1|1-2|1-3|1-4|6-7|6-10|12-15"
+#' combine MS peaks into 0.02 Da *m/z* bins
+s_bin <- spectra(mse) |> # extract spectra from data set
+    filterMsLevel(1L) |> # filter by MS level
+    bin(binSize = 0.02)  # bin mass peaks in m/z bins of 0.02 Da
+
+#' combine all spectra of a sample into a single spectrum with
+#' largest intensity per *m/z* bin
+bps <- combineSpectra(s_bin,
+                      f = s_bin$dataOrigin, # which spectra to combine
+                      intensityFun = max)   # which intensity to report
+
+#' plot all spectra into a single plot
+plotSpectraOverlay(bps, col = paste0(col_sample, 80), lwd = 1)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1)
+```
+
+. . .
+
+```{r}
+#| echo: false
+s_bin <- spectra(mse) |> # extract spectra from data set
+    filterMsLevel(1L) |> # filter by MS level
+    bin(binSize = 0.02)  # bin mass peaks in m/z bins of 0.02 Da
+
+bps <- combineSpectra(s_bin, f = s_bin$dataOrigin, intensityFun = max)
+
+plotSpectraOverlay(bps, col = paste0(col_sample, 80), lwd = 1.5)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1)
+```
+
+::: {.callout-note .center .smaller appearance="simple"}
+- :eyes: all samples, except one, *look* similar...
+- :thought_balloon: can we also quantify that?
+:::
+
+## Base peak spectrum
+
+- Calculate similarity between BPS.
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-line-numbers: "1-2|1-6"
+#' calculate similarity (normalized dot product)
+sim <- compareSpectra(bps)
+
+#' visualize similarity as heatmap
+rownames(sim) <- colnames(sim) <- sampleData(mse)$sample_desc
+pheatmap(sim)
+```
+
+::: {.fragment .fade-in}
+```{r}
+#| echo: false
+sim <- compareSpectra(bps)
+
+rownames(sim) <- colnames(sim) <- sampleData(mse)$sample_desc
+pheatmap(sim)
+```
+:::
+
+::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
+- *PPL* different from all other samples.
+- *A45M* sample also different from the other samples.
+:::
+
+# Preprocessing
+
+```{r}
+if (.Platform$OS.type == "unix") {
+    register(MulticoreParam(4))
+} else {
+    register(SnowParam(4))
+}
+```
+
+## Preprocessing steps
+
+- :one: Chromatographic peak detection
+- :two: Retention time alignment
+- :three: Correspondence analysis
+- :four: *Gap-filling*
+
+## Chromatographic peak detection
+
+- Identify and quantify signal of an ion along retention time
+
+::: {.r-stack}
+![](images/LCMS-data.png){.fragment width="600"}
+
+![](images/LCMS-data-peaks){.fragment width="600"}
+:::
+
+## Chromatographic peak detection
+
+::: {.incremental}
+- We use *centWave* algorithm from *xcms*
+- Key parameter: `peakwidth`: expected lower and upper retention time width
+- Define the parameter on the actual data:
+  - generally: use internal standards/known compounds
+  - present data set: *unsupervised* approach: need to define retention time and
+  *m/z* ranges of interest
+:::
+
+. . .
+
+```{r chrom-peak-detection-bpc}
+#| echo: true
+#' plot BPC
+plot(bpc, col = paste0(col_sample, 80), lwd = 2)
+grid()
+
+#' identify a retention time region to extract
+rtr_1 <- c(105, 130)
+abline(v = rtr_1, lty = 2)
+```
+
+::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
+:white_check_mark: RT region defined - need to identify the *m/z* of that
+signal.
+:::
+
+
+## Chromatographic peak detection
+
+- :white_check_mark: have the retention time region of interest
+- :point_right: define the *m/z* for the extracted ion chromatogram (EIC)
+
+```{r chrom-peak-detection-eic-1}
+#| eval: false
+#| echo: true
+#| code-line-numbers: "1|2|3|4|5|7-8|10-13"
+#' extract MS1 peaks data from the retention time range
+tmp <- spectra(mse) |>   # get spectra
+    filterMsLevel(1L) |> # filter to MS1
+    filterRt(rtr_1) |>   # restrict to retention time range
+    longForm(columns = c("mz", "intensity")) # get peaks' m/z and intensity
+
+#' define a m/z range around the m/z with largest intensity
+mzr_1 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
+
+#' extract an EIC for that RT and m/z region
+eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+tmp <- spectra(mse) |>   # get spectra
+    filterMsLevel(1L) |> # filter to MS1
+    filterRt(rtr_1) |>   # restrict to retention time range
+    longForm(columns = c("mz", "intensity")) # get peaks' m/z and intensity
+mzr_1 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
+eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+:eyes: width of chromatographic peak about 8 seconds.
+:::
+
+## Chromatographic peak detection
+
+- Define a second example EIC
+
+```{r chrom-peak-detection-bpc2}
+#| echo: true
+#' plot BPC
+plot(bpc, col = paste0(col_sample, 80), lwd = 2)
+grid()
+
+#' identify a retention time region to extract
+rtr_2 <- c(720, 770)
+abline(v = rtr_2, lty = 2)
+```
+
+## Chromatographic peak detection
+
+- Evaluate second EIC/signal
+
+```{r chrom-peak-detection-eic2}
+#| eval: false
+#| echo: true
+#| code-line-numbers: "1-4|6-7|9-12"
+tmp <- spectra(mse) |>   # get spectra
+    filterMsLevel(1L) |> # filter to MS1
+    filterRt(rtr_2) |>   # restrict to retention time range
+    longForm(columns = c("mz", "intensity")) # get peaks' m/z and intensity
+
+#' define a m/z range around the m/z with largest intensity
+mzr_2 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
+
+#' extract an EIC for that RT and m/z region
+eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+tmp <- spectra(mse) |>   # get spectra
+    filterMsLevel(1L) |> # filter to MS1
+    filterRt(rtr_2) |>   # restrict to retention time range
+    longForm(columns = c("mz", "intensity")) # get peaks' m/z and intensity
+mzr_2 <- tmp$mz[which.max(tmp$intensity)] + c(-0.005, 0.005)
+eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2)
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+- :eyes: width of chromatographic peak about 15 seconds.
+- :flushed: considerable shifts in retention time present.
+:::
+
+## Chromatographic peak detection
+
+- `peakwidth` should fit most peaks; we use `peakwidth = c(5, 20)`
+  :white_check_mark:
+- Second important parameter: `ppm`
+
+::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
+`ppm`: maximal acceptable deviation of *m/z* in consecutive spectra to consider
+signal being from the same ion.
+:::
+
+. . .
+
+- Inspect MS data to evaluate *m/z* scattering
+
+```{r chrom-peak-detection-mse-plot}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1|2|3|4|5|6|1-6"
+#' plot mass peaks in m/z - retention time plane
+mse[1L] |>                                      # subset to first sample
+    filterSpectra(filterMsLevel, 1L) |>         # filter MS level
+    filterSpectra(filterRt, rt = rtr_2) |>      # filter by RT range
+    filterSpectra(filterMzRange, mz = mzr_2) |> # filter by m/z range
+    plot()                                      # plot
+```
+
+. . .
+
+```{r}
+#| echo: false
+mse[1L] |>
+    filterSpectra(filterMsLevel, 1L) |>         # filter MS level
+    filterSpectra(filterRt, rt = rtr_2) |>      # filter by RT range
+    filterSpectra(filterMzRange, mz = mzr_2) |> # filter by m/z range
+    plot()                                      # plot
+```
+
+::: {.callout-note .center .smaller appearance="simple"}
+*m/z* scattering < 0.001 Da: we use `ppm = 20` (to be on the safe side)
+:::
+
+## Chromatographic peak detection
+
+- Configure and perform chromatographic peak detection
+
+```{r centWave-refinement}
+if (!file.exists("mse.RData")) {
+    cwp <- CentWaveParam(
+        ppm = 20,
+        peakwidth = c(5, 20),
+        snthresh = 8,
+        integrate = 2,
+        mzdiff = 0.001
+    )
+    mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
+    mnpp <- MergeNeighboringPeaksParam(
+        expandRt = 1, expandMz = 0, ppm = 0, minProp = 0.75
+    )
+    mse <- refineChromPeaks(mse, mnpp, chunkSize = 4L)
+    save(mse, file = "mse.RData")
+} else {
+    load("mse.RData")
+}
+```
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-8|9"
+#' configure and perform chromatographic peak detection
+cwp <- CentWaveParam(
+    ppm = 20,
+    peakwidth = c(5, 20),
+    snthresh = 8,
+    integrate = 2,
+    mzdiff = 0.001
+)
+mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
+```
+
+::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
+`chunkSize`: number of data files from which data should be imported and
+processed at a time.
+:::
+
+## Chromatographic peak detection
+
+- Configure and perform chromatographic peak detection
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "11-16|17"
+#' configure and perform chromatographic peak detection
+cwp <- CentWaveParam(
+    ppm = 20,
+    peakwidth = c(5, 20),
+    snthresh = 8,
+    integrate = 2,
+    mzdiff = 0.001
+)
+mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
+
+#' configure and perform *peak refinement*
+mnpp <- MergeNeighboringPeaksParam(
+    expandRt = 1,
+    expandMz = 0,
+    ppm = 0,
+    minProp = 0.75)
+mse <- refineChromPeaks(mse, mnpp, chunkSize = 4L)
+```
+
+::: {.callout-note .center .smaller appearance="simple"}
+*Peak refinement* helps reducing *centWave* peak detection artifacts
+(overlapping peaks, *split* peaks).
+:::
+
+## Chromatographic peak detection
+
+- Quick evaluation of chromatographic peak detection results
+
+. . .
+
+```{r chrom-peak-detection-evaluation}
+#| echo: true
+#| code-line-numbers: "1-4|5-10|12-27"
+#| eval: false
+#' split the detected chrom peaks per sample
+pk_list <- split.data.frame(
+    chromPeaks(mse, columns = c("mzmin", "mzmax", "rtmin", "rtmax")),
+    chromPeaks(mse, columns = "sample")[, "sample"])
+#' calculate mz and rt widths
+pk_list <- lapply(pk_list, function(z) {
+    cbind(z, mz_width = z[, "mzmax"] - z[, "mzmin"],
+          mz_width_ppm = (z[, "mzmax"] - z[, "mzmin"]) * 1e6 / z[, "mzmax"],
+          rt_width = z[, "rtmax"] - z[, "rtmin"])
+})
+
+#' plot the information
+par(mfrow = c(3, 1), mar = c(0, 4.3, 1.5, 0.1))
+barplot(unlist(lapply(pk_list, nrow)),
+     col = col_sample,
+     ylab = "peak count", main = "Peak detection summary, mse", xaxt = "n")
+grid()
+legend("top", horiz = TRUE, col = col, pch = 15,
+       legend = names(col))
+par(mar = c(0, 4.3, 0, 0.1))
+vioplot(lapply(pk_list, function(z) z[, "mz_width_ppm"]), outline = FALSE,
+        ylab = "m/z width [ppm]", xaxt = "n",
+        col = col_sample)
+grid()
+vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
+        ylab = "rt width [s]", col = col_sample)
+grid()
+```
+
+. . .
+
+```{r}
+pk_list <- split.data.frame(
+    chromPeaks(mse, columns = c("mzmin", "mzmax", "rtmin", "rtmax")),
+    chromPeaks(mse, columns = "sample")[, "sample"])
+#' calculate mz and rt widths
+pk_list <- lapply(pk_list, function(z) {
+    cbind(z, mz_width = z[, "mzmax"] - z[, "mzmin"],
+          mz_width_ppm = (z[, "mzmax"] - z[, "mzmin"]) * 1e6 / z[, "mzmax"],
+          rt_width = z[, "rtmax"] - z[, "rtmin"])
+})
+
+#' plot the information
+par(mfrow = c(3, 1), mar = c(0, 4.3, 1.5, 0.1))
+barplot(unlist(lapply(pk_list, nrow)),
+     col = col_sample,
+     ylab = "peak count", main = "Peak detection summary, mse", xaxt = "n")
+grid()
+legend("top", horiz = TRUE, col = col, pch = 15,
+       legend = names(col))
+par(mar = c(0, 4.3, 0, 0.1))
+vioplot(lapply(pk_list, function(z) z[, "mz_width_ppm"]), outline = FALSE,
+        ylab = "m/z width [ppm]", xaxt = "n", line = 3,
+        col = col_sample)
+grid()
+vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
+        ylab = "rt width [s]", col = col_sample, line = 3)
+grid()
+```
+
+::: {.callout-note .center .smaller appearance="simple"}
+- about 7000 chromatographic peaks per sample
+- *m/z* width below 5 ppm for most peaks
+- average retention time width around 10 seconds
+:::
+
+## Retention time alignment
+
+- Reduce retention time shifts between MS runs.
+
+::: {.r-stack}
+![](images/alignment.png){.fragment width="500"}
+:::
+
+::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
+Shifts can be retention time-dependent
+:::
+
+
+## Retention time alignment
+
+- We use the *peak groups* method of *xcms*:
+  - robust, fast and flexible
+  - allows sub-set based alignment
+  - supports alignment against external reference
+  - minimizes retention time differences of *anchor peaks*
+
+::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
+*anchor peak*: chromatographic peak present in most/all samples. Can be chrom
+peaks of an internal standard or any other commonly present compound.
+:::
+
+::: {.fragment .fade-in}
+- :point_up: *peak groups* method requires *anchor peaks*. Need to perform an
+  *initial* **correspondence analysis** to define these.
+:::
+
+## Correspondence analysis
+
+- Group chromatographic peaks representing ion signal of the same compound
+  across samples
+
+::: {.r-stack}
+![](images/correspondence2_03.png){width="700"}
+:::
+
+. . .
+
+- Takes chrom peaks' *m/z* and retention time into consideration
+
+## Correspondence analysis
+
+- We use the *peak density* method from *xcms*
+- Key parameters: `binSize`, `ppm` (*m/z* similarity) and `bw` (retention time
+  similarity)
+- To define `bw`: *simulate* correspondence analysis on EICs:
+
+. . .
+
+```{r alignment-correspondence-1}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-7|9-13"
+#' configure peak density method
+pdp <- PeakDensityParam(
+    sampleGroups = rep(1, length(mse)),
+    bw = 2,
+    minFraction = 0.2,
+    binSize = 0.01,
+    ppm = 10)
+
+#' simulate the analysis on the second example EIC
+col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+pdp <- PeakDensityParam(
+    sampleGroups = rep(1, length(mse)),
+    bw = 2,
+    minFraction = 0.2,
+    binSize = 0.01,
+    ppm = 10)
+
+eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+- upper panel: EIC signal + identified chromatographic peaks
+- lower panel: retention time of identified chromatographic peaks along RT axis
+- black solid line: density distribution of chrom peaks along retention times
+- chrom peaks within a density peak are grouped into a feature (grey box)
+:::
+
+::: {.callout-warning .center appearance="simple" .fragment .fade-in}
+Large retention time shift present: `bw = 2` groups chrom peaks into two
+different features :no_good:
+:::
+
+## Correspondence analysis
+
+- Increase value of `bw` to allow larger shifts in retention time
+
+```{r}
+#| echo: true
+#' increase bw to 5
+pdp@bw <- 5
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+Density curve changed, but still separate features.
+:::
+
+## Correspondence analysis
+
+- Increase value of `bw` further
+
+```{r}
+#| echo: true
+#' increase bw to 7
+pdp@bw <- 7
+plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+Results seem OK :ok_hand:
+:::
+
+- Perform *initial* correspondence analysis with these settings
+
+```{r}
+#| echo: true
+#' perform initial correspondence analysis to group chromatographic peaks
+mse <- groupChromPeaks(mse, param = pdp)
+```
+
+## Retention time alignment
+
+... back to alignment ...
+
+- *peak groups* method:
+  - `minFraction` to define anchor peaks
+  - `span` [0,1] for more *local* or *global* alignment
+
+```{r}
+#| echo: true
+#| code-line-numbers: "1-4|1-7"
+#' configure peak groups method
+pgp <- PeakGroupsParam(
+    minFraction = 0.90, # features with a chrom peak in 90% of samples -> anchor peak
+    span = 0.4)
+
+#' perform the alignment
+mse <- adjustRtime(mse, param = pgp)
+```
+
+## Retention time alignment
+
+- :point_up: evaluate alignment result: visualize adjusted retention time
+  against difference raw - adjusted retention time per sample.
+
+. . .
+
+```{r}
+#| echo: true
+#' visualize alignment results
+plotAdjustedRtime(mse, col = paste0(col_sample, 80),
+                  peakGroupsPch = 21, lwd = 2)
+grid()
+legend("topleft", col = col, lty = 1, legend = names(col))
+```
+
+::: {.callout-note .center appearance="simple" .fragment .fade-in}
+- Little/no adjustment at beginning, larger adjustments at the end.
+- 4 samples with larger shifts at end of the LC.
+:::
+
+## Retention time alignment
+
+- Evaluate impact on BPC
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-9"
+#| fig-width: 9.5
+#| fig-height: 7.5
+#' create BPC after adjustment
+bpc_adj <- chromatogram(mse, chromPeaks = "none", aggregationFun = "max")
+
+par(mfrow = c(2, 1))
+plot(bpc, col = paste0(col_sample, 80), main = "BPC, raw", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(bpc_adj, col = paste0(col_sample, 80), main = "BPC, adjusted", lwd = 2)
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 9.5
+#| fig-height: 7.5
+#' create BPC after adjustment
+bpc_adj <- chromatogram(mse, chromPeaks = "none", aggregationFun = "max")
+
+par(mfrow = c(2, 1))
+plot(bpc, col = paste0(col_sample, 80), main = "BPC, raw", lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(bpc_adj, col = paste0(col_sample, 80), main = "BPC, adjusted", lwd = 2)
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+No big changes visible. Better to *zoom* into specific retention time areas.
+:::
+
+## Retention time alignment
+
+- :point_up: evaluate results on EICs: first example EIC
+
+```{r}
+#| echo: true
+#| eval: false
+#| fig-width: 9.5
+#| fig-height: 7.5
+#| code-line-numbers: "1-2|4-9"
+#' extract first example EIC after alignment
+eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+
+par(mfrow = c(2, 1))
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| fig-width: 9.5
+#| fig-height: 7.5
+#| code-line-numbers: "1-2|4-9"
+#' extract EIC after alignment
+eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+
+par(mfrow = c(2, 1))
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+EICs already well aligned before retention time adjustment.
+:::
+
+## Retention time alignment
+
+- :point_up: evaluate results on EICs: second example EIC
+
+```{r}
+#| echo: true
+#| fig-width: 9.5
+#| fig-height: 7.5
+#' extract second example EIC after alignment
+eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+
+par(mfrow = c(2, 1))
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+```
+
+::: {.callout-warning .center appearance="simple"}
+Alignment improved, but did not fix retention time shifts :no_good:
+:::
+
+## Retention time alignment
+
+- :point_right: repeat alignment using a more *local* alignment: `span = 0.1`.
+
+```{r}
+#| echo: true
+#| code-line-numbers: "1-2|4-5|7-11"
+#' remove retention time alignment results
+mse <- dropAdjustedRtime(mse)
+
+#' re-perform initial correspondence
+mse <- groupChromPeaks(mse, param = pdp)
+
+#' perform the alignment using updated settings
+pgp <- PeakGroupsParam(
+    minFraction = 0.90,
+    span = 0.1) # local alignment
+mse <- adjustRtime(mse, param = pgp)
+```
+
+. . .
+
+- Visualize results:
+
+```{r}
+#' visualize alignment results
+plotAdjustedRtime(mse, col = paste0(col_sample, 80),
+                  peakGroupsPch = 21, lwd = 2)
+grid()
+legend("topleft", col = col, lty = 1, legend = names(col))
+```
+
+::: {.callout-note .center appearance="simple"}
+Stronger, and more local, alignment.
+:::
+
+## Retention time alignment
+
+- Evaluate new alignment results: first example EIC
+
+```{r}
+#| echo: true
+#| fig-width: 9.5
+#| fig-height: 7.5
+#' extract first example EIC after alignment with updated settings
+eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+
+par(mfrow = c(2, 1))
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+Still OK :ok_hand:
+:::
+
+## Retention time alignment
+
+- Evaluate new alignment results: second example EIC
+
+```{r}
+#| echo: true
+#| fig-width: 9.5
+#| fig-height: 7.5
+#' extract second example EIC after alignment with updated settings
+eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+
+par(mfrow = c(2, 1))
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+Alignment not perfect, but acceptable :+1:
+:::
+
+## Correspondence
+
+. . .
+
+- Re-use the settings from the *initial* correspondence, except:
+  - use *sample name* as `sampleGroup`: each replicate-set is one *group*
+  - set `minFraction = 0.67`: feature defined if signal present in 2 out of 3
+    replicates
+
+```{r}
+#| echo: true
+#' configure the *peak density* correspondence method
+pdp <- PeakDensityParam(
+    sampleGroups = sampleData(mse)$sample_name,
+    minFraction = 0.67,
+    binSize = 0.01,
+    ppm = 10,
+    bw = 7)
+```
+
+. . .
+
+- :point_up: test these settings on example EICs
+
+
+## Correspondence
+
+- Simulate correspondence on second example EIC.
+
+```{r}
+#| echo: true
+col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
+plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
+                     peakCol = col_peak, peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+Seem to work well :+1:
+:::
+
+## Correspondence
+
+- :point_up: evaluate impact on a more *complex* region (with closely eluting
+  peaks)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-7"
+#' Extract EIC from larger retention time region
+a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
+
+col_peak <- col_sample[chromPeaks(a)[, "sample"]]
+plotChromPeakDensity(a, param = pdp, col = col_sample,
+                     peakCol = col_peak, peakBg = paste0(col_peak, 40))
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#' Extract EIC from larger retention time region
+a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
+
+col_peak <- col_sample[chromPeaks(a)[, "sample"]]
+plotChromPeakDensity(a, param = pdp, col = col_sample,
+                     peakCol = col_peak, peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+:eyes: signal from 3 compounds along retention time
+:::
+
+::: {.callout-warning .center appearance="simple" .fragment .fade-in}
+:scream: Two closely eluting peaks get grouped into the same feature!
+:::
+
+## Correspondence
+
+- :point_right: reduce value for `bw` and simulate again
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-7"
+#' change value for `bw` parameter
+pdp@bw <- 3
+
+col_peak <- col_sample[chromPeaks(a)[, "sample"]]
+plotChromPeakDensity(a, param = pdp, col = col_sample,
+                     peakCol = col_peak, peakBg = paste0(col_peak, 40))
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#' change value for `bw` parameter
+pdp@bw <- 3
+
+col_peak <- col_sample[chromPeaks(a)[, "sample"]]
+plotChromPeakDensity(a, param = pdp, col = col_sample,
+                     peakCol = col_peak, peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+:sweat_smile: chrom peaks grouped into 3 features :+1:
+:::
+
+## Correspondence
+
+- Validate these settings on the second EIC:
+
+```{r}
+#| echo: true
+col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
+plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
+                     peakCol = col_peak, peakBg = paste0(col_peak, 40))
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+:+1: Works also for the second example EIC.
+:::
+
+## Correspondence
+
+- Apply these settings for the correspondence analysis of the full data set
+
+```{r}
+#| echo: true
+#' perform correspondence analysis on the full data set
+mse <- groupChromPeaks(mse, param = pdp)
+```
+
+. . .
+
+- :point_up: we should evaluate the results again on example EICs
+
+## Correspondence
+
+- Evaluate results on the expanded region around example EIC 1:
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-9"
+#' extract EIC after final correspondence
+a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
+
+#' plot the actual correspondence results by setting `simulate = FALSE`
+col_peak <- col_sample[chromPeaks(a)[, "sample"]]
+plotChromPeakDensity(a, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40),
+                     simulate = FALSE) # show actual results
+grid()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#' extract EIC
+a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
+
+#' plot the actual correspondence results by setting `simulate = FALSE`
+col_peak <- col_sample[chromPeaks(a)[, "sample"]]
+plotChromPeakDensity(a, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40),
+                     simulate = FALSE)
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+- Correctly grouped peaks into 3 features :muscle:
+:::
+
+## Correspondence
+
+- Second example EIC:
+
+```{r}
+#| echo: true
+#' extract EIC after final correspondence
+eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+
+col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
+plotChromPeakDensity(eic_2, col = col_sample, peakCol = col_peak,
+                     peakBg = paste0(col_peak, 40),
+                     simulate = FALSE)
+grid()
+```
+
+::: {.callout-note .center appearance="simple"}
+- Peaks grouped into one feature :muscle:
+:::
+
+## Correspondence results
+
+. . .
+
+- LC-MS feature definitions
+
+. . .
+
+```{r}
+#| echo: true
+#' extract feature definitions
+featureDefinitions(mse) |>
+    head()
+```
+
+. . .
+
+- Number of defined features:
+
+```{r}
+#| echo: true
+featureDefinitions(mse) |>
+    nrow()
+```
+
+## Correspondence results
+
+- Feature abundances
+
+. . .
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-5"
+#' extract feature abundances
+fvals <- featureValues(mse, method = "sum")
+
+colnames(fvals) <- sampleData(mse)$sample_desc
+head(fvals)
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#' extract feature abundances
+fvals <- featureValues(mse, method = "sum")
+
+colnames(fvals) <- sampleData(mse)$sample_desc
+head(fvals)
+```
+
+::: {.callout-note .center appearance="simple"}
+Rows are features, columns samples.
+:::
+
+::: {.callout-warning .center appearance="simple" .fragment .fade-in}
+Large number of missing values :fearful:
+:::
+
+. . .
+
+- Summarize the number of missing values per sample
+
+```{r}
+#| echo: true
+#' determine the number of missing values per sample
+nas <- apply(fvals, MARGIN = 2, function(z) sum(is.na(z)))
+
+barplot(nas, main = "Number of missing values", col = col_sample)
+```
+
+::: {.callout-note .center appearance="simple"}
+A reason for the high number of `NA`s: our choices for `sampleGroups` and
+`minFraction` defined *sample-specific* features.
+:::
+
+## Missing feature values
+
+::: {.incremental}
+- What to do with these missing values?
+- :expressionless: missing value imputation
+- :blush: gap-filling
+:::
+
+## *Gap-filling*
+
+::: {.incremental}
+- Reason for missing values in *xcms*-based preprocessing:
+  - chromatographic peak detection failed
+  - compound is absent
+- **Gap-filling**: in samples without detected peaks, integrate and report
+  MS signal from the feature's *feature area*:
+:::
+
+. . .
+
+```{r}
+#| echo: true
+#' get feature areas for the first 4 features
+featureArea(mse,
+            mzmin = function(z) quantile(z, probs = 0.25, na.rm = TRUE),
+            mzmax = function(z) quantile(z, probs = 0.75, na.rm = TRUE),
+            rtmin = function(z) quantile(z, probs = 0.25, na.rm = TRUE),
+            rtmax = function(z) quantile(z, probs = 0.75, na.rm = TRUE),
+            features = rownames(featureDefinitions(mse))[1:4])
+```
+
+::: {.callout-note .center appearance="simple"}
+*feature area*: *m/z* - retention time region where signal from the compound is
+expected (based on identified chrom peaks for that feature)
+:::
+
+. . .
+
+- Perform gap-filling in *xcms*:
+
+```{r}
+#| echo: true
+#' configure and perform gap-filling
+cpap <- ChromPeakAreaParam(minMzWidthPpm = 10)
+mse <- fillChromPeaks(mse, param = cpap, chunkSize = 4L)
+```
+
+## Gap-filling
+
+- Impact of gap-filling:
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-3|5-7"
+#' extract feature abundances after gap-filling
+fvals <- featureValues(mse, method = "sum")
+colnames(fvals) <- sampleData(mse)$sample_desc
+
+#' determine the number of missing values per sample
+nas <- apply(fvals, MARGIN = 2, function(z) sum(is.na(z)))
+barplot(nas, main = "Number of missing values", col = col_sample)
+```
+
+. . .
+
+```{r}
+#| echo: false
+fvals <- featureValues(mse, method = "sum")
+colnames(fvals) <- sampleData(mse)$sample_desc
+
+#' determine the number of missing values per sample
+nas <- apply(fvals, MARGIN = 2, function(z) sum(is.na(z)))
+barplot(nas, main = "Number of missing values", col = col_sample)
+```
+
+::: {.callout-note .center appearance="simple"}
+:muscle: reduced from ~ 10000 to ~ 2000 missing values per sample.
+:::
+
+## Preprocessing results
+
+- Feature definitions (*m/z* and retention times)
+- Feature abundances
+
+. . .
+
+- Convert results to a `SummarizedExperiment`
+
+```{r}
+#| echo: true
+#' convert results to SummarizedExperiment
+se <- quantify(mse, method = "sum")
+```
+
+::: {.callout-note .center appearance="simple"}
+`SummarizedExperiment` can be used as input object in Bioconductor-based
+analysis workflows.
+:::
+
+. . .
+
+- Export the results tables to a xls or csv file
+
+```{r}
+#| echo: true
+#' compile table
+res <- cbind(
+    feature_id = rownames(featureDefinitions(mse)),
+    featureDefinitions(mse)[, c("mzmed", "rtmed")],
+    featureValues(mse, method = "sum"))
+head(res)
+```
+
+# What next?
+
+## Data normalization, filtering etc
+
+- QA and filtering
+- exploratory data analysis
+- data normalization
+- statistical data analysis
+- annotation
+
+. . .
+
+Details and example workflows available at
+[Metabonaut](https://rformassspectrometry.github.io/Metabonaut)
+
+![](images/Metabonaut.png){.absolute top=100 left=500 height="200"}
+
+:::{.callout-note .center appearance="simple"}
+:link: https://RforMassSpectrometry.github.io/Metabonaut
+:::
+
+## Using *xcms* results in external tools
+
+- **Example**: perform feature-based molecular networking (FBMS) with GNPS
+- We need:
+  - the feature abundance matrix
+  - MS2 spectra for each feature
+
+::: {.callout-note .center appearance="simple" .fragment .fade-in}
+The same data/format could also be used as input for other software.
+:::
+
+## Extract features' MS2 spectra
+
+- Identify and extract all MS2 spectra for LC-MS features:
+
+. . .
+
+```{r}
+#| echo: true
+#' get MS2 spectra for features
+ms2 <- featureSpectra(mse)
+```
+
+::: {.callout-note .center appearance="simple"}
+MS2 spectra with their retention time and precursor *m/z* within the retention time -
+*m/z* range of any of a feature's chromatographic peak.
+:::
+
+. . .
+
+```{r}
+#| echo: true
+ms2
+```
+
+## Extract features' MS2 spectra
+
+- Overview of extracted MS2 spectra:
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4-5"
+#' count the number of MS2 spectra per feature
+ms2_count <- table(ms2$feature_id)
+
+#' the number of LC-MS features with at least one MS2 spectrum:
+length(ms2_count)
+```
+
+. . .
+
+```{r}
+#| echo: false
+ms2_count <- table(ms2$feature_id)
+length(ms2_count)
+```
+
+. . .
+
+```{r}
+#| echo: true
+#' the average number of MS2 spectra per feature:
+mean(ms2_count)
+```
+
+::: {.callout-note .center appearance="simple"}
+On average 7 MS2 spectra per feature; these can be from any of the samples.
+:::
+
+## Extract features' MS2 spectra
+
+- Inspect MS2 spectra for the first feature
+
+```{r}
+#| echo: true
+#| eval: false
+#| fig-width: 9.5
+#| fig-height: 9.5
+#| code-line-numbers: "1-2|4-5"
+#' select MS2 spectra for the first feature
+a <- ms2[ms2$feature_id == ms2$feature_id[1]]
+
+#' plot the spectra
+plotSpectra(a)
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 9.5
+#| fig-height: 9.5
+#' select MS2 spectra for the first feature
+a <- ms2[ms2$feature_id == ms2$feature_id[1]]
+
+#' plot the spectra
+plotSpectra(a)
+```
+
+::: {.callout-note .center appearance="simple"}
+Spectra *look* similar - are they actually similar :no_mouth:?
+:::
+
+## Extract features' MS2 spectra
+
+- Calculate pairwise similarity between the feature's MS2 spectra
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-2|4"
+#' calculate dot product similarity
+sim <- compareSpectra(a, ppm = 10, tolerance = 0)
+
+pheatmap(sim)
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+#' calculate dot product similarity
+sim <- compareSpectra(a, ppm = 10, tolerance = 0)
+
+pheatmap(sim)
+```
+
+::: {.callout-note .center appearance="simple"}
+They are similar :white_check_mark:
+:::
+
+## Extract features' MS2 spectra
+
+- Instead of reporting multiple MS2 per feature, we combine them into a
+  single *consensus* spectrum per feature:
+
+. . .
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-3|4|5|6-7|8|1-8
+#' define consensus spectra per feature
+ms2_cons <- combineSpectra(
+    ms2,                     # original MS2 spectra
+    f = ms2$feature_id,      # define the groups of MS2 to combine
+    p = rep(1, length(ms2)), # avoid parallel processing
+    peaks = "intersect",     # keep only peaks present in
+    minProp = 0.75,          # 75% of spectra (per feature)
+    ppm = 10)                # similarity of *m/z* of peaks to aggregate
+```
+
+::: {.callout-note .center appearance="simple" .fragment .fade-in}
+`ms2_cons` :point_left: a single MS2 spectrum per feature with peaks that were
+present in > 75% of the MS2 spectra for that feature.
+:::
+
+## Extract features' MS2 spectra
+
+- Simple filtering: keep MS2 spectra with more than one fragment peak.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: 1-2|4-6
+#' remove spectra with a single fragment peak
+ms2_cons <- ms2_cons[lengths(ms2_cons) > 1]
+
+#' summary of the number of peaks/MS2
+lengths(ms2_cons) |>
+    quantile()
+```
+
+. . .
+
+```{r}
+#| echo: false
+#| eval: true
+ms2_cons <- ms2_cons[lengths(ms2_cons) > 1]
+lengths(ms2_cons) |>
+    quantile()
+```
+
+
+::: {.callout-note .center appearance="simple" .fragment .fade-in}
+Many additional/other spectra processing and cleaning functionality available in
+the *Spectra* package.
+:::
+
+## Format and export data for GNPS
+
+- Export the feature abundance matrix:
+
+. . .
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-3|4-5|7-8|10-12
+#' get feature definitions
+fdef <- featureDefinitions(mse)[, c("mzmed", "mzmin", "mzmax",
+                                    "rtmed", "rtmin", "rtmax")]
+#' combine with the feature value table
+fvals <- cbind(Row.names = rownames(fdef), fdef, fvals)
+
+#' restrict the feature abundance matrix to features with MS2 spectra
+fvals <- fvals[ms2_cons$feature_id, ]
+
+#' export the data
+write.table(fvals, "xcms_ms2_features.txt", sep = "\t",
+            quote = FALSE, row.names = FALSE)
+```
+
+## Format and export data for GNPS
+
+- Format and export MS2 spectra:
+
+. . .
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-3|5-8
+#' load functions for GNPS-specific spectra formatting
+source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R")
+ms2_cons <- formatSpectraForGNPS(ms2_cons)
+
+#' export the MS2 spectra in MGF format
+library(MsBackendMgf)
+export(ms2_cons, backend = MsBackendMgf(),
+       file = "xcms_ms2_spectra.mgf")
+```
+
+::: {.callout-note .center appearance="simple"}
+Define and name MGF metadata fields as expected by GNPS.
+:::
+
+::: {.callout-note .center appearance="simple" .fragment .fade-in}
+The exported txt and MGF files could now be used for feature-based molecular
+networking in GNPS :open_hands:
+:::
+
+# THANKS!
+
+## Summary
+
+- Short example workflow for *xcms*-based preprocessing of LC-MS/MS data
+- :link: Source code of this presentation:
+  [https://github.com/jorainer/xcms4gnps2](https://github.com/jorainer/xcms4gnps2)
+- :link: docker image for the analysis:
+  [https://hub.docker.com/r/jorainer/xcms4gnps2](https://hub.docker.com/r/jorainer/xcms4gnps2)
+
+. . .
+
+- :metal: integration with R and packages from the *RforMassSpectrometry*
+  initiative (+ Bioconductor) enable highly customizable analyses
+- :muscle: large-scale data support: memory-saving and scalable
+- :repeat: fully reproducible
+
+. . .
+
+- For more :point_right: **Metabonaut** :link:
+  [https://rformassspectrometry.github.io/Metabonaut](https://rformassspectrometry.github.io/Metabonaut)
+
+
+## Acknowledgments
+
+- All *RforMassSpectrometry* contributors :raised_hands:
+- Philippine Louail
+- Steffen Neumann
+
+![](images/EULogo.jpg){.absolute bottom=58 left=700 height="60"}
+
+::: {.absolute bottom=40 left=705}
+::: {style="font-size:16px"}
+Project *HUMAN* (101073062)
+:::
+:::
