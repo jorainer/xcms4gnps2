@@ -171,7 +171,7 @@ legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 ``` r
 
 #' TIC
-tic <- chromatogram(mse, aggregationFun = "max")
+tic <- chromatogram(mse, aggregationFun = "sum")
 
 plot(tic, col = paste0(col_sample, 80), main = "TIC", lwd = 2)
 grid()
@@ -233,7 +233,7 @@ plot, using a different color per sample.
 
 ``` r
 
-plotSpectraOverlay(bps, col = paste0(col_sample, 40))
+plotSpectraOverlay(bps, col = paste0(col_sample, 40), lwd = 2)
 grid()
 legend("topright", col = col, legend = names(col), lty = 1)
 ```
@@ -1274,9 +1274,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Fri Nov 28 14:08:38 2025]
-     Filter: select MS level(s) 2 [Fri Nov 28 14:14:35 2025]
-     Filter: select MS level(s) 2 [Fri Nov 28 14:14:36 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 12:42:35 2025]
+     Filter: select MS level(s) 2 [Tue Dec  2 12:48:30 2025]
+     Filter: select MS level(s) 2 [Tue Dec  2 12:48:31 2025]
      ...2 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1380,9 +1380,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Fri Nov 28 14:08:38 2025]
-     Filter: select MS level(s) 2 [Fri Nov 28 14:14:35 2025]
-     Filter: select MS level(s) 2 [Fri Nov 28 14:14:36 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 12:42:35 2025]
+     Filter: select MS level(s) 2 [Tue Dec  2 12:48:30 2025]
+     Filter: select MS level(s) 2 [Tue Dec  2 12:48:31 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1434,9 +1434,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Fri Nov 28 14:08:38 2025]
-     Filter: select MS level(s) 2 [Fri Nov 28 14:14:35 2025]
-     Filter: select MS level(s) 2 [Fri Nov 28 14:14:36 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 12:42:35 2025]
+     Filter: select MS level(s) 2 [Tue Dec  2 12:48:30 2025]
+     Filter: select MS level(s) 2 [Tue Dec  2 12:48:31 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
@@ -1619,7 +1619,7 @@ sessionInfo()
     [35] knitr_1.50                  IRanges_2.44.0
     [37] BiocBaseUtils_1.12.0        Matrix_1.7-4
     [39] igraph_2.2.1                tidyselect_1.2.1
-    [41] abind_1.4-8                 yaml_2.3.10
+    [41] abind_1.4-8                 yaml_2.3.11
     [43] doParallel_1.0.17           codetools_0.2-20
     [45] affy_1.88.0                 lattice_0.22-7
     [47] tibble_3.3.0                plyr_1.8.9
@@ -1637,7 +1637,7 @@ sessionInfo()
     [71] mzR_2.44.0                  fs_1.6.6
     [73] XML_3.99-0.20               grid_4.5.2
     [75] impute_1.84.0               tidyr_1.3.1
-    [77] MsCoreUtils_1.21.0          PSMatch_1.14.0
+    [77] MsCoreUtils_1.22.1          PSMatch_1.14.0
     [79] cli_3.6.5                   S4Arrays_1.10.0
     [81] dplyr_1.1.4                 AnnotationFilter_1.34.0
     [83] pcaMethods_2.2.0            gtable_0.3.6
