@@ -20,7 +20,7 @@ library(Spectra)
 library(xcms)
 library(MsBackendMgf)
 library(RColorBrewer) 
-library(pheatmap)     
+library(pheatmap)
 
 # Parallel processing setup
 nb_cores <- 4
@@ -30,7 +30,8 @@ register(MulticoreParam(nb_cores)) # Change to SnowParam(4) if on Windows
 
 # Define Experiment Metadata 
 
-We define the file paths and grouping manually here. In a production pipeline, you would read this from a CSV file.
+We define the file paths and grouping manually here. In a production pipeline,
+you would read this from a CSV file.
 
 ```{r}
 # Define filenames and metadata
@@ -48,15 +49,19 @@ pd <- data.frame(
                   "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
                   "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
                   "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
-    sample_name = c(rep("A15M", 3), rep("A45M", 3), rep("A5M", 3), rep("M", 3), "PPL"),
-    sample_desc = c("A15M_R1", "A15M_R2", "A15M_R3", "A45M_R1", "A45M_R2", "A45M_R3",
-                    "A5M_R1", "A5M_R2", "A5M_R3", "M_R1", "M_R2", "M_R3", "PPL_R1"),
+    sample_name = c(rep("A15M", 3), rep("A45M", 3), rep("A5M", 3),
+                    rep("M", 3), "PPL"),
+    sample_desc = c("A15M_R1", "A15M_R2", "A15M_R3", "A45M_R1", "A45M_R2",
+                    "A45M_R3",
+                    "A5M_R1", "A5M_R2", "A5M_R3", "M_R1", "M_R2", "M_R3"
+                    , "PPL_R1"),
     replicate = c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1)
 )
 
 # Set path (Adjust this to your local folder!)
 # These files were downloaded from the MassIVE ftp server.
-path <- file.path("/data", "massive-ftp.ucsd.edu", "v04", "MSV000090156", "peak", "mzml", "POS_MSMS", "Lab_2")
+path <- file.path("/data", "massive-ftp.ucsd.edu", "v04", "MSV000090156", 
+                  "peak", "mzml", "POS_MSMS", "Lab_2")
 
 # Load data
 mse <- readMsExperiment(file.path(path, pd$file_name), sampleData = pd)
@@ -81,7 +86,8 @@ plot(bpc, col = paste0(col_sample, 80), main = "BPC (Raw)", lwd = 2)
 legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 ```
 
-The chromatography is empty before 20s and after 850s. We filter the dataset to reduce processing time.
+The chromatography is empty before 20s and after 850s. We filter the dataset to
+reduce processing time.
 
 ```{r}
 mse <- filterSpectra(mse, filterRt, c(20, 850))
@@ -292,6 +298,22 @@ mse <- refineChromPeaks(mse, MergeNeighboringPeaksParam(expandRt = 1,
                         chunkSize = nb_cores)
 ```
 
+We can check the results on our example EICs:
+
+```{r}
+#| fig-cap: "EICs with detected chromatographic peaks indicated."
+eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
+eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
+
+par(mfrow = c(2, 1))
+plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+plot(eic_2, col = paste0(col_sample, 80), lwd = 2)
+grid()
+legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
+```
+
 
 ## Evaluate peak-picking 
 
@@ -329,7 +351,7 @@ grid()
 ```
 
 
-# Alignment (Retention time corretion)
+# Alignment (Retention time correction)
 
 We align samples using "Anchor Peaks" (peaks present in most samples).
 
@@ -359,7 +381,9 @@ plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-With the used settings, in particular parameter `bw`, the present chromatographic peaks would be split into two separate LC-MS features (indicated with a grey rectangle in the lower panel).
+With the used settings, in particular parameter `bw`, the present
+chromatographic peaks would be split into two separate LC-MS features
+(indicated with a grey rectangle in the lower panel).
 
 ```{r}
 pdp@bw <- 7
@@ -383,7 +407,7 @@ Here we need to pay attention to the following parameters:
 - `minFraction`: minimum fraction of samples a peak must be present in to be
   considered an anchor peak.
 - `span`: smoothing parameter for the retention time correction function.Values
-  of 0.5 usually work but in this case after doing some testing weneeded to go
+  of 0.5 usually work but in this case after doing some testing we needed to go
   as low as 0.1
 
 ```{r}
@@ -405,9 +429,10 @@ legend("topleft", col = col, lty = 1,
        legend = names(col))
 ```
 
-A stronger alignment can be observed for the retention time area from 750 to 800 seconds.
+A stronger alignment can be observed for the retention time area from 750 to
+800 seconds.
 
-We evalaute also based on chosen eics: 
+We evaluate also based on chosen eics: 
 
 ```{r}
 #| fig-cap: "EICs before and after retention time alignment for first example regions."
@@ -436,13 +461,15 @@ plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
 grid()
 ```
 
-Note that in most cases it is not necessary that all samples are perfectly aligned. Some variation in retention time can be accounted for in the final correspondence analysis.
+Note that in most cases it is not necessary that all samples are perfectly
+aligned. Some variation in retention time can be accounted for in the final
+correspondence analysis.
 
 # Feature Definition
 
-Now that RT is aligned, we perform the final grouping of peaks into "Features."
+Now that RT is aligned, we perform the final grouping of peaks into "Features".
 We require a feature to be present in at least 67% of replicates within a sample
-group (i.e., 2 out of 3), this is precisedin the `sampleGroups` parameter.
+group (i.e., 2 out of 3), this is precised in the `sampleGroups` parameter.
 As for now we leave the `bw` parameter at 7.
 
 ```{r}
@@ -455,7 +482,7 @@ pdp <- PeakDensityParam(
     bw = 7)
 ```
 
-If we now chekc the problematic second eic again: 
+If we now check the problematic second eic again: 
 
 ```{r}
 #| fig-cap: "Simulation of correspondence analysis on the second example EIC."
@@ -489,14 +516,16 @@ plotChromPeakDensity(a, param = pdp, col = col_sample,
 grid()
 ```
 
-We now successfully group the signals into distinct features. We thus set `bw = 3` for the final feature definition. 
+We now successfully group the signals into distinct features. We thus set
+`bw = 3` for the final feature definition. 
 
 ```{r}
 #' perform correspondence analysis on the full data set
 mse <- groupChromPeaks(mse, param = pdp)
 ```
 
-Checking results on overall data after processing is important as some algortihm will behave diffferently on eics and full data. 
+Checking results on overall data after processing is important as some
+algorithms will behave differently on eics and full data. 
 
 ```{r}
 #| fig-cap: "Correspondence results for an m/z slice with multiple closely eluting compounds."
@@ -515,12 +544,15 @@ grid()
 cat("Defined Features:", nrow(featureDefinitions(mse)))
 ```
 
-This large number is mainly explain of the low `minFraction` parameter we used.
-which required a chromatographic peak to be detected in only 2 out of the 3 replicates for each individual sample to define, and combine them into, a feature.
+This large number is mainly explain by the low `minFraction` parameter we used.
+which required a chromatographic peak to be detected in only 2 out of the 3
+replicates for each individual sample to define, and combine them into, a
+feature.
 
 # Gap-filling 
 
-We can now extract the abundance estimates of all features with the`featureValues()` function.
+We can now extract the abundance estimates of all features with the 
+`featureValues()` function.
 
 ```{r}
 #| fig-cap: "Number of missing values per sample after feature definition."
@@ -534,18 +566,23 @@ barplot(nas, main = "Number of missing values", col = col_sample)
 ```
 
 For the present data set there are a large number of missing values.
-A missing value indicates failure to detect a chromatographic peak for the m/z - retention time region of a feature in a sample.
+A missing value indicates failure to detect a chromatographic peak for the
+m/z - retention time region of a feature in a sample.
 This can have multiple reasons:
 
 - the compound might simply not be present in the sample
-- the original signal is too noisy, to low in abundance, or does not fit the expected shape for the peak detection algorithm to identify a chromatographic peak.
+- the original signal is too noisy, too low in abundance, or does not fit the
+expected shape for the peak detection algorithm to identify a chromatographic
+peak.
 
-Gap filling will check in samples with a missing value for a feature (i.e., in which no chromatographic peak was detected) and integrate all intensities measured within the m/z - retention time area of the feature. 
+Gap filling will check in samples with a missing value for a feature (i.e., in
+which no chromatographic peak was detected) and integrate all intensities
+measured within the m/z - retention time area of the feature. 
 
 ```{r}
 #' configure and perform gap-filling
 cpap <- ChromPeakAreaParam(minMzWidthPpm = 10)
-mse <- fillChromPeaks(mse, param = cpap, chunkSize = 4L)
+mse <- fillChromPeaks(mse, param = cpap, chunkSize = nb_cores)
 ```
 
 We extract the feature values again and determine the number of missing values.
@@ -558,7 +595,8 @@ colnames(fvals) <- sampleData(mse)$sample_desc
 
 #' determine the number of missing values per sample and plot them
 nas <- apply(fvals, MARGIN = 2, function(z) sum(is.na(z)))
-barplot(nas, main = "Number of missing values (after gap-filling)", col = col_sample)
+barplot(nas, main = "Number of missing values (after gap-filling)",
+        col = col_sample)
 ```
 
 A considerable amount of values could thus be rescued.
@@ -630,23 +668,28 @@ fvals_export <- cbind(Row.names = rownames(fdef), fdef, fvals)
 # Filter to only features that actually have MS2 spectra
 fvals_export <- fvals_export[ms2_cons$feature_id, ]
 
-write.table(fvals_export, "xcms_ms2_features.txt", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(fvals_export, "xcms_ms2_features.txt", sep = "\t", quote = FALSE,
+            row.names = FALSE)
 
 # EXPORT 2: MGF File (Spectra)
 # Helper function to format for GNPS
-source("[https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R](https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R)")
+source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R")
 ms2_cons_gnps <- formatSpectraForGNPS(ms2_cons)
 
 export(ms2_cons_gnps, backend = MsBackendMgf(), file = "xcms_ms2_spectra.mgf")
 ```
 
-These 2 files can now be uploaded to GNP2S for FBMN analysis.
+These 2 files can now be uploaded to GNPS2 for FBMN analysis.
 
 # Summary 
 
-- R-based data analysis workflows allow data set specific, tailored, analysis of LC-MS data.
-- The xcms R package for LC-MS data preprocessing is tightly integrated into a broader ecosystem of R packages.
-- The quarto system would also allow combining R and Python functionality into the same workflow document with the SpectriPy R-package translating between R and Python MS data structures.
+- R-based data analysis workflows allow data set specific, tailored, analysis of
+  LC-MS data.
+- The xcms R package for LC-MS data preprocessing is tightly integrated into a
+  broader ecosystem of R packages.
+- The quarto system would also allow combining R and Python functionality into
+  the same workflow document with the SpectriPy R-package translating between
+  R and Python MS data structures.
 
 # Session information 
 
