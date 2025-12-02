@@ -149,7 +149,7 @@ legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 
 ```{r}
 #' TIC
-tic <- chromatogram(mse, aggregationFun = "max")
+tic <- chromatogram(mse, aggregationFun = "sum")
 
 plot(tic, col = paste0(col_sample, 80), main = "TIC", lwd = 2)
 grid()
@@ -203,7 +203,7 @@ last file. We can also plot all spectra into the same plot, using a different
 color per sample.
 
 ```{r}
-plotSpectraOverlay(bps, col = paste0(col_sample, 40))
+plotSpectraOverlay(bps, col = paste0(col_sample, 40), lwd = 2)
 grid()
 legend("topright", col = col, legend = names(col), lty = 1)
 ```
