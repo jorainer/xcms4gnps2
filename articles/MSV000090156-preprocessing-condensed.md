@@ -175,7 +175,7 @@ To define them we need to evaluate the raw data.
 ``` r
 
 #' extract BPC
-par(mfrow = c(2, 1), mar = c(0, 4.3, 1.5, 0.1))
+par(mfrow = c(2, 1))
 bpc <- chromatogram(mse, aggregationFun = "max")
 plot(bpc, col = paste0(col_sample, 80), lwd = 2)
 grid()
@@ -335,27 +335,9 @@ Show the code
 ``` r
 
 eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
-```
-
-    Extracting chromatographic data
-
-    Processing chromatographic peaks
-
-Show the code
-
-``` r
-
 eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
-```
 
-    Extracting chromatographic data
-    Processing chromatographic peaks
-
-Show the code
-
-``` r
-
-par(mfrow = c(2, 1), mar = c(0, 4.3, 1.5, 0.1))
+par(mfrow = c(2, 1))
 plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
 grid()
 legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
@@ -521,7 +503,7 @@ eic_1_adj <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
 
 ``` r
 
-par(mfrow = c(2, 1), mar = c(0, 4.3, 1.5, 0.1))
+par(mfrow = c(2, 1))
 #' Setting peakType = "none" prevents identified chromatographic peaks to be
 #' indicated in the plot.
 plot(eic_1, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
@@ -547,7 +529,7 @@ eic_2_adj <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
 
 ``` r
 
-par(mfrow = c(2, 1), mar = c(0, 4.3, 1.5, 0.1))
+par(mfrow = c(2, 1))
 plot(eic_2, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
 grid()
 legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)

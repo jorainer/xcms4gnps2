@@ -2,6 +2,10 @@
 
 ## xcms-gnps2 version 0.99
 
+### Changes in version 0.99.4
+
+- Add condensed version of preprocessing
+
 ### Changes in version 0.99.3
 
 - Add export for GNPS.
