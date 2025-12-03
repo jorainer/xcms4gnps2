@@ -1274,9 +1274,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 10:07:44 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 10:13:45 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 10:13:46 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1380,9 +1380,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 10:07:44 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 10:13:45 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 10:13:46 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1434,9 +1434,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 10:07:44 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 10:13:45 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 10:13:46 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**

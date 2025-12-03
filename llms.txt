@@ -3,7 +3,8 @@
 [![License: CC BY-NC
 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)  
 [![Docker Image Version (latest by
-date)](https://img.shields.io/docker/v/jorainer/xcms4gnps2?label=docker%20image)](https://hub.docker.com/repository/docker/jorainer/xcms4gnps2)
+date)](https://img.shields.io/docker/v/jorainer/xcms4gnps2?label=docker%20image)](https://hub.docker.com/repository/docker/jorainer/xcms4gnps2)  
+[![DOI](https://zenodo.org/badge/1099034068.svg)](https://doi.org/10.5281/zenodo.17800013)
 
 This repository contains an example workflow for preprocessing and
 preparation of an LC-MS/MS data set for feature-based molecular
