@@ -30,7 +30,7 @@ analysis options as well as parameter choices see also the
 
 This analysis and the used settings should be considered *initial* with
 potential refinement and improvement based on discussions expected during
-integration of the analysis into the FBMS workflow.
+integration of the analysis into the FBMN workflow.
 
 # Required software packages
 
@@ -1172,7 +1172,7 @@ Thus, with a little bit of R coding we can easily create customized data
 visualizations.
 
 
-# Formatting and exporting data for FBMS
+# Formatting and exporting data for FBMN
 
 We next export the feature abundance matrix and the fragment spectra for
 feature-based molecular networking with GNPS. Similar to the original workflow

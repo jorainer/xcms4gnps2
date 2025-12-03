@@ -1,3 +1,9 @@
+# xcms-gnps2 version 1.0
+
+## Changes in version 1.0.0
+
+- Fix some misspellings of FBMN.
+
 # xcms-gnps2 version 0.99
 
 ## Changes in version 0.99.4

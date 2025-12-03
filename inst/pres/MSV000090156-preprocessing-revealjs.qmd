@@ -1440,7 +1440,7 @@ Details and example workflows available at
 
 ## Using *xcms* results in external tools
 
-- **Example**: perform feature-based molecular networking (FBMS) with GNPS
+- **Example**: perform feature-based molecular networking (FBMN) with GNPS
 - We need:
   - the feature abundance matrix
   - MS2 spectra for each feature
