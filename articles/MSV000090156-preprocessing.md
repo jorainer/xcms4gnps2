@@ -17,7 +17,7 @@ tutorials ([Louail, Graeve, et al.
 
 This analysis and the used settings should be considered *initial* with
 potential refinement and improvement based on discussions expected
-during integration of the analysis into the FBMS workflow.
+during integration of the analysis into the FBMN workflow.
 
 ## Required software packages
 
@@ -1274,9 +1274,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 15:53:23 2025]
-     Filter: select MS level(s) 2 [Tue Dec  2 15:59:05 2025]
-     Filter: select MS level(s) 2 [Tue Dec  2 15:59:06 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1380,9 +1380,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 15:53:23 2025]
-     Filter: select MS level(s) 2 [Tue Dec  2 15:59:05 2025]
-     Filter: select MS level(s) 2 [Tue Dec  2 15:59:06 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1434,9 +1434,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 15:53:23 2025]
-     Filter: select MS level(s) 2 [Tue Dec  2 15:59:05 2025]
-     Filter: select MS level(s) 2 [Tue Dec  2 15:59:06 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
+     Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
@@ -1481,7 +1481,7 @@ in the retention time - *m/z* space.
 Thus, with a little bit of R coding we can easily create customized data
 visualizations.
 
-## Formatting and exporting data for FBMS
+## Formatting and exporting data for FBMN
 
 We next export the feature abundance matrix and the fragment spectra for
 feature-based molecular networking with GNPS. Similar to the original

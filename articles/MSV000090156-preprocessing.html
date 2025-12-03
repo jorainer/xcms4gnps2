@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xcms4gnps2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
 </h2>
 <p>This document describes data inspection and preprocessing of an LC-MS/MS data set using <em>xcms</em> <span class="citation" data-cites="louail_xcms_2025">(<a href="#ref-louail_xcms_2025" role="doc-biblioref">Louail, Brunius, et al. 2025</a>)</span> and export of the data for subsequent feature-based molecular networking (FBMN) with GNPS2. Functionality from different packages from the RforMassSpectrometry package ecosystem are combined to visualize and process the data.</p>
 <p>For details and more in depth description of the various visualizations and analysis options as well as parameter choices see also the <a href="https://rformassspectrometry.github.io/Metabonaut" class="external-link">Metabonaut</a> tutorials <span class="citation" data-cites="louail_rformassspectrometrymetabonaut_2025">(<a href="#ref-louail_rformassspectrometrymetabonaut_2025" role="doc-biblioref">Louail, Graeve, et al. 2025</a>)</span>.</p>
-<p>This analysis and the used settings should be considered <em>initial</em> with potential refinement and improvement based on discussions expected during integration of the analysis into the FBMS workflow.</p>
+<p>This analysis and the used settings should be considered <em>initial</em> with potential refinement and improvement based on discussions expected during integration of the analysis into the FBMN workflow.</p>
 </section><section class="section level2"><h2 id="required-software-packages">Required software packages<a class="anchor" aria-label="anchor" href="#required-software-packages"></a>
 </h2>
 <p>The various software packages required for the analysis are defined and loaded below. All packages are available through Bioconductor or CRAN and can be installed with <code>BiocManager::install(&lt;package name&gt;)</code>.</p>
@@ -1086,9 +1086,9 @@ Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
 Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
  ... 10 more files
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 15:53:23 2025]
- Filter: select MS level(s) 2 [Tue Dec  2 15:59:05 2025]
- Filter: select MS level(s) 2 [Tue Dec  2 15:59:06 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
+ Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
+ Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
  ...3 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1173,9 +1173,9 @@ Processing:
 3091         2   749.801      3791
  ... 40 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 15:53:23 2025]
- Filter: select MS level(s) 2 [Tue Dec  2 15:59:05 2025]
- Filter: select MS level(s) 2 [Tue Dec  2 15:59:06 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
+ Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
+ Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
  ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1224,9 +1224,9 @@ Processing:
 3089         2   749.801      3791
  ... 40 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Tue Dec  2 15:53:23 2025]
- Filter: select MS level(s) 2 [Tue Dec  2 15:59:05 2025]
- Filter: select MS level(s) 2 [Tue Dec  2 15:59:06 2025]
+ Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 09:43:05 2025]
+ Filter: select MS level(s) 2 [Wed Dec  3 09:48:57 2025]
+ Filter: select MS level(s) 2 [Wed Dec  3 09:48:59 2025]
  ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1261,7 +1261,7 @@ Processing:
 </div>
 </div>
 <p>Thus, with a little bit of R coding we can easily create customized data visualizations.</p>
-</section><section class="section level2"><h2 id="formatting-and-exporting-data-for-fbms">Formatting and exporting data for FBMS<a class="anchor" aria-label="anchor" href="#formatting-and-exporting-data-for-fbms"></a>
+</section><section class="section level2"><h2 id="formatting-and-exporting-data-for-fbmn">Formatting and exporting data for FBMN<a class="anchor" aria-label="anchor" href="#formatting-and-exporting-data-for-fbmn"></a>
 </h2>
 <p>We next export the feature abundance matrix and the fragment spectra for feature-based molecular networking with GNPS. Similar to the original workflow <span class="citation" data-cites="johannes_rainer_2025_17293665">(<a href="#ref-johannes_rainer_2025_17293665" role="doc-biblioref">Rainer and Louail 2025</a>)</span> described in <span class="citation" data-cites="nothias_feature-based_2020">(<a href="#ref-nothias_feature-based_2020" role="doc-biblioref">Nothias et al. 2020</a>)</span> we write the feature matrix to a tabulator delimited text file and the associated MS2 spectra to a file in Mascot Generic File (MGF) format. A future version of the workflow might use the mzTab-M format for the data exchange.</p>
 <p>We first compile the feature abundance matrix and export that to a txt file.</p>
