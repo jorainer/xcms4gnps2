@@ -15,3 +15,8 @@ vignettes/objects/
 *.h5
 data/*
 *processing_files/
+vignettes/*.txt
+vignettes/*.mgf
+*.RData
+inst/pres/*.txt
+inst/pres/*.mgf
