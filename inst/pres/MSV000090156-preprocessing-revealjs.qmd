@@ -1,15 +1,11 @@
 ---
 title: "LC-MS/MS data preprocessing with *xcms*"
 author:
-  - name: Philippine Louail
-    orcid: 0009-0007-5429-6846
-    affiliations:
-      - id: IfB
-        name: Institute for Biomedicine, Eurac Research
   - name: Johannes Rainer
     orcid: 0000-0002-6977-7147
     affiliations:
-      - ref: IfB
+      - id: IfB
+        name: Institute for Biomedicine, Eurac Research
 from: markdown+emoji
 format:
   revealjs:
