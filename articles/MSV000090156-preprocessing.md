@@ -1274,9 +1274,9 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 10:07:44 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 10:13:45 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 10:13:46 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec 10 11:12:19 2025]
+     Filter: select MS level(s) 2 [Wed Dec 10 11:18:25 2025]
+     Filter: select MS level(s) 2 [Wed Dec 10 11:18:27 2025]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1380,9 +1380,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 10:07:44 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 10:13:45 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 10:13:46 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec 10 11:12:19 2025]
+     Filter: select MS level(s) 2 [Wed Dec 10 11:18:25 2025]
+     Filter: select MS level(s) 2 [Wed Dec 10 11:18:27 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1434,9 +1434,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec  3 10:07:44 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 10:13:45 2025]
-     Filter: select MS level(s) 2 [Wed Dec  3 10:13:46 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Wed Dec 10 11:12:19 2025]
+     Filter: select MS level(s) 2 [Wed Dec 10 11:18:25 2025]
+     Filter: select MS level(s) 2 [Wed Dec 10 11:18:27 2025]
      ...4 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
@@ -1638,21 +1638,21 @@ sessionInfo()
     [73] XML_3.99-0.20               grid_4.5.2
     [75] impute_1.84.0               tidyr_1.3.1
     [77] MsCoreUtils_1.22.1          PSMatch_1.14.0
-    [79] cli_3.6.5                   S4Arrays_1.10.0
+    [79] cli_3.6.5                   S4Arrays_1.10.1
     [81] dplyr_1.1.4                 AnnotationFilter_1.34.0
     [83] pcaMethods_2.2.0            gtable_0.3.6
-    [85] digest_0.6.39               SparseArray_1.10.3
-    [87] farver_2.1.2                htmltools_0.5.8.1
+    [85] digest_0.6.39               SparseArray_1.10.6
+    [87] farver_2.1.2                htmltools_0.5.9
     [89] lifecycle_1.0.4             statmod_1.5.1
     [91] MASS_7.3-65                
 
 ## References
 
 Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, William Kumler,
-Norman Storz, Jan Stanstrup, Hendrik Treutler, et al. 2025. “Xcms at 20
-and Still in Peak Form: Anchoring a Complete Metabolomics Data
-Preprocessing and Analysis Software Ecosystem.” ChemRxiv.
-<https://doi.org/10.26434/chemrxiv-2025-2n2kh>.
+Norman Storz, Jan Stanstrup, Hendrik Treutler, et al. 2025. “Xcms in
+Peak Form: Now Anchoring a Complete Metabolomics Data Preprocessing and
+Analysis Software Ecosystem.” *Analytical Chemistry*, December.
+<https://doi.org/10.1021/acs.analchem.5c04338>.
 
 Louail, Philippine, Marilyn De Graeve, Anna Tagliaferri, Vinicius Verri
 Hernandes, Daniel Marques de Sá e Silva, and Johannes Rainer. 2025.
