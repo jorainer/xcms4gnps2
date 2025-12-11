@@ -16,6 +16,9 @@ GNPS2.
 This workflow explains preprocessing of a public LC-MS/MS data set with *xcms*
 and export of the results for feature-based molecular networking with GNPS.
 
+:movie_camera: a video recording of a presentation of this workshop is available
+at [https://youtu.be/yc6fsegFg-k](https://youtu.be/yc6fsegFg-k).
+
 -------------------------------------------------------------------------------
 
 ## 📌 Reproducibility & Usage
