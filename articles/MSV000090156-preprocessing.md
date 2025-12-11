@@ -1274,10 +1274,10 @@ ms2
     Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec 10 11:12:19 2025]
-     Filter: select MS level(s) 2 [Wed Dec 10 11:18:25 2025]
-     Filter: select MS level(s) 2 [Wed Dec 10 11:18:27 2025]
-     ...3 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Dec 11 14:59:07 2025]
+     Filter: select MS level(s) 2 [Thu Dec 11 15:05:17 2025]
+     Filter: select MS level(s) 2 [Thu Dec 11 15:05:20 2025]
+     ...4 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
 
@@ -1380,10 +1380,10 @@ ms2_cons
     3091         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec 10 11:12:19 2025]
-     Filter: select MS level(s) 2 [Wed Dec 10 11:18:25 2025]
-     Filter: select MS level(s) 2 [Wed Dec 10 11:18:27 2025]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Dec 11 14:59:07 2025]
+     Filter: select MS level(s) 2 [Thu Dec 11 15:05:17 2025]
+     Filter: select MS level(s) 2 [Thu Dec 11 15:05:20 2025]
+     ...5 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
 numbers of peaks per consensus spectrum is shown below.
@@ -1434,10 +1434,10 @@ ms2_cons
     3089         2   749.801      3791
      ... 40 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Wed Dec 10 11:12:19 2025]
-     Filter: select MS level(s) 2 [Wed Dec 10 11:18:25 2025]
-     Filter: select MS level(s) 2 [Wed Dec 10 11:18:27 2025]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Dec 11 14:59:07 2025]
+     Filter: select MS level(s) 2 [Thu Dec 11 15:05:17 2025]
+     Filter: select MS level(s) 2 [Thu Dec 11 15:05:20 2025]
+     ...5 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
 >
@@ -1619,7 +1619,7 @@ sessionInfo()
     [35] knitr_1.50                  IRanges_2.44.0
     [37] BiocBaseUtils_1.12.0        Matrix_1.7-4
     [39] igraph_2.2.1                tidyselect_1.2.1
-    [41] abind_1.4-8                 yaml_2.3.11
+    [41] abind_1.4-8                 yaml_2.3.12
     [43] doParallel_1.0.17           codetools_0.2-20
     [45] affy_1.88.0                 lattice_0.22-7
     [47] tibble_3.3.0                plyr_1.8.9
