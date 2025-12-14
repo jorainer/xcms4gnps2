@@ -35,10 +35,15 @@ https://jorainer.github.io/xcms4gnps2
 https://jorainer.github.io/xcms4gnps2
 ![](images/xcms4gnps2-workflow.png){width="700"}
 
+## Available material
+
+https://jorainer.github.io/xcms4gnps2
+![](images/xcms4gnps-rendered.png){width="700"}
+
 ## Overview
 
 ::: {.incremental}
-- **Plan**: perform & explain preprocessing of LC-MS/MS data.
+- **Plan**: perform & explain preprocessing of LC-MS/MS data using *xcms*.
 - Data: part of the MassIVE
   [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
   data set.
@@ -56,8 +61,8 @@ https://jorainer.github.io/xcms4gnps2
 #| echo: true
 library(MsExperiment) # container for MS data
 library(Spectra)      # main MS infrastructure for R
-library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
 library(MsBackendMgf) # to export MS data in MGF format
+library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
@@ -85,16 +90,12 @@ pd <- data.frame(
                   "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
                   "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
                   "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
-    sample_name = c("A15M", "A15M", "A15M",
-                    "A45M", "A45M", "A45M",
-                    "A5M", "A5M", "A5M",
-                    "M", "M", "M",
-                    "PPL"),
-    sample_desc = c("A15M_R1", "A15M_R2", "A15M_R3",
-                    "A45M_R1", "A45M_R2", "A45M_R3",
-                    "A5M_R1", "A5M_R2", "A5M_R3",
-                    "M_R1", "M_R2", "M_R3",
-                    "PPL_R1"),
+    sample_name = c("A15M", "A15M", "A15M", "A45M", "A45M",
+                    "A45M", "A5M", "A5M", "A5M", "M", "M",
+                    "M", "PPL"),
+    sample_desc = c("A15M_R1", "A15M_R2", "A15M_R3", "A45M_R1",
+                    "A45M_R2", "A45M_R3", "A5M_R1", "A5M_R2",
+                    "A5M_R3", "M_R1", "M_R2", "M_R3", "PPL_R1"),
     replicate = c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1)
 )
 ```
@@ -129,12 +130,6 @@ mse
 mse
 ```
 
-. . .
-
-::: {.callout-note appearance="simple"}
-MS data **not** loaded into memory.
-:::
-
 # Initial data inspection
 
 ## Base peak chromatogram
@@ -151,8 +146,8 @@ names(col) <- unique(sampleData(mse)$sample_name)
 col_sample <- col[sampleData(mse)$sample_name]
 ```
 
+- BPC: largest intensity per retention time (spectrum)
 - Are LC performances comparable? Are there problematic samples/injections?
-- BPC: largest intensity per retention time (spectrum).
 
 . . .
 
@@ -227,8 +222,8 @@ legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 
 ## Base peak spectrum
 
-- Is the *ion content* of samples comparable?
 - BPS: largest intensity per *m/z* value (bin).
+- Is the *ion content* of samples comparable?
 
 . . .
 
@@ -335,11 +330,12 @@ if (.Platform$OS.type == "unix") {
 
 ::: {.incremental}
 - We use *centWave* algorithm from *xcms*
-- Key parameter: `peakwidth`: expected lower and upper retention time width
+- Key parameter: `peakwidth`: expected lower and upper retention time width of
+  chromatographic peaks
 - Define the parameter on the actual data:
   - generally: use internal standards/known compounds
   - present data set: *unsupervised* approach: need to define retention time and
-  *m/z* ranges of interest
+  *m/z* ranges of interest:
 :::
 
 . . .
@@ -359,7 +355,6 @@ abline(v = rtr_1, lty = 2)
 :white_check_mark: RT region defined - need to identify the *m/z* of that
 signal.
 :::
-
 
 ## Chromatographic peak detection
 
@@ -405,7 +400,7 @@ grid()
 
 ## Chromatographic peak detection
 
-- Define a second example EIC
+- Define a **second** example EIC
 
 ```{r chrom-peak-detection-bpc2}
 #| echo: true
@@ -463,7 +458,7 @@ grid()
 
 - `peakwidth` should fit most peaks; we use `peakwidth = c(5, 20)`
   :white_check_mark:
-- Second important parameter: `ppm`
+- Second parameter: `ppm`
 
 ::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
 `ppm`: maximal acceptable deviation of *m/z* in consecutive spectra to consider
@@ -508,8 +503,8 @@ mse[1L] |>
 ```{r centWave-refinement}
 if (!file.exists("mse.RData")) {
     cwp <- CentWaveParam(
-        ppm = 20,
         peakwidth = c(5, 20),
+        ppm = 20,
         snthresh = 8,
         integrate = 2,
         mzdiff = 0.001
@@ -531,19 +526,14 @@ if (!file.exists("mse.RData")) {
 #| code-line-numbers: "1-8|9"
 #' configure and perform chromatographic peak detection
 cwp <- CentWaveParam(
-    ppm = 20,
     peakwidth = c(5, 20),
+    ppm = 20,
     snthresh = 8,
     integrate = 2,
     mzdiff = 0.001
 )
-mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
+mse <- findChromPeaks(mse, param = cwp)
 ```
-
-::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
-`chunkSize`: number of data files from which data should be imported and
-processed at a time.
-:::
 
 ## Chromatographic peak detection
 
@@ -552,16 +542,15 @@ processed at a time.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-line-numbers: "11-16|17"
 #' configure and perform chromatographic peak detection
 cwp <- CentWaveParam(
-    ppm = 20,
     peakwidth = c(5, 20),
+    ppm = 20,
     snthresh = 8,
     integrate = 2,
     mzdiff = 0.001
 )
-mse <- findChromPeaks(mse, param = cwp, chunkSize = 4L)
+mse <- findChromPeaks(mse, param = cwp)
 
 #' configure and perform *peak refinement*
 mnpp <- MergeNeighboringPeaksParam(
@@ -569,7 +558,7 @@ mnpp <- MergeNeighboringPeaksParam(
     expandMz = 0,
     ppm = 0,
     minProp = 0.75)
-mse <- refineChromPeaks(mse, mnpp, chunkSize = 4L)
+mse <- refineChromPeaks(mse, mnpp)
 ```
 
 ::: {.callout-note .center .smaller appearance="simple"}
@@ -661,18 +650,12 @@ grid()
 ![](images/alignment.png){.fragment width="500"}
 :::
 
-::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
-Shifts can be retention time-dependent
-:::
-
-
 ## Retention time alignment
 
 - We use the *peak groups* method of *xcms*:
   - robust, fast and flexible
-  - allows sub-set based alignment
-  - supports alignment against external reference
-  - minimizes retention time differences of *anchor peaks*
+  - *peak groups* method: minimizes retention time differences of **anchor
+    peaks**
 
 ::: {.callout-note .center .smaller appearance="simple" .fragment .fade-in}
 *anchor peak*: chromatographic peak present in most/all samples. Can be chrom
@@ -680,8 +663,10 @@ peaks of an internal standard or any other commonly present compound.
 :::
 
 ::: {.fragment .fade-in}
-- :point_up: *peak groups* method requires *anchor peaks*. Need to perform an
-  *initial* **correspondence analysis** to define these.
+- :point_up: *peak groups* method requires chrom peaks grouped across samples to
+  define *anchor peaks*.
+- :point_right: Need to perform an *initial* **correspondence analysis** to
+  define these.
 :::
 
 ## Correspondence analysis
@@ -693,8 +678,6 @@ peaks of an internal standard or any other commonly present compound.
 ![](images/correspondence2_03.png){width="700"}
 :::
 
-. . .
-
 - Takes chrom peaks' *m/z* and retention time into consideration
 
 ## Correspondence analysis
@@ -702,7 +685,7 @@ peaks of an internal standard or any other commonly present compound.
 - We use the *peak density* method from *xcms*
 - Key parameters: `binSize`, `ppm` (*m/z* similarity) and `bw` (retention time
   similarity)
-- To define `bw`: *simulate* correspondence analysis on EICs:
+- To define `bw`: **simulate** correspondence analysis on EICs:
 
 . . .
 
@@ -712,11 +695,11 @@ peaks of an internal standard or any other commonly present compound.
 #| code-line-numbers: "1-7|9-13"
 #' configure peak density method
 pdp <- PeakDensityParam(
-    sampleGroups = rep(1, length(mse)),
-    bw = 2,
-    minFraction = 0.2,
     binSize = 0.01,
-    ppm = 10)
+    ppm = 10,
+    bw = 2,
+    sampleGroups = rep(1, length(mse)),
+    minFraction = 0.2)
 
 #' simulate the analysis on the second example EIC
 col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
@@ -731,11 +714,11 @@ grid()
 #| echo: false
 #| eval: true
 pdp <- PeakDensityParam(
-    sampleGroups = rep(1, length(mse)),
-    bw = 2,
-    minFraction = 0.2,
     binSize = 0.01,
-    ppm = 10)
+    ppm = 10,
+    bw = 2,
+    sampleGroups = rep(1, length(mse)),
+    minFraction = 0.2)
 
 eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
 col_peak <- col_sample[chromPeaks(eic_2)[, "sample"]]
@@ -745,9 +728,11 @@ grid()
 ```
 
 ::: {.callout-note .center appearance="simple"}
-- upper panel: EIC signal + identified chromatographic peaks
-- lower panel: retention time of identified chromatographic peaks along RT axis
-- black solid line: density distribution of chrom peaks along retention times
+- **upper panel**: EIC signal + identified chromatographic peaks
+- **lower panel**: retention time of identified chromatographic peaks along RT
+  axis
+- **black solid line**: density distribution of chrom peaks along retention
+  times
 - chrom peaks within a density peak are grouped into a feature (grey box)
 :::
 
@@ -787,10 +772,11 @@ grid()
 ```
 
 ::: {.callout-note .center appearance="simple"}
-Results seem OK :ok_hand:
+- Results seem OK :ok_hand:
+- In general: use relaxed RT similarity for *initial* correspondence
 :::
 
-- Perform *initial* correspondence analysis with these settings
+- perform *initial* correspondence analysis with these settings
 
 ```{r}
 #| echo: true
@@ -888,7 +874,7 @@ No big changes visible. Better to *zoom* into specific retention time areas.
 
 ## Retention time alignment
 
-- :point_up: evaluate results on EICs: first example EIC
+- :point_up: evaluate results on EICs: **first** example EIC
 
 ```{r}
 #| echo: true
@@ -931,7 +917,7 @@ EICs already well aligned before retention time adjustment.
 
 ## Retention time alignment
 
-- :point_up: evaluate results on EICs: second example EIC
+- :point_up: evaluate results on EICs: **second** example EIC
 
 ```{r}
 #| echo: true
@@ -990,7 +976,7 @@ Stronger, and more local, alignment.
 
 ## Retention time alignment
 
-- Evaluate new alignment results: first example EIC
+- Evaluate new alignment results: **first** example EIC
 
 ```{r}
 #| echo: true
@@ -1013,7 +999,7 @@ Still OK :ok_hand:
 
 ## Retention time alignment
 
-- Evaluate new alignment results: second example EIC
+- Evaluate new alignment results: **second** example EIC
 
 ```{r}
 #| echo: true
@@ -1041,17 +1027,17 @@ Alignment not perfect, but acceptable :+1:
 - Re-use the settings from the *initial* correspondence, except:
   - use *sample name* as `sampleGroup`: each replicate-set is one *group*
   - set `minFraction = 0.67`: feature defined if signal present in 2 out of 3
-    replicates
+    replicates :point_right: sample-specific features
 
 ```{r}
 #| echo: true
 #' configure the *peak density* correspondence method
 pdp <- PeakDensityParam(
-    sampleGroups = sampleData(mse)$sample_name,
-    minFraction = 0.67,
     binSize = 0.01,
     ppm = 10,
-    bw = 7)
+    bw = 7,
+    sampleGroups = sampleData(mse)$sample_name,
+    minFraction = 0.67)
 ```
 
 . . .
@@ -1061,7 +1047,7 @@ pdp <- PeakDensityParam(
 
 ## Correspondence
 
-- Simulate correspondence on second example EIC.
+- Simulate correspondence on **second** example EIC.
 
 ```{r}
 #| echo: true
@@ -1151,7 +1137,7 @@ grid()
 
 ## Correspondence
 
-- Validate these settings on the second EIC:
+- Validate these settings on the **second** EIC:
 
 ```{r}
 #| echo: true
@@ -1186,7 +1172,6 @@ mse <- groupChromPeaks(mse, param = pdp)
 ```{r}
 #| echo: true
 #| eval: false
-#| code-line-numbers: "1-2|4-9"
 #' extract EIC after final correspondence
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
 
@@ -1197,8 +1182,6 @@ plotChromPeakDensity(a, col = col_sample, peakCol = col_peak,
                      simulate = FALSE) # show actual results
 grid()
 ```
-
-. . .
 
 ```{r}
 #| echo: false
@@ -1337,6 +1320,13 @@ barplot(nas, main = "Number of missing values", col = col_sample)
 
 . . .
 
+::: {.callout-note .center appearance="simple"}
+*feature area*: *m/z* - retention time region where signal from the compound is
+expected (based on identified chrom peaks for that feature)
+:::
+
+. . .
+
 ```{r}
 #| echo: true
 #' get feature areas for the first 4 features
@@ -1348,12 +1338,7 @@ featureArea(mse,
             features = rownames(featureDefinitions(mse))[1:4])
 ```
 
-::: {.callout-note .center appearance="simple"}
-*feature area*: *m/z* - retention time region where signal from the compound is
-expected (based on identified chrom peaks for that feature)
-:::
-
-. . .
+## Gap-filling
 
 - Perform gap-filling in *xcms*:
 
@@ -1361,17 +1346,16 @@ expected (based on identified chrom peaks for that feature)
 #| echo: true
 #' configure and perform gap-filling
 cpap <- ChromPeakAreaParam(minMzWidthPpm = 10)
-mse <- fillChromPeaks(mse, param = cpap, chunkSize = 4L)
+mse <- fillChromPeaks(mse, param = cpap)
 ```
 
-## Gap-filling
+. . .
 
 - Impact of gap-filling:
 
 ```{r}
 #| echo: true
 #| eval: false
-#| code-line-numbers: "1-3|5-7"
 #' extract feature abundances after gap-filling
 fvals <- featureValues(mse, method = "sum")
 colnames(fvals) <- sampleData(mse)$sample_desc
@@ -1710,27 +1694,38 @@ networking in GNPS :open_hands:
 
 . . .
 
-- :metal: integration with R and packages from the *RforMassSpectrometry*
-  initiative (+ Bioconductor) enable highly customizable analyses
-- :muscle: large-scale data support: memory-saving and scalable
 - :repeat: fully reproducible
+- :metal: highly customizable analyses through integration with R and packages
+  from the *RforMassSpectrometry* initiative (+ Bioconductor)
+- :muscle: large-scale data support: memory-saving and scalable
+
+## Acknowledgments :raised_hands:
+
+::: {.absolute top=200 left=0}
+- All *RforMassSpectrometry* [contributors](https://www.rformassspectrometry.org/contributions/) :family:
+- Philippine Louail :muscle:
+- Steffen Neumann :pray:
+:::
+
+![](images/EULogo.jpg){.absolute bottom=58 left=750 height="60"}
+
+::: {.absolute bottom=40 left=770}
+::: {style="font-size:16px"}
+Project *HUMAN* (101073062)
+:::
+:::
+
+::: {.absolute bottom=50 left=0}
+:link: [https://jorainer.github.io/xcms4gnps2](https://jorainer.github.io/xcms4gnps2)\
+:link: [https://RforMassSpectrometry.github.io/Metabonaut](https://RforMassSpectrometry.github.com/Metabonaut)
+:::
 
 . . .
 
-- For more :point_right: **Metabonaut** :link:
-  [https://rformassspectrometry.github.io/Metabonaut](https://rformassspectrometry.github.io/Metabonaut)
+![](images/xcms-paper.png){.absolute top=280 left=300 height="150"}
 
-
-## Acknowledgments
-
-- All *RforMassSpectrometry* contributors :raised_hands:
-- Philippine Louail
-- Steffen Neumann
-
-![](images/EULogo.jpg){.absolute bottom=58 left=700 height="60"}
-
-::: {.absolute bottom=40 left=705}
+::: {.absolute top=430 left=300}
 ::: {style="font-size:16px"}
-Project *HUMAN* (101073062)
+[https://doi.org/10.1021/acs.analchem.5c04338](https://doi.org/10.1021/acs.analchem.5c04338)
 :::
 :::
