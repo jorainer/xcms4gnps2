@@ -44,14 +44,15 @@ https://jorainer.github.io/xcms4gnps2
 
 ::: {.incremental}
 - **Plan**: perform & explain preprocessing of LC-MS/MS data using *xcms*.
-- Data: part of the MassIVE
-  [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
+- Process feature's MS2 spectra and export results for FBMN with GNPS.
+- Data: part of the MassIVE [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
   data set.
 :::
 
 ## Overview
 
 - **Plan**: perform & explain preprocessing of LC-MS/MS data using *xcms*.
+- Process feature's MS2 spectra and export results for FBMN with GNPS.
 - Data: part of the MassIVE
   [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
   data set.
