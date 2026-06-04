@@ -17,8 +17,9 @@ We load the `xcms` ecosystem. `Spectra` handles the MS data, and
 library(MsExperiment)
 library(Spectra)
 library(xcms)
+library(MsBackendMassIVE)
 library(MsBackendMgf)
-library(RColorBrewer) 
+library(RColorBrewer)
 library(pheatmap)
 library(vioplot)
 
@@ -28,9 +29,9 @@ register(MulticoreParam(nb_cores)) # Change to SnowParam(4) if on Windows
 ```
 
 
-# Define Experiment Metadata 
+# Define Experiment Metadata
 
-We define the file paths and grouping manually here. In a production pipeline,
+We define the file names and grouping manually here. In a production pipeline,
 you would read this from a CSV file.
 
 ```{r}
@@ -58,13 +59,20 @@ pd <- data.frame(
     replicate = c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1)
 )
 
-# Set path (Adjust this to your local folder!)
-# These files were downloaded from the MassIVE ftp server.
-path <- file.path("/data", "massive-ftp.ucsd.edu", "v04", "MSV000090156", 
-                  "peak", "mzml", "POS_MSMS", "Lab_2")
+# Load the Lab 2 mzML files directly from MassIVE.
+# MsBackendMassIVE downloads and caches the files locally via BiocFileCache;
+# subsequent runs reuse the local cache.
+sps <- Spectra("MSV000090156",
+               filePattern = "Lab_2/Interlab-LC-MS_Lab2.*mzML$",
+               source = MsBackendMassIVE())
 
-# Load data
-mse <- readMsExperiment(file.path(path, pd$file_name), sampleData = pd)
+# Helper spectra variable used to link spectra to samples in `pd`
+sps$file_name <- basename(dataOrigin(sps))
+
+# Wrap into an MsExperiment and link sample data to spectra by file name
+mse <- MsExperiment(spectra = sps, sampleData = DataFrame(pd))
+mse <- linkSampleData(mse,
+                      with = "sampleData.file_name = spectra.file_name")
 ```
 
 
