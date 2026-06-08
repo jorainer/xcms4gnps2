@@ -39,10 +39,11 @@ below. All packages are available through Bioconductor or CRAN and can be
 installed with `BiocManager::install(<package name>)`.
 
 ```{r, message = FALSE}
-library(MsExperiment) # container for MS data
-library(Spectra)      # main MS infrastructure for R
-library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
-library(MsBackendMgf) # to export MS data in MGF format
+library(MsExperiment)     # container for MS data
+library(Spectra)          # main MS infrastructure for R
+library(xcms)             # for preprocessing of LC-MS and LC-MS/MS data
+library(MsBackendMassIVE) # to load MS data directly from MassIVE
+library(MsBackendMgf)     # to export MS data in MGF format
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
@@ -54,14 +55,17 @@ library(vioplot)      # to create *violin plots*
 
 The data analyzed here is part of the MassIVE
 [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
-data set. The full data set (raw data files) should first downloaded from the
-respective directory of the ftp server:
-[ftp://massive-ftp.ucsd.edu/v04/MSV000090156/](ftp://massive-ftp.ucsd.edu/v04/MSV000090156/).
-Here we will analyze the data from *Lab 2*. Before loading the data we define a
-`data.frame` with sample and experiment-specific information for the individual
-MS runs/data files. These should ideally comprise all relevant phenotypic but
-also technical information (e.g. injection index) to allow proper adjusting or
-modeling of the data.
+data set. Here we will analyze the data from *Lab 2*. Rather than downloading
+the raw mzML files manually, we use the
+[*MsBackendMassIVE*](https://github.com/rformassspectrometry/MsBackendMassIVE)
+backend, which fetches the MS data files directly from the MassIVE FTP server
+and caches them locally via *BiocFileCache*, so subsequent runs do not
+re-download anything.
+
+Before loading the data we define a `data.frame` with sample and
+experiment-specific information for the individual MS runs/data files. These
+should ideally comprise all relevant phenotypic but also technical information
+(e.g. injection index) to allow proper adjusting or modeling of the data.
 
 ```{r}
 pd <- data.frame(
@@ -92,18 +96,25 @@ pd <- data.frame(
 )
 ```
 
-To run this analysis the MS data files (in mzML format) above need to be
-available. In the example workflow, they were downloaded from the MassIVE ftp
-server and stored to a local folder */data/massive-ftp.ucsd.edu/v04*. Below we
-define the path to the data files and load the data set. This needs to be
-adapted if the files were stored to a different folder.
+We next load the Lab 2 mzML files of the data set directly from MassIVE. The
+`filePattern` argument is used to restrict the download to the 13 Lab 2 mzML
+files. The first call will download (and cache) the files; subsequent calls
+will simply reuse the local cache.
 
 ```{r}
-path <- file.path("/data", "massive-ftp.ucsd.edu", "v04",
-                  "MSV000090156", "peak", "mzml", "POS_MSMS",
-                  "Lab_2")
-mse <- readMsExperiment(file.path(path, pd$file_name),
-                        sampleData = pd)
+#' Load the Lab 2 mzML files from MassIVE (downloaded & cached on first run)
+sps <- Spectra("MSV000090156",
+               filePattern = "Lab_2/Interlab-LC-MS_Lab2.*mzML$",
+               source = MsBackendMassIVE())
+
+#' Helper spectra variable used to link spectra to samples in `pd`
+sps$file_name <- basename(dataOrigin(sps))
+
+#' Wrap into an MsExperiment and link sample data to spectra by file name
+mse <- MsExperiment(spectra = sps,
+                    sampleData = DataFrame(pd))
+mse <- linkSampleData(mse,
+                      with = "sampleData.file_name = spectra.file_name")
 mse
 ```
 
