@@ -1,4 +1,4 @@
-# xcms-based preprocessing of LC-MS/MS data for feature-based molecular networking with GNPS2
+# *xcms*-based Preprocessing of LC-MS/MS Data for Feature-Based Molecular Networking with GNPS2
 
 ## Introduction
 
@@ -27,10 +27,11 @@ and can be installed with `BiocManager::install(<package name>)`.
 
 ``` r
 
-library(MsExperiment) # container for MS data
-library(Spectra)      # main MS infrastructure for R
-library(xcms)         # for preprocessing of LC-MS and LC-MS/MS data
-library(MsBackendMgf) # to export MS data in MGF format
+library(MsExperiment)     # container for MS data
+library(Spectra)          # main MS infrastructure for R
+library(xcms)             # for preprocessing of LC-MS and LC-MS/MS data
+library(MsBackendMassIVE) # to load MS data directly from MassIVE
+library(MsBackendMgf)     # to export MS data in MGF format
 
 library(RColorBrewer) # to define colors
 library(pander)       # to format tables
@@ -38,35 +39,46 @@ library(pheatmap)     # visualization of clustering results as heatmap
 library(vioplot)      # to create *violin plots*
 ```
 
+> **Note**
+>
+> *MsBackendMassIVE* is currently (as of 2026-06) only available in the
+> developmental branch of Bioconductor and needs to be installed from
+> GitHub using
+> `remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")`.
+
 ## Data import
 
 The data analyzed here is part of the MassIVE
 [MSV000090156](https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?task=06bd49807caa4390961fb827606a8696)
-data set. The full data set (raw data files) should first downloaded
-from the respective directory of the ftp server:
-<ftp://massive-ftp.ucsd.edu/v04/MSV000090156/>. Here we will analyze the
-data from *Lab 2*. Before loading the data we define a `data.frame` with
-sample and experiment-specific information for the individual MS
-runs/data files. These should ideally comprise all relevant phenotypic
-but also technical information (e.g. injection index) to allow proper
-adjusting or modeling of the data.
+data set. Here we will analyze the data from *Lab 2*. Rather than
+downloading the raw mzML files manually, we use the
+[*MsBackendMassIVE*](https://github.com/rformassspectrometry/MsBackendMassIVE)
+backend, which fetches the MS data files directly from the MassIVE FTP
+server and caches them locally via *BiocFileCache*, so subsequent runs
+do not re-download anything.
+
+Before loading the data we define a `data.frame` with sample and
+experiment-specific information for the individual MS runs/data files.
+These should ideally comprise all relevant phenotypic but also technical
+information (e.g. injection index) to allow proper adjusting or modeling
+of the data.
 
 ``` r
 
 pd <- data.frame(
-    file_name = c("Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
+    original_file_name = c("Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
     sample_name = c("A15M", "A15M", "A15M",
                     "A45M", "A45M", "A45M",
                     "A5M", "A5M", "A5M",
@@ -81,20 +93,28 @@ pd <- data.frame(
 )
 ```
 
-To run this analysis the MS data files (in mzML format) above need to be
-available. In the example workflow, they were downloaded from the
-MassIVE ftp server and stored to a local folder
-*/data/massive-ftp.ucsd.edu/v04*. Below we define the path to the data
-files and load the data set. This needs to be adapted if the files were
-stored to a different folder.
+We next load the Lab 2 mzML files of the data set directly from MassIVE.
+The `filePattern` argument is used to restrict the download to the 13
+Lab 2 mzML files. The first call will download (and cache) the files;
+subsequent calls will simply reuse the local cache.
 
 ``` r
 
-path <- file.path("/data", "massive-ftp.ucsd.edu", "v04",
-                  "MSV000090156", "peak", "mzml", "POS_MSMS",
-                  "Lab_2")
-mse <- readMsExperiment(file.path(path, pd$file_name),
-                        sampleData = pd)
+#' Load the Lab 2 mzML files from MassIVE (downloaded & cached on first run)
+sps <- Spectra("MSV000090156",
+               filePattern = "Lab_2/Interlab-LC-MS_Lab2.*mzML$",
+               source = MsBackendMassIVE())
+
+#' Helper sample data column and spectra variable used to link spectra to
+#' samples in `pd`
+pd$file_name <- paste0("MSV000090156_", pd$original_file_name)
+sps$file_name <- basename(dataOrigin(sps))
+
+#' Wrap into an MsExperiment and link sample data to spectra by file name
+mse <- MsExperiment(spectra = sps,
+                    sampleData = DataFrame(pd))
+mse <- linkSampleData(mse,
+                      with = "sampleData.file_name = spectra.file_name")
 mse
 ```
 
@@ -116,21 +136,21 @@ sampleData(mse)[, c("sample_name", "sample_desc", "replicate")] |>
     pandoc.table(style = "rmarkdown", split.table = Inf)
 ```
 
-|   | sample_name | sample_desc | replicate |
-|:--:|:--:|:--:|:--:|
-| **Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML** | A15M | A15M_R1 | 1 |
-| **Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML** | A15M | A15M_R2 | 2 |
-| **Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML** | A15M | A15M_R3 | 3 |
-| **Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML** | A45M | A45M_R1 | 1 |
-| **Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML** | A45M | A45M_R2 | 2 |
-| **Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML** | A45M | A45M_R3 | 3 |
-| **Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML** | A5M | A5M_R1 | 1 |
-| **Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML** | A5M | A5M_R2 | 2 |
-| **Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML** | A5M | A5M_R3 | 3 |
-| **Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML** | M | M_R1 | 1 |
-| **Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML** | M | M_R2 | 2 |
-| **Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML** | M | M_R3 | 3 |
-| **Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML** | PPL | PPL_R1 | 1 |
+| sample_name | sample_desc | replicate |
+|:-----------:|:-----------:|:---------:|
+|    A15M     |   A15M_R1   |     1     |
+|    A15M     |   A15M_R2   |     2     |
+|    A15M     |   A15M_R3   |     3     |
+|    A45M     |   A45M_R1   |     1     |
+|    A45M     |   A45M_R2   |     2     |
+|    A45M     |   A45M_R3   |     3     |
+|     A5M     |   A5M_R1    |     1     |
+|     A5M     |   A5M_R2    |     2     |
+|     A5M     |   A5M_R3    |     3     |
+|      M      |    M_R1     |     1     |
+|      M      |    M_R2     |     2     |
+|      M      |    M_R3     |     3     |
+|     PPL     |   PPL_R1    |     1     |
 
 We in addition also define different colors for the individual samples.
 
@@ -240,8 +260,13 @@ legend("topright", col = col, legend = names(col), lty = 1)
 
 ![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-11-1.png)
 
-We can also use these aggregated spectra to calculate spectra similarity
-between the individual samples and cluster them.
+The mass content seems to be comparable between samples, except for the
+*PPM* sample that shows distinct peaks.
+
+For a more quantitative assessment and comparison we can also use these
+calculate a spectra similarity between these aggregated spectra to
+calculate spectra similarity between the individual samples and cluster
+them.
 
 ``` r
 
@@ -288,7 +313,7 @@ parallel processing setup for the present analysis.
 if (.Platform$OS.type == "unix") {
     register(MulticoreParam(4))
 } else {
-    register(SnowParam(4))
+    register(bpstart(SnowParam(4)))
 }
 ```
 
@@ -306,6 +331,12 @@ chromatographic peaks in retention time dimension. Without any prior
 information, we need to derive this information from the data set. We
 therefore zoom into areas of the BPC that seem to contain signal from an
 ion.
+
+> **Note**
+>
+> :information_source: see :woman_astronaut:
+> [Metabonaut](https://rformassspectrometry.github.io/metabonaut) for
+> more details on *xcms*-based preprocessing.
 
 ``` r
 
@@ -399,7 +430,7 @@ signal from the same ion. To illustrate this we below subset the full MS
 data from the first data file to the *m/z* and retention time range
 defined above and plot the individual mass peaks.
 
-> **Details on the `ppm` *centWave* parameter**
+> **:information_source: Details on the `ppm` *centWave* parameter**
 >
 > The `ppm` parameter defines the expected (or observed) *m/z* deviation
 > of mass peaks representing signal from the same compound/ion in
@@ -885,9 +916,9 @@ grid()
 Second example EIC before (top) and after (bottom) retention time
 alignment.
 
-Note that in most cases it is not necessary that all samples are
-perfectly aligned. Some variation in retention time can be accounted for
-in the final correspondence analysis.
+:information_source: note that in most cases it is not necessary that
+all samples are perfectly aligned. Some variation in retention time can
+be accounted for in the final correspondence analysis.
 
 ### Correspondence analysis
 
@@ -1252,7 +1283,7 @@ ms2 <- featureSpectra(mse)
 ms2
 ```
 
-    MSn data (Spectra) with 21917 spectra in a MsBackendMzR backend:
+    MSn data (Spectra) with 21917 spectra in a MsBackendMassIVE backend:
             msLevel     rtime scanIndex
           <integer> <numeric> <integer>
     1             2   169.361       834
@@ -1266,17 +1297,17 @@ ms2
     21915         2   744.174      3679
     21916         2   748.223      3744
     21917         2   749.801      3791
-     ... 40 more variables/columns.
+     ... 43 more variables/columns.
 
     file(s):
-    Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML
-    Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
-    Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
+    MSV000090156_Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML
+    MSV000090156_Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
+    MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Thu Dec 18 08:49:00 2025]
-     Filter: select MS level(s) 2 [Thu Dec 18 08:55:01 2025]
-     Filter: select MS level(s) 2 [Thu Dec 18 08:55:02 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
+     Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
+     Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1378,11 +1409,11 @@ ms2_cons
     3089         2   794.229      3958
     3090         2   744.275      3673
     3091         2   749.801      3791
-     ... 40 more variables/columns.
+     ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Thu Dec 18 08:49:00 2025]
-     Filter: select MS level(s) 2 [Thu Dec 18 08:55:01 2025]
-     Filter: select MS level(s) 2 [Thu Dec 18 08:55:02 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
+     Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
+     Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
      ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1432,11 +1463,11 @@ ms2_cons
     3087         2   794.229      3958
     3088         2   744.275      3673
     3089         2   749.801      3791
-     ... 40 more variables/columns.
+     ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Thu Dec 18 08:49:00 2025]
-     Filter: select MS level(s) 2 [Thu Dec 18 08:55:01 2025]
-     Filter: select MS level(s) 2 [Thu Dec 18 08:55:02 2025]
+     Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
+     Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
+     Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
      ...4 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
@@ -1568,9 +1599,9 @@ The R version and package versions used:
 sessionInfo()
 ```
 
-    R version 4.5.2 (2025-10-31)
+    R version 4.6.0 (2026-04-24)
     Platform: x86_64-pc-linux-gnu
-    Running under: Ubuntu 24.04.3 LTS
+    Running under: Ubuntu 24.04.4 LTS
 
     Matrix products: default
     BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
@@ -1592,79 +1623,87 @@ sessionInfo()
     [8] base
 
     other attached packages:
-     [1] vioplot_0.5.1       zoo_1.8-15          sm_2.2-6.0
-     [4] pheatmap_1.0.13     pander_0.6.6        RColorBrewer_1.1-3
-     [7] MsBackendMgf_1.18.0 xcms_4.8.0          Spectra_1.20.0
-    [10] BiocParallel_1.44.0 S4Vectors_0.48.0    BiocGenerics_0.56.0
-    [13] generics_0.1.4      MsExperiment_1.12.0 ProtGenerics_1.42.0
+     [1] vioplot_0.5.1           zoo_1.8-15              sm_2.2-6.0
+     [4] pheatmap_1.0.13         pander_0.6.6            RColorBrewer_1.1-3
+     [7] MsBackendMgf_1.20.0     MsBackendMassIVE_0.99.1 xcms_4.10.0
+    [10] Spectra_1.22.2          BiocParallel_1.46.0     S4Vectors_0.50.1
+    [13] BiocGenerics_0.58.1     generics_0.1.4          MsExperiment_1.14.0
+    [16] ProtGenerics_1.44.0
 
     loaded via a namespace (and not attached):
-     [1] DBI_1.2.3                   rlang_1.1.6
-     [3] magrittr_2.0.4              clue_0.3-66
-     [5] MassSpecWavelet_1.76.0      matrixStats_1.5.0
-     [7] compiler_4.5.2              vctrs_0.6.5
-     [9] reshape2_1.4.5              stringr_1.6.0
-    [11] pkgconfig_2.0.3             MetaboCoreUtils_1.18.1
-    [13] crayon_1.5.3                fastmap_1.2.0
-    [15] XVector_0.50.0              rmarkdown_2.30
-    [17] preprocessCore_1.72.0       purrr_1.2.0
-    [19] xfun_0.55                   MultiAssayExperiment_1.36.1
-    [21] jsonlite_2.0.0              progress_1.2.3
-    [23] DelayedArray_0.36.0         parallel_4.5.2
-    [25] prettyunits_1.2.0           cluster_2.1.8.1
-    [27] R6_2.6.1                    stringi_1.8.7
-    [29] limma_3.66.0                GenomicRanges_1.62.1
-    [31] Rcpp_1.1.0                  Seqinfo_1.0.0
-    [33] SummarizedExperiment_1.40.0 iterators_1.0.14
-    [35] knitr_1.50                  IRanges_2.44.0
-    [37] BiocBaseUtils_1.12.0        Matrix_1.7-4
-    [39] igraph_2.2.1                tidyselect_1.2.1
-    [41] abind_1.4-8                 yaml_2.3.12
-    [43] doParallel_1.0.17           codetools_0.2-20
-    [45] affy_1.88.0                 lattice_0.22-7
-    [47] tibble_3.3.0                plyr_1.8.9
-    [49] Biobase_2.70.0              S7_0.2.1
-    [51] evaluate_1.0.5              pillar_1.11.1
-    [53] affyio_1.80.0               BiocManager_1.30.27
-    [55] MatrixGenerics_1.22.0       foreach_1.5.2
-    [57] MSnbase_2.36.0              MALDIquant_1.22.3
-    [59] ncdf4_1.24                  hms_1.1.4
-    [61] ggplot2_4.0.1               scales_1.4.0
-    [63] glue_1.8.0                  MsFeatures_1.18.0
-    [65] lazyeval_0.2.2              tools_4.5.2
-    [67] mzID_1.48.0                 data.table_1.17.8
-    [69] QFeatures_1.20.0            vsn_3.78.0
-    [71] mzR_2.44.0                  fs_1.6.6
-    [73] XML_3.99-0.20               grid_4.5.2
-    [75] impute_1.84.0               tidyr_1.3.1
-    [77] MsCoreUtils_1.22.1          PSMatch_1.14.0
-    [79] cli_3.6.5                   S4Arrays_1.10.1
-    [81] dplyr_1.1.4                 AnnotationFilter_1.34.0
-    [83] pcaMethods_2.2.0            gtable_0.3.6
-    [85] digest_0.6.39               SparseArray_1.10.7
-    [87] farver_2.1.2                htmltools_0.5.9
-    [89] lifecycle_1.0.4             statmod_1.5.1
-    [91] MASS_7.3-65                
+      [1] DBI_1.3.0                   httr2_1.2.2
+      [3] rlang_1.2.0                 magrittr_2.0.5
+      [5] clue_0.3-68                 MassSpecWavelet_1.78.0
+      [7] otel_0.2.0                  matrixStats_1.5.0
+      [9] compiler_4.6.0              RSQLite_3.53.1
+     [11] PTMods_1.0.0                vctrs_0.7.3
+     [13] reshape2_1.4.5              rvest_1.0.5
+     [15] stringr_1.6.0               pkgconfig_2.0.3
+     [17] MetaboCoreUtils_1.20.1      crayon_1.5.3
+     [19] fastmap_1.2.0               dbplyr_2.5.2
+     [21] XVector_0.52.0              rmarkdown_2.31
+     [23] preprocessCore_1.74.0       bit_4.6.0
+     [25] purrr_1.2.2                 xfun_0.58
+     [27] MultiAssayExperiment_1.38.0 cachem_1.1.0
+     [29] jsonlite_2.0.0              progress_1.2.3
+     [31] blob_1.3.0                  DelayedArray_0.38.2
+     [33] parallel_4.6.0              prettyunits_1.2.0
+     [35] cluster_2.1.8.2             R6_2.6.1
+     [37] stringi_1.8.7               limma_3.68.4
+     [39] GenomicRanges_1.64.0        Rcpp_1.1.1-1.1
+     [41] Seqinfo_1.2.0               SummarizedExperiment_1.42.0
+     [43] iterators_1.0.14            knitr_1.51
+     [45] IRanges_2.46.0              Matrix_1.7-5
+     [47] igraph_2.3.2                tidyselect_1.2.1
+     [49] abind_1.4-8                 yaml_2.3.12
+     [51] doParallel_1.0.17           codetools_0.2-20
+     [53] affy_1.90.0                 curl_7.1.0
+     [55] lattice_0.22-9              tibble_3.3.1
+     [57] plyr_1.8.9                  withr_3.0.2
+     [59] Biobase_2.72.0              S7_0.2.2
+     [61] evaluate_1.0.5              BiocFileCache_3.2.0
+     [63] xml2_1.5.2                  filelock_1.0.3
+     [65] pillar_1.11.1               affyio_1.82.0
+     [67] BiocManager_1.30.27         MatrixGenerics_1.24.0
+     [69] foreach_1.5.2               MSnbase_2.37.0
+     [71] MALDIquant_1.22.3           ncdf4_1.24
+     [73] hms_1.1.4                   ggplot2_4.0.3
+     [75] scales_1.4.0                glue_1.8.1
+     [77] MsFeatures_1.20.0           lazyeval_0.2.3
+     [79] tools_4.6.0                 mzID_1.50.0
+     [81] data.table_1.18.4           QFeatures_1.22.0
+     [83] vsn_3.80.0                  mzR_2.46.0
+     [85] fs_2.1.0                    XML_3.99-0.23
+     [87] grid_4.6.0                  impute_1.86.0
+     [89] tidyr_1.3.2                 MsCoreUtils_1.24.0
+     [91] PSMatch_1.16.0              cli_3.6.6
+     [93] rappdirs_0.3.4              S4Arrays_1.12.0
+     [95] dplyr_1.2.1                 AnnotationFilter_1.36.0
+     [97] pcaMethods_2.4.0            gtable_0.3.6
+     [99] digest_0.6.39               SparseArray_1.12.2
+    [101] farver_2.1.2                memoise_2.0.1
+    [103] htmltools_0.5.9             lifecycle_1.0.5
+    [105] httr_1.4.8                  statmod_1.5.2
+    [107] bit64_4.8.2                 MASS_7.3-65                
 
 ## References
 
-Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, William Kumler,
-Norman Storz, Jan Stanstrup, Hendrik Treutler, et al. 2025. “Xcms in
+Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, et al. 2025. “Xcms in
 Peak Form: Now Anchoring a Complete Metabolomics Data Preprocessing and
-Analysis Software Ecosystem.” *Analytical Chemistry*, December.
-<https://doi.org/10.1021/acs.analchem.5c04338>.
+Analysis Software Ecosystem.” *Analytical Chemistry*, ahead of print,
+December. <https://doi.org/10.1021/acs.analchem.5c04338>.
 
 Louail, Philippine, Marilyn De Graeve, Anna Tagliaferri, Vinicius Verri
 Hernandes, Daniel Marques de Sá e Silva, and Johannes Rainer. 2025.
-“Rformassspectrometry/Metabonaut: V1.2.0.” Zenodo.
+*Rformassspectrometry/Metabonaut: V1.2.0*. Zenodo.
 <https://doi.org/10.5281/zenodo.15554287>.
 
-Nothias, Louis-Félix, Daniel Petras, Robin Schmid, Kai Dührkop, Johannes
-Rainer, Abinesh Sarvepalli, Ivan Protsyuk, et al. 2020. “Feature-Based
-Molecular Networking in the GNPS Analysis Environment.” *Nature Methods*
-17 (9): 905–8. <https://doi.org/10.1038/s41592-020-0933-6>.
+Nothias, Louis-Félix, Daniel Petras, Robin Schmid, et al. 2020.
+“Feature-Based Molecular Networking in the GNPS Analysis Environment.”
+*Nature Methods* 17 (9): 905–8.
+<https://doi.org/10.1038/s41592-020-0933-6>.
 
 Rainer, Johannes, and Philippine Louail. 2025.
-“Jorainer/Xcms-Gnps-Large-Scale: Preprocessing of a Large LC-MS/MS Data
-Set for Molecular Networking with GNPS.” Zenodo.
-<https://doi.org/10.5281/zenodo.17293665>.
+*Jorainer/Xcms-Gnps-Large-Scale: Preprocessing of a Large LC-MS/MS Data
+Set for Molecular Networking with GNPS*. V. v1.0.0. Zenodo, released
+October. <https://doi.org/10.5281/zenodo.17293665>.

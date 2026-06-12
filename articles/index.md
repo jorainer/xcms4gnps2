@@ -2,8 +2,6 @@
 
 ### All vignettes
 
-- [Workshop: xcms preprocessing for
-  GNPS2](https://jorainer.github.io/xcms4gnps2/articles/MSV000090156-preprocessing-condensed.md):
-- [xcms-based preprocessing of LC-MS/MS data for feature-based molecular
-  networking with
+- [\*xcms\*-based Preprocessing of LC-MS/MS Data for Feature-Based
+  Molecular Networking with
   GNPS2](https://jorainer.github.io/xcms4gnps2/articles/MSV000090156-preprocessing.md):

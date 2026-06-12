@@ -3,7 +3,7 @@
 ## Authors
 
 - **Philippine Louail**. Author.
-  [](https://orcid.org/0009-0007-5429-6846)  
+  [](https://orcid.org/0009-0007-5429-6846)\
   European Union HORIZON-MSCA-2021 project Grant No. 101073062: HUMAN –
   Harmonising and Unifying Blood Metabolic Analysis Networks
 
@@ -18,14 +18,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/jorainer/xcms4gnps2/blob/main/DESCRIPTION)
 
-Louail P, Rainer J (2025). *xcms4gnps2: xcms-based data preprocessing
+Louail P, Rainer J (2026). *xcms4gnps2: xcms-based data preprocessing
 for FBMN with GNPS2*. R package version 1.0.0,
 <https://github.com/jorainer/xcms4gnps2/>.
 
     @Manual{,
       title = {xcms4gnps2: xcms-based data preprocessing for FBMN with GNPS2},
       author = {Philippine Louail and Johannes Rainer},
-      year = {2025},
+      year = {2026},
       note = {R package version 1.0.0},
       url = {https://github.com/jorainer/xcms4gnps2/},
     }
