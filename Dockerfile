@@ -1,4 +1,4 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_22
+FROM bioconductor/bioconductor_docker:RELEASE_3_23
 
 LABEL name="jorainer/xcms4gnps2" \
       url="https://github.com/jorainer/xcms4gnps2" \
@@ -11,15 +11,28 @@ WORKDIR /home/rstudio
 COPY --chown=rstudio:rstudio . /home/rstudio/
 
 ## Global installation of required packages
-RUN Rscript -e "BiocManager::install(c('xcms', 'MsExperiment', 'mzR') , ask = FALSE, dependencies = c('Depends', 'Imports'), build_vignettes = FALSE)"
+RUN Rscript -e "BiocManager::install(c('xcms', 'MsExperiment', 'mzR', 'remotes', 'pak') , ask = FALSE, dependencies = c('Depends', 'Imports'), build_vignettes = FALSE)"
 
-## Download the data and store it to the local folder
-RUN wget -r ftp://massive-ftp.ucsd.edu/v04/MSV000090156/peak/mzml/POS_MSMS/Lab_2/* -P /data
-RUN chmod a+rx -R /data
+## Install MsBackendMassIVE from GitHub; change for RELEASE_3_24
+RUN Rscript -e "BiocManager::install('RforMassSpectrometry/MsBackendMassIVE', ref = 'gabri')"
+
+## Cache the MS data set
+RUN Rscript -e "library(Spectra); library(MsBackendMassIVE); Spectra('MSV000090156', filePattern = 'Lab_2/Interlab-LC-MS_Lab2.*mzML$', source = MsBackendMassIVE())"
+
+## Move the cache to the rstudio user and cross-link
+RUN mkdir -p /home/rstudio/.cache/R/BiocFileCache && \
+    mv /root/.cache/R/BiocFileCache /home/rstudio/.cache/R/ && \
+    chown -R rstudio:rstudio /home/rstudio/.cache && \
+    mkdir -p /root/.cache/R/ && \
+    ln -s /home/rstudio/.cache/R/BiocFileCache /root/.cache/R/BiocFileCache
+
+## Install package dependencies
+RUN Rscript -e "pak::local_install_dev_deps(ask = FALSE)"
 
 ## Install the current package with vignettes
-RUN Rscript -e "devtools::install('.', dependencies = c('Depends', 'Imports'), type = 'source', build_vignettes = TRUE, repos = BiocManager::repositories())"
+RUN Rscript -e "pak::local_install()"
 
 ## Clean up
 RUN find vignettes/ -name "*.html" -type f -delete && find vignettes/ -name "*_files" -type d -exec rm -r {} + && \
-    rm -rf /tmp/*
+    rm -rf /tmp/* && \
+    chown -R rstudio:rstudio /home/rstudio/.cache

@@ -1,5 +1,5 @@
 ---
-title: "xcms-based preprocessing of LC-MS/MS data for feature-based molecular networking with GNPS2"
+title: "*xcms*-based Preprocessing of LC-MS/MS Data for Feature-Based Molecular Networking with GNPS2"
 author: "Philippine Louail, Steffen Neumann, Johannes Rainer"
 format:
   html:
@@ -51,6 +51,12 @@ library(pheatmap)     # visualization of clustering results as heatmap
 library(vioplot)      # to create *violin plots*
 ```
 
+::: {.callout-note collapse="true"}
+*MsBackendMassIVE* is currently (as of 2026-06) only available in the
+developmental branch of Bioconductor and needs to be installed from GitHub using
+`remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")`.
+:::
+
 # Data import
 
 The data analyzed here is part of the MassIVE
@@ -69,19 +75,19 @@ should ideally comprise all relevant phenotypic but also technical information
 
 ```{r}
 pd <- data.frame(
-    file_name = c("Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML",
-                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
-                  "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
-                  "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
+    original_file_name = c("Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_A5M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep1.mzML",
+                           "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep2.mzML",
+                           "Interlab-LC-MS_Lab2_M_Pos_MS2_Rep3.mzML",
+                           "Interlab-LC-MS_Lab2_PPL_Pos_MS2_Rep1.mzML"),
     sample_name = c("A15M", "A15M", "A15M",
                     "A45M", "A45M", "A45M",
                     "A5M", "A5M", "A5M",
@@ -102,12 +108,16 @@ files. The first call will download (and cache) the files; subsequent calls
 will simply reuse the local cache.
 
 ```{r}
+#| warning: FALSE
+#| message: FALSE
 #' Load the Lab 2 mzML files from MassIVE (downloaded & cached on first run)
 sps <- Spectra("MSV000090156",
                filePattern = "Lab_2/Interlab-LC-MS_Lab2.*mzML$",
                source = MsBackendMassIVE())
 
-#' Helper spectra variable used to link spectra to samples in `pd`
+#' Helper sample data column and spectra variable used to link spectra to
+#' samples in `pd`
+pd$file_name <- paste0("MSV000090156_", pd$original_file_name)
 sps$file_name <- basename(dataOrigin(sps))
 
 #' Wrap into an MsExperiment and link sample data to spectra by file name
@@ -219,8 +229,12 @@ grid()
 legend("topright", col = col, legend = names(col), lty = 1)
 ```
 
-We can also use these aggregated spectra to calculate spectra similarity between
-the individual samples and cluster them.
+The mass content seems to be comparable between samples, except for the *PPM*
+sample that shows distinct peaks.
+
+For a more quantitative assessment and comparison we can also use these
+calculate a spectra similarity between these aggregated spectra to calculate
+spectra similarity between the individual samples and cluster them.
 
 ```{r}
 #| fig-cap: "Similarity of *base peak spectra* of all samples in the experiment."
@@ -264,7 +278,7 @@ operating system. For the present analysis we use 4 parallel processes.
 if (.Platform$OS.type == "unix") {
     register(MulticoreParam(4))
 } else {
-    register(SnowParam(4))
+    register(bpstart(SnowParam(4)))
 }
 ```
 
@@ -280,6 +294,12 @@ defines an approximate lower and upper expected width of chromatographic peaks
 in retention time dimension. Without any prior information, we need to derive
 this information from the data set. We therefore zoom into areas of the BPC that
 seem to contain signal from an ion.
+
+::: {.callout-note appearance="minimal"}
+:information_source: see :woman_astronaut:
+[Metabonaut](https://rformassspectrometry.github.io/metabonaut) for more details
+on *xcms*-based preprocessing.
+:::
 
 ```{r}
 #| fig-cap: "Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the *m/z* region with the largest signal in the retention time window."
@@ -364,7 +384,7 @@ illustrate this we below subset the full MS data from the first data file to the
 *m/z* and retention time range defined above and plot the individual mass peaks.
 
 ::: {.callout-note appearance="minimal"}
-## Details on the `ppm` *centWave* parameter
+## :information_source: Details on the `ppm` *centWave* parameter
 
 The `ppm` parameter defines the expected (or observed) *m/z* deviation of mass
 peaks representing signal from the same compound/ion in consecutive
@@ -430,7 +450,7 @@ completely overlapping chromatographic peak, or those that are less than 2
 seconds apart from each other, if the intensity below both apexes is lower than
 a certain proportion of the apex intensity of the lower intensity peak.
 
-```{r}
+```{r, warning = FALSE}
 #' configure and perform *peak refinement*
 mnpp <- MergeNeighboringPeaksParam(
     expandRt = 1,
@@ -496,7 +516,6 @@ grid()
 legend("topright", col = col, lty = 1,
        legend = names(col))
 ```
-
 
 ```{r}
 #| fig-cap: "Chromatographic peak detection results on the second example EIC."
@@ -783,9 +802,9 @@ plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
 grid()
 ```
 
-Note that in most cases it is not necessary that all samples are perfectly
-aligned. Some variation in retention time can be accounted for in the final
-correspondence analysis.
+:information_source: note that in most cases it is not necessary that all
+samples are perfectly aligned. Some variation in retention time can be accounted
+for in the final correspondence analysis.
 
 ## Correspondence analysis
 
@@ -1241,9 +1260,7 @@ provided by packages such as the
 [*MsBackendMassbank*](https://bioconductor.org/packages/MsBackendMassbank). Upcoming
 formats, such as *specLib*, *mzPeak* or the updated mzTab-M format will be
 supported in future.
-
 :::
-
 
 
 # Summary
