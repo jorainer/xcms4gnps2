@@ -20,3 +20,4 @@ vignettes/*.mgf
 *.RData
 inst/pres/*.txt
 inst/pres/*.mgf
+local_data/*
