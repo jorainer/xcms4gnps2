@@ -52,6 +52,8 @@ library(vioplot)      # to create *violin plots*
 ```
 
 ::: {.callout-note collapse="true"}
+## ℹ️ Note
+
 *MsBackendMassIVE* is currently (as of 2026-06) available only in the
 developmental branch of Bioconductor and needs to be installed from GitHub using
 `remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")`.
@@ -269,7 +271,7 @@ Most methods in *xcms* are parallelized by default. Below we define the parallel
 processing setup for the present analysis.
 
 ::: {.callout-note collapse="true"}
-## Parallel processing details
+## ℹ️ Parallel processing details
 
 It is generally advisable to configure the parallel processing setup globally
 using `register()`. On Unix machines *multi-core* parallel processing can be
@@ -301,9 +303,10 @@ this information from the data set. We therefore zoom into areas of the BPC that
 seem to contain signal from an ion.
 
 ::: {.callout-note appearance="minimal"}
-:information_source: see :woman_astronaut:
-[Metabonaut](https://rformassspectrometry.github.io/metabonaut) for more details
-on *xcms*-based preprocessing.
+## ℹ️ Note
+
+See 👩‍🚀 [Metabonaut](https://rformassspectrometry.github.io/metabonaut) for
+more details on *xcms*-based preprocessing.
 :::
 
 ```{r}
@@ -391,7 +394,7 @@ illustrate this we below subset the full MS data from the first data file to the
 *m/z* and retention time range defined above and plot the individual mass peaks.
 
 ::: {.callout-note appearance="minimal"}
-## :information_source: Details on the `ppm` *centWave* parameter
+## ℹ️ Details on the `ppm` *centWave* parameter
 
 The `ppm` parameter defines the expected (or observed) *m/z* deviation of mass
 peaks representing signal from the same compound/ion in consecutive
@@ -566,7 +569,7 @@ the same sample group (since we want to define anchor peaks that are present in
 most samples).
 
 ::: {.callout-note appearance="simple" collapse="true"}
-## Details on `PeakDensityParam` settings
+## ℹ️ Details on `PeakDensityParam` settings
 
 The *peak density* correspondence method can be configured using the
 `PeakDensityParam`. For an initial correspondence used for retention time
@@ -1144,7 +1147,7 @@ We next combine the individual MS2 spectra of a feature to a single *consensus*
 spectrum.
 
 ::: {.callout-note collapse="true"}
-## Options to combine spectra
+## ℹ️ Options to combine spectra
 
 Multiple spectra can be combined into a single spectrum using the
 `combineSpectra()` function which provides a large number of options and
@@ -1197,7 +1200,7 @@ ms2_cons
 ```
 
 ::: {.callout-note collapse="true"}
-## Additional spectra processing options
+## ℹ️ Additional spectra processing options
 
 The [*Spectra*](https://bioconductor.org/packages/Spectra) package would provide
 many additional functions and options to process, scale or clean spectra. As an
@@ -1294,7 +1297,7 @@ setBackend(ms2, MsBackendMemory()) |>
 ```
 
 ::: {.callout-note collapse="true"}
-## Spectra data export formats
+## ℹ️ Spectra data export formats
 
 The MGF format is only loosely defined with many different *dialects* being
 used. The [*MsBackendMgf*](https://bioconductor.org/packages/MsBackendMgf)
