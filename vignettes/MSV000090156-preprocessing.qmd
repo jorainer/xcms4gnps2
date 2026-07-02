@@ -52,7 +52,7 @@ library(vioplot)      # to create *violin plots*
 ```
 
 ::: {.callout-note collapse="true"}
-*MsBackendMassIVE* is currently (as of 2026-06) only available in the
+*MsBackendMassIVE* is currently (as of 2026-06) available only in the
 developmental branch of Bioconductor and needs to be installed from GitHub using
 `remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")`.
 :::
@@ -105,7 +105,7 @@ pd <- data.frame(
 We next load the Lab 2 mzML files of the data set directly from MassIVE. The
 `filePattern` argument is used to restrict the download to the 13 Lab 2 mzML
 files. The first call will download (and cache) the files; subsequent calls
-will simply reuse the local cache.
+will simply reload them from the local cache.
 
 ```{r}
 #| warning: FALSE
@@ -160,6 +160,7 @@ chromatograms (BPC) and total ion chromatograms (TIC) of the data set using the
 TIC) as the function to aggregate the per-spectrum intensities.
 
 ```{r}
+#| label: fig-bpc-full
 #' BPC
 bpc <- chromatogram(mse, aggregationFun = "max")
 
@@ -169,6 +170,7 @@ legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 ```
 
 ```{r}
+#| label: fig-tic-full
 #' TIC
 tic <- chromatogram(mse, aggregationFun = "sum")
 
@@ -212,6 +214,7 @@ We have thus a single aggregated mass spectrum per sample. These *base peak
 spectra* are plotted below.
 
 ```{r}
+#| label: fig-bps
 #| fig-cap: "Aggregated MS1 spectrum per sample."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -224,6 +227,7 @@ last file. We can also plot all spectra into the same plot, using a different
 color per sample.
 
 ```{r}
+#| label: fig-bps-overlay
 plotSpectraOverlay(bps, col = paste0(col_sample, 40), lwd = 2)
 grid()
 legend("topright", col = col, legend = names(col), lty = 1)
@@ -237,6 +241,7 @@ calculate a spectra similarity between these aggregated spectra to calculate
 spectra similarity between the individual samples and cluster them.
 
 ```{r}
+#| label: fig-bps-heatmap
 #| fig-cap: "Similarity of *base peak spectra* of all samples in the experiment."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -302,6 +307,7 @@ on *xcms*-based preprocessing.
 :::
 
 ```{r}
+#| label: fig-eic1
 #| fig-cap: "Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the *m/z* region with the largest signal in the retention time window."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -338,6 +344,7 @@ The width of this chromatographic peaks is about 8 seconds. We evaluate a second
 signal at the and of the chromatogram.
 
 ```{r}
+#| label: fig-eic2
 #| fig-cap: "Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the *m/z* region with the largest signal in the retention time window."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -396,6 +403,7 @@ with higher signal.
 :::
 
 ```{r}
+#| label: fig-eic1-plot
 mse[1L] |>
     filterSpectra(filterMsLevel, 1L) |>
     filterSpectra(filterRt, rt = rtr_1) |>
@@ -410,6 +418,7 @@ We evaluate the signal also for the second *m/z* - retention time window defined
 above.
 
 ```{r}
+#| label: fig-eic2-plot
 mse[1L] |>
     filterSpectra(filterMsLevel, 1L) |>
     filterSpectra(filterRt, rt = rtr_2) |>
@@ -464,6 +473,7 @@ We next compare the number of identified peaks per sample as well as their *m/z*
 and retention time widths.
 
 ```{r}
+#| label: fig-chrom-peak-overview
 #' split the detected chrom peaks per sample
 pk_list <- split.data.frame(
     chromPeaks(mse, columns = c("mzmin", "mzmax", "rtmin", "rtmax")),
@@ -504,6 +514,7 @@ time regions. Identified chromatographic peaks will be colored according to the
 sample group.
 
 ```{r}
+#| label: fig-cpd-eic1
 #| fig-cap: "Chromatographic peak detection results on the first example EIC."
 eic_1 <- chromatogram(mse, mz = mzr_1, rt = rtr_1)
 
@@ -518,6 +529,7 @@ legend("topright", col = col, lty = 1,
 ```
 
 ```{r}
+#| label: fig-cpd-eic2
 #| fig-cap: "Chromatographic peak detection results on the second example EIC."
 eic_2 <- chromatogram(mse, mz = mzr_2, rt = rtr_2)
 
@@ -580,6 +592,7 @@ chromatographic peaks' *m/z* values to consider them for grouping.
 :::
 
 ```{r}
+#| label: fig-eic2-chrom-peak-density
 #| fig-cap: "Correspondence analysis simulation on the second example EIC."
 pdp <- PeakDensityParam(
     sampleGroups = rep(1, length(mse)),
@@ -610,6 +623,7 @@ them into the same feature. We hence next increase the `bw` parameter and
 simulate the correspondence with these updated settings.
 
 ```{r}
+#| label: fig-eic2-chrom-peak-density-2
 #| fig-cap: "Correspondence analysis simulation with `bw = 5`."
 pdp@bw <- 5
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
@@ -621,6 +635,7 @@ Changing `bw` to 5 changed the density curve, but we still defined two separate
 features. We thus increase below `bw` to 7.
 
 ```{r}
+#| label: fig-eic2-chrom-peak-density-3
 #| fig-cap: "Correspondence analysis simulation with `bw = 7`."
 pdp@bw <- 7
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
@@ -667,6 +682,7 @@ indicated with individual data points. These should ideally be placed along the
 full retention time range of the experiment.
 
 ```{r}
+#| label: fig-align-plot
 #| fig-cap: "Retention time alignment results."
 #' visualize alignment results
 plotAdjustedRtime(mse, col = paste0(col_sample, 80),
@@ -685,6 +701,7 @@ We next evaluate the alignment results based on the BPC before and after
 alignment.
 
 ```{r}
+#| label: fig-align-bpc
 #| fig-cap: "BPC before (top) and after (bottom) retention time alignment."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -705,6 +722,7 @@ reduced. We in addition evaluate the effect of retention time alignment on the
 two example EICs.
 
 ```{r}
+#| label: fig-align-eic1
 #| fig-cap: "First example EIC before (top) and after (bottom) retention time alignment."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -721,6 +739,7 @@ grid()
 For this early retention time range already the raw signal was well aligned.
 
 ```{r}
+#| label: fig-align-eic2
 #| fig-cap: "Second example EIC before (top) and after (bottom) retention time alignment."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -758,6 +777,7 @@ mse <- adjustRtime(mse, param = pgp)
 Evaluating the impact of changing this parameter.
 
 ```{r}
+#| label: fig-align-adjust-2
 #| fig-cap: "Retention time alignment results."
 #' visualize alignment results
 plotAdjustedRtime(mse, col = paste0(col_sample, 80),
@@ -771,6 +791,7 @@ A stronger alignment can be observed for the retention time area from 750 to 800
 seconds. The results for the first example EIC did not change.
 
 ```{r}
+#| label: fig-align-eic1-2
 #| fig-cap: "First example EIC before (top) and after (bottom) retention time alignment."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -789,6 +810,7 @@ grid()
 While for the second EIC the alignment improved.
 
 ```{r}
+#| label: fig-align-eic2-2
 #| fig-cap: "Second example EIC before (top) and after (bottom) retention time alignment."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -832,6 +854,7 @@ We evaluate these settings, in particular the effect of `bw` on the first
 example EIC.
 
 ```{r}
+#| label: fig-chrom-peak-density-eic1
 #| fig-cap: "Simulation of correspondence analysis on the first example EIC."
 col_peak <- col_sample[chromPeaks(eic_1_adj)[, "sample"]]
 plotChromPeakDensity(eic_1_adj, param = pdp, col = col_sample,
@@ -843,6 +866,7 @@ For that EIC the settings worked nicely. Simulating the correspondence for the
 second example EIC.
 
 ```{r}
+#| label: fig-chrom-peak-density-eic2
 #| fig-cap: "Simulation of correspondence analysis on the second example EIC."
 col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
 plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
@@ -856,6 +880,7 @@ complex signals, e.g. regions with co- or closely eluting compounds. We below
 expand the retention time window for the *m/z* slice of the first example EIC.
 
 ```{r}
+#| label: fig-chrom-peak-density-other
 #| fig-cap: "Simulation of correspondence analysis on an expanded RT window."
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
 
@@ -873,6 +898,7 @@ want that these signals are grouped together, we need to reduce the value of
 `bw`. Below we simulate a correspondence using `bw = 3`.
 
 ```{r}
+#| label: fig-chrom-peak-density-other-bw3
 #| fig-cap: "Effect of changing to `bw = 3` for the correspondence analysis."
 pdp@bw <- 3
 plotChromPeakDensity(a, param = pdp, col = col_sample,
@@ -885,6 +911,7 @@ next evaluate whether with these updated setting we would still group the signal
 from the second example EIC into a single feature.
 
 ```{r}
+#| label: fig-chrom-peak-density-eic2-bw3
 #| fig-cap: "Effect of `bw = 3` on correspondence results of the second example EIC."
 col_peak <- col_sample[chromPeaks(eic_2_adj)[, "sample"]]
 plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
@@ -909,6 +936,7 @@ and evaluate the correspondence results for it. Here it is important to set
 `simulate = FALSE` to show the actual results.
 
 ```{r}
+#| label: fig-corr-eic1
 #| fig-cap: "Correspondence results for the first example EIC."
 eic_1 <- chromatogram(mse, rt = rtr_1, mz = mzr_1)
 
@@ -925,6 +953,7 @@ All chromatographic peaks were grouped into the same feature. The retention time
 evaluate the results also on the second example EIC.
 
 ```{r}
+#| label: fig-corr-eic2
 #| fig-cap: "Correspondence results for the second example EIC."
 eic_2 <- chromatogram(mse, rt = rtr_2, mz = mzr_2)
 
@@ -941,6 +970,7 @@ single feature. At last we evaluate the expanded retention time region of the
 *m/z* range of the first example EIC.
 
 ```{r}
+#| label: fig-corr-other
 #| fig-cap: "Correspondence results for an *m/z* slice with multiple closely eluting compounds."
 a <- chromatogram(mse, mz = mzr_1, rt = c(30, 150))
 
@@ -991,6 +1021,7 @@ algorithm to identify a chromatographic peak.
 Below we calculate and plot the number of missing values per sample.
 
 ```{r}
+#| label: fig-nas
 #| fig-cap: "Number of missing feature values per sample."
 
 #' determine the number of missing values per sample and plot them
@@ -1040,6 +1071,7 @@ head(fvals)
 ```
 
 ```{r}
+#| label: fig-nas-filled
 #| fig-cap: "Number of missing feature values per sample after gap-filling."
 
 #' determine the number of missing values per sample and plot them
@@ -1081,6 +1113,7 @@ mean(ms2_count)
 We next inspect some of the identified MS2 spectra.
 
 ```{r}
+#| label: fig-ms2-1
 #| fig-cap: "MS2 spectra for one LC-MS feature."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -1095,6 +1128,7 @@ All MS2 spectra look similar - we next calculate also a pairwise similarity
 between them and visualize the results as a heatmap.
 
 ```{r}
+#| label: fig-ms2-heatmap
 #| fig-cap: "Pairwise spectra similarity between MS2 spectra of one feature."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -1148,6 +1182,7 @@ quantile(lengths(ms2_cons))
 The consensus spectrum for the first feature is shown below.
 
 ```{r}
+#| label: fig-consensus-1
 #| fig-cap: "Consensus spectrum for the first feature."
 plotSpectra(ms2_cons[1], lwd = 2)
 grid()
@@ -1169,7 +1204,7 @@ many additional functions and options to process, scale or clean spectra. As an
 alternative, through the
 [*SpectriPy*](https://bioconductor.org/packages/SpectriPy) package, it would
 also be possible to apply Python-based functionality from e.g. the *matchms*
-Python library to `Spectra` objects.
+Python library to `Spectra` objects [@graeve_spectripy_2025].
 :::
 
 At last we visualize the select data (i.e. features with associated MS2 spectra)
@@ -1179,6 +1214,7 @@ the feature boundaries and draw them as rectangles. The associated MS2 spectra
 points.
 
 ```{r}
+#| label: fig-feature-area
 #| fig-cap: "Feature areas (grey rectangles) and associated MS2 spectra (blue points) in the retention time - *m/z* space."
 #| fig-width: 9.5
 #| fig-height: 9.5
@@ -1238,12 +1274,23 @@ source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/custom
 ms2_cons <- formatSpectraForGNPS(ms2_cons)
 ```
 
-And finally we export the MS2 spectra in MGF format.
+And finally we export the consensus MS2 spectra in MGF format.
 
 ```{r}
 #' export the MS2 spectra in MGF format
 export(ms2_cons, backend = MsBackendMgf(),
-       file = "xcms_ms2_spectra.mgf")
+       file = "xcms_consensus_ms2_spectra.mgf")
+```
+
+For completeness, we also export all the individual original MS2 spectra to a
+file *xcms_all_ms2_spectra.mgf*.
+
+```{r}
+#' export the MS2 spectra in MGF format
+setBackend(ms2, MsBackendMemory()) |>
+    formatSpectraForGNPS() |>
+    export(backend = MsBackendMgf(),
+           file = "xcms_all_ms2_spectra.mgf")
 ```
 
 ::: {.callout-note collapse="true"}
@@ -1272,7 +1319,7 @@ supported in future.
 - The quarto system would also allow combining R and Python functionality into
   the same workflow document with the
   [SpectriPy](https://github.com/RforMassSpectrometry/SpectriPy) R-package
-  translating between R and Python MS data structures.
+  translating between R and Python MS data structures [@graeve_spectripy_2025].
 
 # Session information
 

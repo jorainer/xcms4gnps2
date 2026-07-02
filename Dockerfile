@@ -17,13 +17,12 @@ RUN Rscript -e "BiocManager::install(c('xcms', 'MsExperiment', 'mzR', 'remotes',
 RUN Rscript -e "BiocManager::install('RforMassSpectrometry/MsBackendMassIVE', ref = 'gabri')"
 
 ## Cache the MS data set
+USER rstudio
 RUN Rscript -e "library(Spectra); library(MsBackendMassIVE); Spectra('MSV000090156', filePattern = 'Lab_2/Interlab-LC-MS_Lab2.*mzML$', source = MsBackendMassIVE())"
+USER root
 
-## Move the cache to the rstudio user and cross-link
-RUN mkdir -p /home/rstudio/.cache/R/BiocFileCache && \
-    mv /root/.cache/R/BiocFileCache /home/rstudio/.cache/R/ && \
-    chown -R rstudio:rstudio /home/rstudio/.cache && \
-    mkdir -p /root/.cache/R/ && \
+## Cross-link the cache
+RUN mkdir -p /root/.cache/R/ && \
     ln -s /home/rstudio/.cache/R/BiocFileCache /root/.cache/R/BiocFileCache
 
 ## Install package dependencies
