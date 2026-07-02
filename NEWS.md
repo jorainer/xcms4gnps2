@@ -1,3 +1,13 @@
+# xcms-gnps2 version 1.1
+
+## Changes in version 1.1.0
+
+- Use Bioconductor 3.23 packages.
+
+## Changes in version 1.1.1
+
+- Export, next to consensus MS2 spectra, also all MS2 spectra.
+
 # xcms-gnps2 version 1.0
 
 ## Changes in version 1.0.0
