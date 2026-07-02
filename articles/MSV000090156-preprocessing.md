@@ -41,7 +41,7 @@ library(vioplot)      # to create *violin plots*
 
 > **Note**
 >
-> *MsBackendMassIVE* is currently (as of 2026-06) only available in the
+> *MsBackendMassIVE* is currently (as of 2026-06) available only in the
 > developmental branch of Bioconductor and needs to be installed from
 > GitHub using
 > `remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")`.
@@ -96,7 +96,7 @@ pd <- data.frame(
 We next load the Lab 2 mzML files of the data set directly from MassIVE.
 The `filePattern` argument is used to restrict the download to the 13
 Lab 2 mzML files. The first call will download (and cache) the files;
-subsequent calls will simply reuse the local cache.
+subsequent calls will simply reload them from the local cache.
 
 ``` r
 
@@ -186,7 +186,9 @@ grid()
 legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-6-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-bpc-full-1.png)
+
+Figure 1
 
 ``` r
 
@@ -198,7 +200,9 @@ grid()
 legend("topright", col = col, legend = names(col), lty = 1, lwd = 2)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-7-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-tic-full-1.png)
+
+Figure 2
 
 Based on the BPC and TIC there seems to be little retention time shifts
 between the samples. Also, no signal seems to be present before 20
@@ -243,9 +247,9 @@ par(mar = c(4.5, 4, 0, 0.5))
 plotSpectra(bps, main = "")
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-10-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-bps-1.png)
 
-Aggregated MS1 spectrum per sample.
+Figure 3: Aggregated MS1 spectrum per sample.
 
 The *mass content* of the samples seems to be similar, with the
 exception of the last file. We can also plot all spectra into the same
@@ -258,7 +262,9 @@ grid()
 legend("topright", col = col, legend = names(col), lty = 1)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-11-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-bps-overlay-1.png)
+
+Figure 4
 
 The mass content seems to be comparable between samples, except for the
 *PPM* sample that shows distinct peaks.
@@ -275,9 +281,10 @@ rownames(sim) <- colnames(sim) <- sampleData(mse)$sample_desc
 pheatmap(sim)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-12-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-bps-heatmap-1.png)
 
-Similarity of *base peak spectra* of all samples in the experiment.
+Figure 5: Similarity of *base peak spectra* of all samples in the
+experiment.
 
 A15M, A5M and M samples cluster together, separately from the A45M
 samples while the PPL_R1 sample has a distinct mass peak profile.
@@ -368,12 +375,12 @@ plot(eic_1, col = paste0(col_sample, 80), lwd = 2)
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-14-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic1-1.png)
 
-Definition of an example region for EIC extraction. Upper panel: BPC,
-dashed vertical lines indicate the selected retention time region. Lower
-panel: EIC for the *m/z* region with the largest signal in the retention
-time window.
+Figure 6: Definition of an example region for EIC extraction. Upper
+panel: BPC, dashed vertical lines indicate the selected retention time
+region. Lower panel: EIC for the *m/z* region with the largest signal in
+the retention time window.
 
 The width of this chromatographic peaks is about 8 seconds. We evaluate
 a second signal at the and of the chromatogram.
@@ -406,12 +413,12 @@ plot(eic_2, col = paste0(col_sample, 80), lwd = 2)
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-15-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic2-1.png)
 
-Definition of an example region for EIC extraction. Upper panel: BPC,
-dashed vertical lines indicate the selected retention time region. Lower
-panel: EIC for the *m/z* region with the largest signal in the retention
-time window.
+Figure 7: Definition of an example region for EIC extraction. Upper
+panel: BPC, dashed vertical lines indicate the selected retention time
+region. Lower panel: EIC for the *m/z* region with the largest signal in
+the retention time window.
 
 The width of the chromatographic peaks for that *m/z* slice seem to be
 around 15 seconds. Also, there seems to be a considerable shift in
@@ -449,7 +456,9 @@ mse[1L] |>
     plot()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-16-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic1-plot-1.png)
+
+Figure 8
 
 The individual mass peaks are shown in the lower panel in the plot
 above. For the present ion, the *m/z* values show a very low variance.
@@ -466,7 +475,9 @@ mse[1L] |>
     plot()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-17-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic2-plot-1.png)
+
+Figure 9
 
 The scattering of *m/z* values looks larger, but is still below 0.001
 Da. We nevertheless use a `ppm = 20` for the present data set - as we do
@@ -548,7 +559,9 @@ vioplot(lapply(pk_list, function(z) z[, "rt_width"]),
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-20-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-overview-1.png)
+
+Figure 10
 
 The highest number of peaks was detected in the *PPL* sample. Apart from
 that sample, the numbers of detected peaks is comparable in the data
@@ -575,9 +588,10 @@ legend("topright", col = col, lty = 1,
        legend = names(col))
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-21-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-cpd-eic1-1.png)
 
-Chromatographic peak detection results on the first example EIC.
+Figure 11: Chromatographic peak detection results on the first example
+EIC.
 
 ``` r
 
@@ -593,9 +607,10 @@ legend("topright", col = col, lty = 1,
        legend = names(col))
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-22-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-cpd-eic2-1.png)
 
-Chromatographic peak detection results on the second example EIC.
+Figure 12: Chromatographic peak detection results on the second example
+EIC.
 
 ### Retention time alignment
 
@@ -662,9 +677,9 @@ plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-23-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic2-chrom-peak-density-1.png)
 
-Correspondence analysis simulation on the second example EIC.
+Figure 13: Correspondence analysis simulation on the second example EIC.
 
 The upper panel of this plot shows the EIC, the lower panel the data
 considered for correspondence: it shows the retention time of the apex
@@ -691,9 +706,9 @@ plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-24-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic2-chrom-peak-density-2-1.png)
 
-Correspondence analysis simulation with `bw = 5`.
+Figure 14: Correspondence analysis simulation with `bw = 5`.
 
 Changing `bw` to 5 changed the density curve, but we still defined two
 separate features. We thus increase below `bw` to 7.
@@ -706,9 +721,9 @@ plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-25-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-eic2-chrom-peak-density-3-1.png)
 
-Correspondence analysis simulation with `bw = 7`.
+Figure 15: Correspondence analysis simulation with `bw = 7`.
 
 With a `bw = 7` a single feature was defined. We use these parameter for
 the initial correspondence analysis on the full data set.
@@ -764,9 +779,9 @@ legend("topleft", col = col, lty = 1,
        legend = names(col))
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-28-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-plot-1.png)
 
-Retention time alignment results.
+Figure 16: Retention time alignment results.
 
 Anchor points span the full retention time range. Retention time
 adjustments for most samples were below 2-4 seconds, with the exception
@@ -791,9 +806,9 @@ plot(bpc_adj, col = paste0(col_sample, 80), main = "BPC, adjusted", lwd = 2)
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-29-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-bpc-1.png)
 
-BPC before (top) and after (bottom) retention time alignment.
+Figure 17: BPC before (top) and after (bottom) retention time alignment.
 
 Misalignment of signal at the later stage of the chromatography seems to
 be reduced. We in addition evaluate the effect of retention time
@@ -811,10 +826,10 @@ plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2)
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-30-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-eic1-1.png)
 
-First example EIC before (top) and after (bottom) retention time
-alignment.
+Figure 18: First example EIC before (top) and after (bottom) retention
+time alignment.
 
 For this early retention time range already the raw signal was well
 aligned.
@@ -831,10 +846,10 @@ plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2)
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-31-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-eic2-1.png)
 
-Second example EIC before (top) and after (bottom) retention time
-alignment.
+Figure 19: Second example EIC before (top) and after (bottom) retention
+time alignment.
 
 This later retention time range shows clear, and strong, differences in
 retention times of 4 samples. While the *PPL* sample could be aligned
@@ -870,9 +885,9 @@ legend("topleft", col = col, lty = 1,
        legend = names(col))
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-33-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-adjust-2-1.png)
 
-Retention time alignment results.
+Figure 20: Retention time alignment results.
 
 A stronger alignment can be observed for the retention time area from
 750 to 800 seconds. The results for the first example EIC did not
@@ -892,10 +907,10 @@ plot(eic_1_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-34-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-eic1-2-1.png)
 
-First example EIC before (top) and after (bottom) retention time
-alignment.
+Figure 21: First example EIC before (top) and after (bottom) retention
+time alignment.
 
 While for the second EIC the alignment improved.
 
@@ -911,10 +926,10 @@ plot(eic_2_adj, col = paste0(col_sample, 80), lwd = 2, peakType = "none")
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-35-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-align-eic2-2-1.png)
 
-Second example EIC before (top) and after (bottom) retention time
-alignment.
+Figure 22: Second example EIC before (top) and after (bottom) retention
+time alignment.
 
 :information_source: note that in most cases it is not necessary that
 all samples are perfectly aligned. Some variation in retention time can
@@ -956,9 +971,10 @@ plotChromPeakDensity(eic_1_adj, param = pdp, col = col_sample,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-37-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-eic1-1.png)
 
-Simulation of correspondence analysis on the first example EIC.
+Figure 23: Simulation of correspondence analysis on the first example
+EIC.
 
 For that EIC the settings worked nicely. Simulating the correspondence
 for the second example EIC.
@@ -971,9 +987,10 @@ plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-38-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-eic2-1.png)
 
-Simulation of correspondence analysis on the second example EIC.
+Figure 24: Simulation of correspondence analysis on the second example
+EIC.
 
 Also for the second EIC all chromatographic peaks got grouped into the
 same feature. Ideally, correspondence parameters should also be
@@ -991,9 +1008,10 @@ plotChromPeakDensity(a, param = pdp, col = col_sample,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-39-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-other-1.png)
 
-Simulation of correspondence analysis on an expanded RT window.
+Figure 25: Simulation of correspondence analysis on an expanded RT
+window.
 
 There seem to be signal from 3 different compounds in that *m/z* slice.
 Using the settings above, in particular with `bw = 7` the apparently
@@ -1011,9 +1029,10 @@ plotChromPeakDensity(a, param = pdp, col = col_sample,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-40-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-other-bw3-1.png)
 
-Effect of changing to `bw = 3` for the correspondence analysis.
+Figure 26: Effect of changing to `bw = 3` for the correspondence
+analysis.
 
 With `bw = 3` we successfully grouped the signals into 3 distinct
 features. We next evaluate whether with these updated setting we would
@@ -1028,9 +1047,10 @@ plotChromPeakDensity(eic_2_adj, param = pdp, col = col_sample,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-41-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-eic2-bw3-1.png)
 
-Effect of `bw = 3` on correspondence results of the second example EIC.
+Figure 27: Effect of `bw = 3` on correspondence results of the second
+example EIC.
 
 All chromatographic peaks for this region were grouped into a single
 region. We thus proceed and use these settings for the correspondence
@@ -1062,9 +1082,9 @@ plotChromPeakDensity(eic_1, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-43-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-corr-eic1-1.png)
 
-Correspondence results for the first example EIC.
+Figure 28: Correspondence results for the first example EIC.
 
 All chromatographic peaks were grouped into the same feature. The
 retention time (`"rtmed"`) of the feature is indicated with a dashed
@@ -1083,9 +1103,9 @@ plotChromPeakDensity(eic_2, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-44-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-corr-eic2-1.png)
 
-Correspondence results for the second example EIC.
+Figure 29: Correspondence results for the second example EIC.
 
 Also for this retention time region, chromatographic peaks were grouped
 into a single feature. At last we evaluate the expanded retention time
@@ -1102,10 +1122,10 @@ plotChromPeakDensity(a, col = col_sample, peakCol = col_peak,
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-45-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-corr-other-1.png)
 
-Correspondence results for an *m/z* slice with multiple closely eluting
-compounds.
+Figure 30: Correspondence results for an *m/z* slice with multiple
+closely eluting compounds.
 
 For this region, chromatographic peaks were grouped into 3 distinct
 features.
@@ -1179,9 +1199,9 @@ nas <- apply(fvals, MARGIN = 2, function(z) sum(is.na(z)))
 barplot(nas, main = "Number of missing values", col = col_sample)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-48-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-nas-1.png)
 
-Number of missing feature values per sample.
+Figure 31: Number of missing feature values per sample.
 
 The lowest number of missing values is present in the *PPL_R1* sample.
 
@@ -1260,9 +1280,10 @@ nas <- apply(fvals, MARGIN = 2, function(z) sum(is.na(z)))
 barplot(nas, main = "Number of missing values", col = col_sample)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-52-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-nas-filled-1.png)
 
-Number of missing feature values per sample after gap-filling.
+Figure 32: Number of missing feature values per sample after
+gap-filling.
 
 A considerable amount of values could thus be *rescued*.
 
@@ -1305,10 +1326,10 @@ ms2
     MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
-     Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
-     Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
-     ...3 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
+     ...4 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
 
@@ -1342,9 +1363,9 @@ a <- ms2[ms2$feature_id == ms2$feature_id[1]]
 plotSpectra(a)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-55-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-ms2-1-1.png)
 
-MS2 spectra for one LC-MS feature.
+Figure 33: MS2 spectra for one LC-MS feature.
 
 All MS2 spectra look similar - we next calculate also a pairwise
 similarity between them and visualize the results as a heatmap.
@@ -1357,9 +1378,10 @@ sim <- compareSpectra(a, ppm = 10, tolerance = 0)
 pheatmap(sim)
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-56-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-ms2-heatmap-1.png)
 
-Pairwise spectra similarity between MS2 spectra of one feature.
+Figure 34: Pairwise spectra similarity between MS2 spectra of one
+feature.
 
 Similarity between all MS2 spectra is very high (above 0.92).
 
@@ -1411,10 +1433,10 @@ ms2_cons
     3091         2   749.801      3791
      ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
-     Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
-     Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
+     ...5 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
 numbers of peaks per consensus spectrum is shown below.
@@ -1436,9 +1458,9 @@ plotSpectra(ms2_cons[1], lwd = 2)
 grid()
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-59-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-consensus-1-1.png)
 
-Consensus spectrum for the first feature.
+Figure 35: Consensus spectrum for the first feature.
 
 We next filter the data and remove spectra with a single fragment peak.
 
@@ -1465,10 +1487,10 @@ ms2_cons
     3089         2   749.801      3791
      ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
-     Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
-     Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
+     ...5 more processings. Use 'processingLog' to list all. 
 
 > **Additional spectra processing options**
 >
@@ -1477,7 +1499,8 @@ ms2_cons
 > or clean spectra. As an alternative, through the
 > [*SpectriPy*](https://bioconductor.org/packages/SpectriPy) package, it
 > would also be possible to apply Python-based functionality from
-> e.g. the *matchms* Python library to `Spectra` objects.
+> e.g. the *matchms* Python library to `Spectra` objects ([Graeve et al.
+> 2025](#ref-graeve_spectripy_2025)).
 
 At last we visualize the select data (i.e. features with associated MS2
 spectra) in the *m/z* - retention time space. We use the
@@ -1504,10 +1527,10 @@ points(ms2_cons$rtime, ms2_cons$precursorMz,
        cex = 0.5, col = "#0000ff40")
 ```
 
-![](MSV000090156-preprocessing_files/figure-html/unnamed-chunk-61-1.png)
+![](MSV000090156-preprocessing_files/figure-html/fig-feature-area-1.png)
 
-Feature areas (grey rectangles) and associated MS2 spectra (blue points)
-in the retention time - *m/z* space.
+Figure 36: Feature areas (grey rectangles) and associated MS2 spectra
+(blue points) in the retention time - *m/z* space.
 
 Thus, with a little bit of R coding we can easily create customized data
 visualizations.
@@ -1554,13 +1577,25 @@ source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/custom
 ms2_cons <- formatSpectraForGNPS(ms2_cons)
 ```
 
-And finally we export the MS2 spectra in MGF format.
+And finally we export the consensus MS2 spectra in MGF format.
 
 ``` r
 
 #' export the MS2 spectra in MGF format
 export(ms2_cons, backend = MsBackendMgf(),
-       file = "xcms_ms2_spectra.mgf")
+       file = "xcms_consensus_ms2_spectra.mgf")
+```
+
+For completeness, we also export all the individual original MS2 spectra
+to a file *xcms_all_ms2_spectra.mgf*.
+
+``` r
+
+#' export the MS2 spectra in MGF format
+setBackend(ms2, MsBackendMemory()) |>
+    formatSpectraForGNPS() |>
+    export(backend = MsBackendMgf(),
+           file = "xcms_all_ms2_spectra.mgf")
 ```
 
 > **Spectra data export formats**
@@ -1588,7 +1623,8 @@ export(ms2_cons, backend = MsBackendMgf(),
 - The quarto system would also allow combining R and Python
   functionality into the same workflow document with the
   [SpectriPy](https://github.com/RforMassSpectrometry/SpectriPy)
-  R-package translating between R and Python MS data structures.
+  R-package translating between R and Python MS data structures ([Graeve
+  et al. 2025](#ref-graeve_spectripy_2025)).
 
 ## Session information
 
@@ -1631,19 +1667,19 @@ sessionInfo()
     [16] ProtGenerics_1.44.0
 
     loaded via a namespace (and not attached):
-      [1] DBI_1.3.0                   httr2_1.2.2
+      [1] DBI_1.3.0                   httr2_1.2.3
       [3] rlang_1.2.0                 magrittr_2.0.5
       [5] clue_0.3-68                 MassSpecWavelet_1.78.0
       [7] otel_0.2.0                  matrixStats_1.5.0
-      [9] compiler_4.6.0              RSQLite_3.53.1
+      [9] compiler_4.6.0              RSQLite_3.53.3
      [11] PTMods_1.0.0                vctrs_0.7.3
      [13] reshape2_1.4.5              rvest_1.0.5
      [15] stringr_1.6.0               pkgconfig_2.0.3
      [17] MetaboCoreUtils_1.20.1      crayon_1.5.3
-     [19] fastmap_1.2.0               dbplyr_2.5.2
+     [19] fastmap_1.2.0               dbplyr_2.6.0
      [21] XVector_0.52.0              rmarkdown_2.31
      [23] preprocessCore_1.74.0       bit_4.6.0
-     [25] purrr_1.2.2                 xfun_0.58
+     [25] purrr_1.2.2                 xfun_0.59
      [27] MultiAssayExperiment_1.38.0 cachem_1.1.0
      [29] jsonlite_2.0.0              progress_1.2.3
      [31] blob_1.3.0                  DelayedArray_0.38.2
@@ -1654,15 +1690,15 @@ sessionInfo()
      [41] Seqinfo_1.2.0               SummarizedExperiment_1.42.0
      [43] iterators_1.0.14            knitr_1.51
      [45] IRanges_2.46.0              Matrix_1.7-5
-     [47] igraph_2.3.2                tidyselect_1.2.1
+     [47] igraph_2.3.3                tidyselect_1.2.1
      [49] abind_1.4-8                 yaml_2.3.12
      [51] doParallel_1.0.17           codetools_0.2-20
      [53] affy_1.90.0                 curl_7.1.0
      [55] lattice_0.22-9              tibble_3.3.1
-     [57] plyr_1.8.9                  withr_3.0.2
+     [57] plyr_1.8.9                  withr_3.0.3
      [59] Biobase_2.72.0              S7_0.2.2
      [61] evaluate_1.0.5              BiocFileCache_3.2.0
-     [63] xml2_1.5.2                  filelock_1.0.3
+     [63] xml2_1.6.0                  filelock_1.0.3
      [65] pillar_1.11.1               affyio_1.82.0
      [67] BiocManager_1.30.27         MatrixGenerics_1.24.0
      [69] foreach_1.5.2               MSnbase_2.37.0
@@ -1687,6 +1723,11 @@ sessionInfo()
     [107] bit64_4.8.2                 MASS_7.3-65                
 
 ## References
+
+Graeve, Marilyn De, Wout Bittremieux, Thomas Naake, et al. 2025.
+“SpectriPy: Enhancing Cross-Language Mass Spectrometry Data Analysis
+with R and Python.” *Journal of Open Source Software* 10 (109): 8070.
+<https://doi.org/10.21105/joss.08070>.
 
 Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, et al. 2025. “Xcms in
 Peak Form: Now Anchoring a Complete Metabolomics Data Preprocessing and

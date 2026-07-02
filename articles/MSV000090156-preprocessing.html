@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">xcms4gnps2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,7 +101,7 @@
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p><em>MsBackendMassIVE</em> is currently (as of 2026-06) only available in the developmental branch of Bioconductor and needs to be installed from GitHub using <code>remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")</code>.</p>
+<p><em>MsBackendMassIVE</em> is currently (as of 2026-06) available only in the developmental branch of Bioconductor and needs to be installed from GitHub using <code>remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")</code>.</p>
 </blockquote>
 </div>
 </section><section class="section level2"><h2 id="data-import">Data import<a class="anchor" aria-label="anchor" href="#data-import"></a>
@@ -137,7 +137,7 @@
 <span>    replicate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>We next load the Lab 2 mzML files of the data set directly from MassIVE. The <code>filePattern</code> argument is used to restrict the download to the 13 Lab 2 mzML files. The first call will download (and cache) the files; subsequent calls will simply reuse the local cache.</p>
+<p>We next load the Lab 2 mzML files of the data set directly from MassIVE. The <code>filePattern</code> argument is used to restrict the download to the 13 Lab 2 mzML files. The first call will download (and cache) the files; subsequent calls will simply reload them from the local cache.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Load the Lab 2 mzML files from MassIVE (downloaded &amp; cached on first run)</span></span>
@@ -268,9 +268,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
-</figure>
+<div id="fig-bpc-full" class="quarto-float quarto-figure quarto-figure-center" width="672">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-bpc-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-bpc-full-1.png" id="fig-bpc-full" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-bpc-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -283,9 +287,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-</figure>
+<div id="fig-tic-full" class="quarto-float quarto-figure quarto-figure-center" width="672">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tic-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-tic-full-1.png" id="fig-tic-full" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-tic-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -316,9 +324,13 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">4</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">bps</span>, main <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-10-1.png" width="912"></p>
-<figcaption>Aggregated MS1 spectrum per sample.</figcaption></figure>
+<div id="fig-bps" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-bps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-bps-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 3: Aggregated MS1 spectrum per sample.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -329,9 +341,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
-</figure>
+<div id="fig-bps-overlay" class="quarto-float quarto-figure quarto-figure-center" width="672">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-bps-overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-bps-overlay-1.png" id="fig-bps-overlay" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-bps-overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -343,9 +359,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MsExperiment/man/MsExperiment.html" class="external-link">sampleData</a></span><span class="op">(</span><span class="va">mse</span><span class="op">)</span><span class="op">$</span><span class="va">sample_desc</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-12-1.png" width="912"></p>
-<figcaption>Similarity of <em>base peak spectra</em> of all samples in the experiment.</figcaption></figure>
+<div id="fig-bps-heatmap" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-bps-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-bps-heatmap-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bps-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 5: Similarity of <em>base peak spectra</em> of all samples in the experiment.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -406,9 +426,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-14-1.png" width="912"></p>
-<figcaption>Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the <em>m/z</em> region with the largest signal in the retention time window.</figcaption></figure>
+<div id="fig-eic1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic1-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 6: Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the <em>m/z</em> region with the largest signal in the retention time window.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -440,9 +464,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-15-1.png" width="912"></p>
-<figcaption>Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the <em>m/z</em> region with the largest signal in the retention time window.</figcaption></figure>
+<div id="fig-eic2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic2-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 7: Definition of an example region for EIC extraction. Upper panel: BPC, dashed vertical lines indicate the selected retention time region. Lower panel: EIC for the <em>m/z</em> region with the largest signal in the retention time window.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -463,9 +491,13 @@
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">filterMzRange</span>, mz <span class="op">=</span> <span class="va">mzr_1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
-</figure>
+<div id="fig-eic1-plot" class="quarto-float quarto-figure quarto-figure-center" width="672">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic1-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic1-plot-1.png" id="fig-eic1-plot" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-eic1-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 8
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -479,9 +511,13 @@
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/filterSpectra.html" class="external-link">filterSpectra</a></span><span class="op">(</span><span class="va">filterMzRange</span>, mz <span class="op">=</span> <span class="va">mzr_2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
-</figure>
+<div id="fig-eic2-plot" class="quarto-float quarto-figure quarto-figure-center" width="672">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic2-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic2-plot-1.png" id="fig-eic2-plot" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-eic2-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -541,9 +577,13 @@
 <span>        ylab <span class="op">=</span> <span class="st">"rt width [s]"</span>, col <span class="op">=</span> <span class="va">col_sample</span>, line <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
-</figure>
+<div id="fig-chrom-peak-overview" class="quarto-float quarto-figure quarto-figure-center" width="672">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chrom-peak-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-overview-1.png" id="fig-chrom-peak-overview" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-chrom-peak-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 10
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -562,9 +602,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
-<figcaption>Chromatographic peak detection results on the first example EIC.</figcaption></figure>
+<div id="fig-cpd-eic1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-cpd-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-cpd-eic1-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cpd-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 11: Chromatographic peak detection results on the first example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -581,9 +625,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, col <span class="op">=</span> <span class="va">col</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
-<figcaption>Chromatographic peak detection results on the second example EIC.</figcaption></figure>
+<div id="fig-cpd-eic2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-cpd-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-cpd-eic2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cpd-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 12: Chromatographic peak detection results on the second example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -611,9 +659,13 @@
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
-<figcaption>Correspondence analysis simulation on the second example EIC.</figcaption></figure>
+<div id="fig-eic2-chrom-peak-density" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic2-chrom-peak-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic2-chrom-peak-density-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eic2-chrom-peak-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 13: Correspondence analysis simulation on the second example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -626,9 +678,13 @@
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-24-1.png" width="672"></p>
-<figcaption>Correspondence analysis simulation with <code>bw = 5</code>.</figcaption></figure>
+<div id="fig-eic2-chrom-peak-density-2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic2-chrom-peak-density-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic2-chrom-peak-density-2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eic2-chrom-peak-density-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 14: Correspondence analysis simulation with <code>bw = 5</code>.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -640,9 +696,13 @@
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-25-1.png" width="672"></p>
-<figcaption>Correspondence analysis simulation with <code>bw = 7</code>.</figcaption></figure>
+<div id="fig-eic2-chrom-peak-density-3" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-eic2-chrom-peak-density-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-eic2-chrom-peak-density-3-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eic2-chrom-peak-density-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 15: Correspondence analysis simulation with <code>bw = 7</code>.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -671,9 +731,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, col <span class="op">=</span> <span class="va">col</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-28-1.png" width="672"></p>
-<figcaption>Retention time alignment results.</figcaption></figure>
+<div id="fig-align-plot" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-plot-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 16: Retention time alignment results.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -692,9 +756,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bpc_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"BPC, adjusted"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-29-1.png" width="912"></p>
-<figcaption>BPC before (top) and after (bottom) retention time alignment.</figcaption></figure>
+<div id="fig-align-bpc" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-bpc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-bpc-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-bpc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 17: BPC before (top) and after (bottom) retention time alignment.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -710,9 +778,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-30-1.png" width="912"></p>
-<figcaption>First example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
+<div id="fig-align-eic1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-eic1-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 18: First example EIC before (top) and after (bottom) retention time alignment.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -728,9 +800,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-31-1.png" width="912"></p>
-<figcaption>Second example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
+<div id="fig-align-eic2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-eic2-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 19: Second example EIC before (top) and after (bottom) retention time alignment.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -757,9 +833,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, col <span class="op">=</span> <span class="va">col</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-33-1.png" width="672"></p>
-<figcaption>Retention time alignment results.</figcaption></figure>
+<div id="fig-align-adjust-2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-adjust-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-adjust-2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-adjust-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 20: Retention time alignment results.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -777,9 +857,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_1_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-34-1.png" width="912"></p>
-<figcaption>First example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
+<div id="fig-align-eic1-2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-eic1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-eic1-2-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-eic1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 21: First example EIC before (top) and after (bottom) retention time alignment.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -795,9 +879,13 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eic_2_adj</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_sample</span>, <span class="fl">80</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, peakType <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-35-1.png" width="912"></p>
-<figcaption>Second example EIC before (top) and after (bottom) retention time alignment.</figcaption></figure>
+<div id="fig-align-eic2-2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-align-eic2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-align-eic2-2-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-align-eic2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 22: Second example EIC before (top) and after (bottom) retention time alignment.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -823,9 +911,13 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-37-1.png" width="672"></p>
-<figcaption>Simulation of correspondence analysis on the first example EIC.</figcaption></figure>
+<div id="fig-chrom-peak-density-eic1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chrom-peak-density-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-eic1-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chrom-peak-density-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 23: Simulation of correspondence analysis on the first example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -837,9 +929,13 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-38-1.png" width="672"></p>
-<figcaption>Simulation of correspondence analysis on the second example EIC.</figcaption></figure>
+<div id="fig-chrom-peak-density-eic2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chrom-peak-density-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-eic2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chrom-peak-density-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 24: Simulation of correspondence analysis on the second example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -853,9 +949,13 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-39-1.png" width="672"></p>
-<figcaption>Simulation of correspondence analysis on an expanded RT window.</figcaption></figure>
+<div id="fig-chrom-peak-density-other" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chrom-peak-density-other-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-other-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chrom-peak-density-other-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 25: Simulation of correspondence analysis on an expanded RT window.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -867,9 +967,13 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-40-1.png" width="672"></p>
-<figcaption>Effect of changing to <code>bw = 3</code> for the correspondence analysis.</figcaption></figure>
+<div id="fig-chrom-peak-density-other-bw3" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chrom-peak-density-other-bw3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-other-bw3-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chrom-peak-density-other-bw3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 26: Effect of changing to <code>bw = 3</code> for the correspondence analysis.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -881,9 +985,13 @@
 <span>                     peakCol <span class="op">=</span> <span class="va">col_peak</span>, peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-41-1.png" width="672"></p>
-<figcaption>Effect of <code>bw = 3</code> on correspondence results of the second example EIC.</figcaption></figure>
+<div id="fig-chrom-peak-density-eic2-bw3" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chrom-peak-density-eic2-bw3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-chrom-peak-density-eic2-bw3-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chrom-peak-density-eic2-bw3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 27: Effect of <code>bw = 3</code> on correspondence results of the second example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -905,9 +1013,13 @@
 <span>                     simulate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-43-1.png" width="672"></p>
-<figcaption>Correspondence results for the first example EIC.</figcaption></figure>
+<div id="fig-corr-eic1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-corr-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-corr-eic1-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-eic1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 28: Correspondence results for the first example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -923,9 +1035,13 @@
 <span>                     simulate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-44-1.png" width="672"></p>
-<figcaption>Correspondence results for the second example EIC.</figcaption></figure>
+<div id="fig-corr-eic2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-corr-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-corr-eic2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-eic2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 29: Correspondence results for the second example EIC.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -940,9 +1056,13 @@
 <span>                     simulate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-45-1.png" width="672"></p>
-<figcaption>Correspondence results for an <em>m/z</em> slice with multiple closely eluting compounds.</figcaption></figure>
+<div id="fig-corr-other" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-corr-other-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-corr-other-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-other-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 30: Correspondence results for an <em>m/z</em> slice with multiple closely eluting compounds.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -989,9 +1109,13 @@ FT00006      NA   NA   NA 6931111.8</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">nas</span>, main <span class="op">=</span> <span class="st">"Number of missing values"</span>, col <span class="op">=</span> <span class="va">col_sample</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-48-1.png" width="672"></p>
-<figcaption>Number of missing feature values per sample.</figcaption></figure>
+<div id="fig-nas" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-nas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-nas-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 31: Number of missing feature values per sample.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1053,9 +1177,13 @@ FT00006  7827918.6 6753662 5360799.4 4505007 7968544.6 6931111.8</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">nas</span>, main <span class="op">=</span> <span class="st">"Number of missing values"</span>, col <span class="op">=</span> <span class="va">col_sample</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-52-1.png" width="672"></p>
-<figcaption>Number of missing feature values per sample after gap-filling.</figcaption></figure>
+<div id="fig-nas-filled" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-nas-filled-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-nas-filled-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nas-filled-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 32: Number of missing feature values per sample after gap-filling.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1091,10 +1219,10 @@ MSV000090156_Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
 MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
  ... 10 more files
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
- Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
- Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
- ...3 more processings. Use 'processingLog' to list all. </code></pre>
+ Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
+ ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
 <p>We can have multiple, or no, MS2 spectra per feature:</p>
@@ -1124,9 +1252,13 @@ Processing:
 <span><span class="co">#' plot the spectra</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-55-1.png" width="912"></p>
-<figcaption>MS2 spectra for one LC-MS feature.</figcaption></figure>
+<div id="fig-ms2-1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ms2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-ms2-1-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ms2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 33: MS2 spectra for one LC-MS feature.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1138,9 +1270,13 @@ Processing:
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span><span class="va">sim</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-56-1.png" width="912"></p>
-<figcaption>Pairwise spectra similarity between MS2 spectra of one feature.</figcaption></figure>
+<div id="fig-ms2-heatmap" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ms2-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-ms2-heatmap-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ms2-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 34: Pairwise spectra similarity between MS2 spectra of one feature.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1178,10 +1314,10 @@ Processing:
 3091         2   749.801      3791
  ... 43 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
- Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
- Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
- ...4 more processings. Use 'processingLog' to list all. </code></pre>
+ Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
+ ...5 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
 <p>We have thus now one consensus spectrum per feature. A summary of the numbers of peaks per consensus spectrum is shown below.</p>
@@ -1200,9 +1336,13 @@ Processing:
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/spectra-plotting.html" class="external-link">plotSpectra</a></span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-59-1.png" width="672"></p>
-<figcaption>Consensus spectrum for the first feature.</figcaption></figure>
+<div id="fig-consensus-1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-consensus-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-consensus-1-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-consensus-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 35: Consensus spectrum for the first feature.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1229,16 +1369,16 @@ Processing:
 3089         2   749.801      3791
  ... 43 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Fri Jun 12 14:55:05 2026]
- Filter: select MS level(s) 2 [Fri Jun 12 15:01:19 2026]
- Filter: select MS level(s) 2 [Fri Jun 12 15:01:20 2026]
- ...4 more processings. Use 'processingLog' to list all. </code></pre>
+ Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
+ ...5 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
 <div>
 <blockquote>
 <p><strong>Additional spectra processing options</strong></p>
-<p>The <a href="https://bioconductor.org/packages/Spectra" class="external-link"><em>Spectra</em></a> package would provide many additional functions and options to process, scale or clean spectra. As an alternative, through the <a href="https://bioconductor.org/packages/SpectriPy" class="external-link"><em>SpectriPy</em></a> package, it would also be possible to apply Python-based functionality from e.g. the <em>matchms</em> Python library to <code>Spectra</code> objects.</p>
+<p>The <a href="https://bioconductor.org/packages/Spectra" class="external-link"><em>Spectra</em></a> package would provide many additional functions and options to process, scale or clean spectra. As an alternative, through the <a href="https://bioconductor.org/packages/SpectriPy" class="external-link"><em>SpectriPy</em></a> package, it would also be possible to apply Python-based functionality from e.g. the <em>matchms</em> Python library to <code>Spectra</code> objects <span class="citation" data-cites="graeve_spectripy_2025">(<a href="#ref-graeve_spectripy_2025" role="doc-biblioref">Graeve et al. 2025</a>)</span>.</p>
 </blockquote>
 </div>
 <p>At last we visualize the select data (i.e. features with associated MS2 spectra) in the <em>m/z</em> - retention time space. We use the <code><a href="https://rdrr.io/pkg/xcms/man/XcmsExperiment.html" class="external-link">featureArea()</a></code> function to get the feature boundaries and draw them as rectangles. The associated MS2 spectra (their precursor <em>m/z</em> and retention time value) are added as individual data points.</p>
@@ -1259,9 +1399,13 @@ Processing:
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">$</span><span class="va">rtime</span>, <span class="va">ms2_cons</span><span class="op">$</span><span class="va">precursorMz</span>,</span>
 <span>       cex <span class="op">=</span> <span class="fl">0.5</span>, col <span class="op">=</span> <span class="st">"#0000ff40"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="MSV000090156-preprocessing_files/figure-html/unnamed-chunk-61-1.png" width="912"></p>
-<figcaption>Feature areas (grey rectangles) and associated MS2 spectra (blue points) in the retention time - <em>m/z</em> space.</figcaption></figure>
+<div id="fig-feature-area" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-feature-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="MSV000090156-preprocessing_files/figure-html/fig-feature-area-1.png" width="912">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-feature-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 36: Feature areas (grey rectangles) and associated MS2 spectra (blue points) in the retention time - <em>m/z</em> space.
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -1292,12 +1436,21 @@ Processing:
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R"</span><span class="op">)</span></span>
 <span><span class="va">ms2_cons</span> <span class="op">&lt;-</span> <span class="fu">formatSpectraForGNPS</span><span class="op">(</span><span class="va">ms2_cons</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>And finally we export the MS2 spectra in MGF format.</p>
+<p>And finally we export the consensus MS2 spectra in MGF format.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' export the MS2 spectra in MGF format</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/Spectra.html" class="external-link">export</a></span><span class="op">(</span><span class="va">ms2_cons</span>, backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/MsBackendMgf/man/MsBackendMgf.html" class="external-link">MsBackendMgf</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>       file <span class="op">=</span> <span class="st">"xcms_ms2_spectra.mgf"</span><span class="op">)</span></span></code></pre></div>
+<span>       file <span class="op">=</span> <span class="st">"xcms_consensus_ms2_spectra.mgf"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>For completeness, we also export all the individual original MS2 spectra to a file <em>xcms_all_ms2_spectra.mgf</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' export the MS2 spectra in MGF format</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/backendInitialize.html" class="external-link">setBackend</a></span><span class="op">(</span><span class="va">ms2</span>, <span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/MsBackend.html" class="external-link">MsBackendMemory</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">formatSpectraForGNPS</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/Spectra/man/Spectra.html" class="external-link">export</a></span><span class="op">(</span>backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/MsBackendMgf/man/MsBackendMgf.html" class="external-link">MsBackendMgf</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>           file <span class="op">=</span> <span class="st">"xcms_all_ms2_spectra.mgf"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div>
 <blockquote>
@@ -1310,12 +1463,12 @@ Processing:
 <ul>
 <li>R-based data analysis workflows allow data set specific, tailored, analysis of LC-MS data.</li>
 <li>The <em>xcms</em> R package for LC-MS data preprocessing is tightly integrated into a broader ecosystem of R packages.</li>
-<li>The quarto system would also allow combining R and Python functionality into the same workflow document with the <a href="https://github.com/RforMassSpectrometry/SpectriPy" class="external-link">SpectriPy</a> R-package translating between R and Python MS data structures.</li>
+<li>The quarto system would also allow combining R and Python functionality into the same workflow document with the <a href="https://github.com/RforMassSpectrometry/SpectriPy" class="external-link">SpectriPy</a> R-package translating between R and Python MS data structures <span class="citation" data-cites="graeve_spectripy_2025">(<a href="#ref-graeve_spectripy_2025" role="doc-biblioref">Graeve et al. 2025</a>)</span>.</li>
 </ul></section><section class="section level2"><h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <p>The R version and package versions used:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.6.0 (2026-04-24)
@@ -1350,19 +1503,19 @@ other attached packages:
 [16] ProtGenerics_1.44.0
 
 loaded via a namespace (and not attached):
-  [1] DBI_1.3.0                   httr2_1.2.2
+  [1] DBI_1.3.0                   httr2_1.2.3
   [3] rlang_1.2.0                 magrittr_2.0.5
   [5] clue_0.3-68                 MassSpecWavelet_1.78.0
   [7] otel_0.2.0                  matrixStats_1.5.0
-  [9] compiler_4.6.0              RSQLite_3.53.1
+  [9] compiler_4.6.0              RSQLite_3.53.3
  [11] PTMods_1.0.0                vctrs_0.7.3
  [13] reshape2_1.4.5              rvest_1.0.5
  [15] stringr_1.6.0               pkgconfig_2.0.3
  [17] MetaboCoreUtils_1.20.1      crayon_1.5.3
- [19] fastmap_1.2.0               dbplyr_2.5.2
+ [19] fastmap_1.2.0               dbplyr_2.6.0
  [21] XVector_0.52.0              rmarkdown_2.31
  [23] preprocessCore_1.74.0       bit_4.6.0
- [25] purrr_1.2.2                 xfun_0.58
+ [25] purrr_1.2.2                 xfun_0.59
  [27] MultiAssayExperiment_1.38.0 cachem_1.1.0
  [29] jsonlite_2.0.0              progress_1.2.3
  [31] blob_1.3.0                  DelayedArray_0.38.2
@@ -1373,15 +1526,15 @@ loaded via a namespace (and not attached):
  [41] Seqinfo_1.2.0               SummarizedExperiment_1.42.0
  [43] iterators_1.0.14            knitr_1.51
  [45] IRanges_2.46.0              Matrix_1.7-5
- [47] igraph_2.3.2                tidyselect_1.2.1
+ [47] igraph_2.3.3                tidyselect_1.2.1
  [49] abind_1.4-8                 yaml_2.3.12
  [51] doParallel_1.0.17           codetools_0.2-20
  [53] affy_1.90.0                 curl_7.1.0
  [55] lattice_0.22-9              tibble_3.3.1
- [57] plyr_1.8.9                  withr_3.0.2
+ [57] plyr_1.8.9                  withr_3.0.3
  [59] Biobase_2.72.0              S7_0.2.2
  [61] evaluate_1.0.5              BiocFileCache_3.2.0
- [63] xml2_1.5.2                  filelock_1.0.3
+ [63] xml2_1.6.0                  filelock_1.0.3
  [65] pillar_1.11.1               affyio_1.82.0
  [67] BiocManager_1.30.27         MatrixGenerics_1.24.0
  [69] foreach_1.5.2               MSnbase_2.37.0
@@ -1409,6 +1562,9 @@ loaded via a namespace (and not attached):
 </section><section class="section level2"><h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-graeve_spectripy_2025" class="csl-entry" role="listitem">
+Graeve, Marilyn De, Wout Bittremieux, Thomas Naake, et al. 2025. <span>“<span>SpectriPy</span>: <span>Enhancing</span> <span>Cross</span>-<span>Language</span> <span>Mass</span> <span>Spectrometry</span> <span>Data</span> <span>Analysis</span> with <span>R</span> and <span>Python</span>.”</span> <em>Journal of Open Source Software</em> 10 (109): 8070. <a href="https://doi.org/10.21105/joss.08070" class="external-link">https://doi.org/10.21105/joss.08070</a>.
+</div>
 <div id="ref-louail_xcms_2025" class="csl-entry" role="listitem">
 Louail, Philippine, Carl Brunius, Mar Garcia-Aloy, et al. 2025. <span>“Xcms in <span>Peak</span> <span>Form</span>: <span>Now</span> <span>Anchoring</span> a <span>Complete</span> <span>Metabolomics</span> <span>Data</span> <span>Preprocessing</span> and <span>Analysis</span> <span>Software</span> <span>Ecosystem</span>.”</span> <em>Analytical Chemistry</em>, ahead of print, December. <a href="https://doi.org/10.1021/acs.analchem.5c04338" class="external-link">https://doi.org/10.1021/acs.analchem.5c04338</a>.
 </div>
