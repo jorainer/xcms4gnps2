@@ -100,7 +100,7 @@
 </div>
 <div>
 <blockquote>
-<p><strong>Note</strong></p>
+<p><strong>ℹ️ Note</strong></p>
 <p><em>MsBackendMassIVE</em> is currently (as of 2026-06) available only in the developmental branch of Bioconductor and needs to be installed from GitHub using <code>remotes::install_github("RforMassSpectrometry/MsBackendMassIVE")</code>.</p>
 </blockquote>
 </div>
@@ -376,7 +376,7 @@ Figure 5: Similarity of <em>base peak spectra</em> of all samples in the experi
 <p>Most methods in <em>xcms</em> are parallelized by default. Below we define the parallel processing setup for the present analysis.</p>
 <div>
 <blockquote>
-<p><strong>Parallel processing details</strong></p>
+<p><strong>ℹ️ Parallel processing details</strong></p>
 <p>It is generally advisable to configure the parallel processing setup globally using <code><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register()</a></code>. On Unix machines <em>multi-core</em> parallel processing can be used, that shares memory between the parallel processes. Windows supports only <em>socket-based</em> parallel processing and starts a separate R for each parallel process. Below we globally define the parallel processing setup depending on the operating system. For the present analysis we use 4 parallel processes.</p>
 </blockquote>
 </div>
@@ -393,8 +393,8 @@ Figure 5: Similarity of <em>base peak spectra</em> of all samples in the experi
 <p>The aim of the chromatographic peak detection is to identify and quantify signal in the raw MS data space representing signal from ions of compounds present in a sample. Data processing is performed separately for each data file and mass peak intensities with similar <em>m/z</em> are evaluated along retention time axis to identify chromatographic peaks. We use the <em>centWave</em> algorithm for peak detection. The most important parameter for <em>centWave</em> is <code>peakwidth</code> which defines an approximate lower and upper expected width of chromatographic peaks in retention time dimension. Without any prior information, we need to derive this information from the data set. We therefore zoom into areas of the BPC that seem to contain signal from an ion.</p>
 <div>
 <blockquote>
-<p><strong>Note</strong></p>
-<p>:information_source: see :woman_astronaut: <a href="https://rformassspectrometry.github.io/metabonaut" class="external-link">Metabonaut</a> for more details on <em>xcms</em>-based preprocessing.</p>
+<p><strong>ℹ️ Note</strong></p>
+<p>See 👩‍🚀 <a href="https://rformassspectrometry.github.io/metabonaut" class="external-link">Metabonaut</a> for more details on <em>xcms</em>-based preprocessing.</p>
 </blockquote>
 </div>
 <div class="cell">
@@ -479,7 +479,7 @@ Figure 7: Definition of an example region for EIC extraction. Upper panel: BPC,
 <p>A second potentially data set-specific parameter of the <em>centWave</em> algorithm is <code>ppm</code>. It defines the maximum allowed deviation in <em>m/z</em> dimension of mass peaks in consecutive spectra considered to represent signal from the same ion. To illustrate this we below subset the full MS data from the first data file to the <em>m/z</em> and retention time range defined above and plot the individual mass peaks.</p>
 <div>
 <blockquote>
-<p><strong>:information_source: Details on the <code>ppm</code> <em>centWave</em> parameter</strong></p>
+<p><strong>ℹ️ Details on the <code>ppm</code> <em>centWave</em> parameter</strong></p>
 <p>The <code>ppm</code> parameter defines the expected (or observed) <em>m/z</em> deviation of mass peaks representing signal from the same compound/ion in consecutive spectra. This scattering of mass peak’s <em>m/z</em> values can depend on the centroiding algorithm used or the precision of the MS instrument. In addition, on TOF instruments, the scattering can depend on the intensity of the signal, with higher variation observed for low intensity peaks and increasing stability with higher signal.</p>
 </blockquote>
 </div>
@@ -641,7 +641,7 @@ Figure 12: Chromatographic peak detection results on the second example EIC.
 <p>We use the <em>peak density</em> correspondence method which groups chromatographic peaks into an LC-MS feature, if their <em>m/z</em> difference is smaller than <code>binSize</code> (+ <code>ppm</code> of the <em>m/z</em>), the retention time of their apex is within one peak of the <em>peak density</em> curve (which smoothness can be configured with parameter <code>bw</code>) and a chromatographic peak is present in at least <code>minFraction</code> of at least one of the sample groups defined with <code>sampleGroups</code>. For the initial correspondence we apply more relaxed settings and consider all samples to be in the same sample group (since we want to define anchor peaks that are present in most samples).</p>
 <div>
 <blockquote>
-<p><strong>Details on <code>PeakDensityParam</code> settings</strong></p>
+<p><strong>ℹ️ Details on <code>PeakDensityParam</code> settings</strong></p>
 <p>The <em>peak density</em> correspondence method can be configured using the <code>PeakDensityParam</code>. For an initial correspondence used for retention time alignment more relaxed settings can be used, also putting all samples into the same <em>sample group</em>. The important parameters are <code>bw</code> and <code>binSize</code>. The former defines the tolerance of retention time similarity, the latter the similarity of <em>m/z</em> values for chromatographic peaks from different samples to be considered to represent signal from ions of the same compound. Setting <code>binSize</code> is straight forward - it depends on the resolution of the instrument and the expected similarity of <em>m/z</em> values for the same ion. We set it to a value of <code>binSize = 0.01</code>, hence all chromatographic peaks with a difference in <em>m/z</em> smaller than 0.01 would be evaluated. The <code>bw</code> parameter is a bit more difficult to define. It should be defined based on observed data in the experiment, ideally, on EICs of closely eluting compounds with the same <em>m/z</em>. In our example we use the second example <em>m/z</em> - retention time range, because it seemed to contain signal from the same compound, but with quite large shifts between data files. We below <em>simulate</em> a correspondence analysis on this EIC. Other parameters defined are <code>minFraction</code>, which defines the minimum required proportion of samples of one of the sample groups defined with parameter <code>sampleGroups</code> in which a chromatographic peak is present, and <code>ppm</code> which, together with <code>binSize</code> defines the maximal accepted difference in chromatographic peaks’ <em>m/z</em> values to consider them for grouping.</p>
 </blockquote>
 </div>
@@ -1219,10 +1219,10 @@ MSV000090156_Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
 MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
  ... 10 more files
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
- Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
- Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
- ...4 more processings. Use 'processingLog' to list all. </code></pre>
+ Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 09:29:56 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 09:36:18 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 09:36:21 2026]
+ ...3 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
 <p>We can have multiple, or no, MS2 spectra per feature:</p>
@@ -1284,7 +1284,7 @@ Figure 34: Pairwise spectra similarity between MS2 spectra of one feature.
 <p>We next combine the individual MS2 spectra of a feature to a single <em>consensus</em> spectrum.</p>
 <div>
 <blockquote>
-<p><strong>Options to combine spectra</strong></p>
+<p><strong>ℹ️ Options to combine spectra</strong></p>
 <p>Multiple spectra can be combined into a single spectrum using the <code><a href="https://rdrr.io/pkg/Spectra/man/combineSpectra.html" class="external-link">combineSpectra()</a></code> function which provides a large number of options and parameters for this task, including the possibility to provide a custom function to combine the fragment peaks. By default (with parameter <code>peaks = "union"</code>), the combined spectrum contains <strong>all</strong> mass peaks of all input spectra. The option <code>peaks = "intersect"</code> allows to retain only peaks that are present in a certain proportion of input spectra. Parameters <code>ppm</code> and <code>tolerance</code> define the required similarity in the peaks’ <em>m/z</em> value to be considered <em>the same</em>. The groups of spectra to be combined are specified with parameter <code>f</code> and a potential splitting of the input <code>Spectra</code> object for parallel processing with parameter <code>p</code>.</p>
 </blockquote>
 </div>
@@ -1314,10 +1314,10 @@ Figure 34: Pairwise spectra similarity between MS2 spectra of one feature.
 3091         2   749.801      3791
  ... 43 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
- Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
- Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
- ...5 more processings. Use 'processingLog' to list all. </code></pre>
+ Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 09:29:56 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 09:36:18 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 09:36:21 2026]
+ ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
 <p>We have thus now one consensus spectrum per feature. A summary of the numbers of peaks per consensus spectrum is shown below.</p>
@@ -1369,15 +1369,15 @@ Figure 35: Consensus spectrum for the first feature.
 3089         2   749.801      3791
  ... 43 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
- Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
- Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
- ...5 more processings. Use 'processingLog' to list all. </code></pre>
+ Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 09:29:56 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 09:36:18 2026]
+ Filter: select MS level(s) 2 [Thu Jul  2 09:36:21 2026]
+ ...4 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
 <div>
 <blockquote>
-<p><strong>Additional spectra processing options</strong></p>
+<p><strong>ℹ️ Additional spectra processing options</strong></p>
 <p>The <a href="https://bioconductor.org/packages/Spectra" class="external-link"><em>Spectra</em></a> package would provide many additional functions and options to process, scale or clean spectra. As an alternative, through the <a href="https://bioconductor.org/packages/SpectriPy" class="external-link"><em>SpectriPy</em></a> package, it would also be possible to apply Python-based functionality from e.g. the <em>matchms</em> Python library to <code>Spectra</code> objects <span class="citation" data-cites="graeve_spectripy_2025">(<a href="#ref-graeve_spectripy_2025" role="doc-biblioref">Graeve et al. 2025</a>)</span>.</p>
 </blockquote>
 </div>
@@ -1454,7 +1454,7 @@ Figure 36: Feature areas (grey rectangles) and associated MS2 spectra (blue poi
 </div>
 <div>
 <blockquote>
-<p><strong>Spectra data export formats</strong></p>
+<p><strong>ℹ️ Spectra data export formats</strong></p>
 <p>The MGF format is only loosely defined with many different <em>dialects</em> being used. The <a href="https://bioconductor.org/packages/MsBackendMgf" class="external-link"><em>MsBackendMgf</em></a> package supports renaming or specifying spectra variables (metadata) for export to the MGF format. In addition, it would also allow to export also additional peak information, such as chemical formulas for individual fragments. As an alternative, also other export formats would be supported for <code>Spectra</code> objects, provided by packages such as the <a href="https://bioconductor.org/packages/MsBackendMsp" class="external-link"><em>MsBackendMsp</em></a> or <a href="https://bioconductor.org/packages/MsBackendMassbank" class="external-link"><em>MsBackendMassbank</em></a>. Upcoming formats, such as <em>specLib</em>, <em>mzPeak</em> or the updated mzTab-M format will be supported in future.</p>
 </blockquote>
 </div>

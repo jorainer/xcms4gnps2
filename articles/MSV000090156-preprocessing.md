@@ -39,7 +39,7 @@ library(pheatmap)     # visualization of clustering results as heatmap
 library(vioplot)      # to create *violin plots*
 ```
 
-> **Note**
+> **ℹ️ Note**
 >
 > *MsBackendMassIVE* is currently (as of 2026-06) available only in the
 > developmental branch of Bioconductor and needs to be installed from
@@ -303,7 +303,7 @@ expected *m/z* by retention time areas of defined LC-MS features.
 Most methods in *xcms* are parallelized by default. Below we define the
 parallel processing setup for the present analysis.
 
-> **Parallel processing details**
+> **ℹ️ Parallel processing details**
 >
 > It is generally advisable to configure the parallel processing setup
 > globally using
@@ -339,11 +339,10 @@ information, we need to derive this information from the data set. We
 therefore zoom into areas of the BPC that seem to contain signal from an
 ion.
 
-> **Note**
+> **ℹ️ Note**
 >
-> :information_source: see :woman_astronaut:
-> [Metabonaut](https://rformassspectrometry.github.io/metabonaut) for
-> more details on *xcms*-based preprocessing.
+> See 👩‍🚀 [Metabonaut](https://rformassspectrometry.github.io/metabonaut)
+> for more details on *xcms*-based preprocessing.
 
 ``` r
 
@@ -437,7 +436,7 @@ signal from the same ion. To illustrate this we below subset the full MS
 data from the first data file to the *m/z* and retention time range
 defined above and plot the individual mass peaks.
 
-> **:information_source: Details on the `ppm` *centWave* parameter**
+> **ℹ️ Details on the `ppm` *centWave* parameter**
 >
 > The `ppm` parameter defines the expected (or observed) *m/z* deviation
 > of mass peaks representing signal from the same compound/ion in
@@ -635,7 +634,7 @@ apply more relaxed settings and consider all samples to be in the same
 sample group (since we want to define anchor peaks that are present in
 most samples).
 
-> **Details on `PeakDensityParam` settings**
+> **ℹ️ Details on `PeakDensityParam` settings**
 >
 > The *peak density* correspondence method can be configured using the
 > `PeakDensityParam`. For an initial correspondence used for retention
@@ -1326,10 +1325,10 @@ ms2
     MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
-     Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
-     Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
-     ...4 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 09:29:56 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 09:36:18 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 09:36:21 2026]
+     ...3 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
 
@@ -1388,7 +1387,7 @@ Similarity between all MS2 spectra is very high (above 0.92).
 We next combine the individual MS2 spectra of a feature to a single
 *consensus* spectrum.
 
-> **Options to combine spectra**
+> **ℹ️ Options to combine spectra**
 >
 > Multiple spectra can be combined into a single spectrum using the
 > [`combineSpectra()`](https://rdrr.io/pkg/Spectra/man/combineSpectra.html)
@@ -1433,10 +1432,10 @@ ms2_cons
     3091         2   749.801      3791
      ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
-     Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
-     Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
-     ...5 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 09:29:56 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 09:36:18 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 09:36:21 2026]
+     ...4 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
 numbers of peaks per consensus spectrum is shown below.
@@ -1487,12 +1486,12 @@ ms2_cons
     3089         2   749.801      3791
      ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 07:21:51 2026]
-     Filter: select MS level(s) 2 [Thu Jul  2 07:27:46 2026]
-     Filter: select MS level(s) 2 [Thu Jul  2 07:27:47 2026]
-     ...5 more processings. Use 'processingLog' to list all. 
+     Filter: select retention time [20..850] on MS level(s)  [Thu Jul  2 09:29:56 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 09:36:18 2026]
+     Filter: select MS level(s) 2 [Thu Jul  2 09:36:21 2026]
+     ...4 more processings. Use 'processingLog' to list all. 
 
-> **Additional spectra processing options**
+> **ℹ️ Additional spectra processing options**
 >
 > The [*Spectra*](https://bioconductor.org/packages/Spectra) package
 > would provide many additional functions and options to process, scale
@@ -1598,7 +1597,7 @@ setBackend(ms2, MsBackendMemory()) |>
            file = "xcms_all_ms2_spectra.mgf")
 ```
 
-> **Spectra data export formats**
+> **ℹ️ Spectra data export formats**
 >
 > The MGF format is only loosely defined with many different *dialects*
 > being used. The
