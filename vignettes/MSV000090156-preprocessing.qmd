@@ -1124,8 +1124,25 @@ a <- ms2[ms2$feature_id == ms2$feature_id[1]]
 plotSpectra(a)
 ```
 
-All MS2 spectra look similar - we next calculate also a pairwise similarity
-between them and visualize the results as a heatmap.
+Next to the main fragment peaks also some very low intensity peaks are
+visible. We
+
+```{r}
+#' define a function to keep only fragments with an intensity > 1%
+#' of the max fragment intensity
+min_intensity <- function(x, ...) {
+    x > max(x, na.rm = TRUE) * 0.01
+}
+
+#' apply this filter to the MS2 spectra and remove spectra with
+#' less than 3 peaks
+ms2 <- filterIntensity(ms2, intensity = min_intensity)
+ms2 <- ms2[lengths(ms2) > 2]
+```
+
+All MS2 spectra in [@fig-ms2-1] look similar - to get some quantitative
+measurement for this similarity we next calculate also a pairwise
+similarity between them and visualize the results as a heatmap.
 
 ```{r}
 #| label: fig-ms2-heatmap
