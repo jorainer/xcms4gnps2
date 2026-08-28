@@ -1,6 +1,6 @@
 Package: xcms4gnps2
 Title: xcms-based data preprocessing for FBMN with GNPS2
-Version: 1.1.1
+Version: 1.1.2
 Authors@R:
     c(person(given = "Philippine", family = "Louail",
             email = "philippine.louail@outlook.com",
@@ -36,6 +36,7 @@ Suggests:
     Spectra,
     MsExperiment,
     MsBackendMgf,
+    MsBackendMassIVE,
     pander,
     vioplot,
     BiocStyle,
@@ -44,6 +45,8 @@ Suggests:
     pheatmap,
     knitr,
     quarto
+Remotes:
+    RforMassSpectrometry/MsBackendMassIVE
 URL: https://github.com/jorainer/xcms4gnps2/, https://jorainer.github.io/xcms4gnps2
 BugReports: https://github.com/jorainer/xcms4gnps2/issues/new
 BiocType: Workflow

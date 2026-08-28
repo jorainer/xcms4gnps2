@@ -14,7 +14,7 @@ COPY --chown=rstudio:rstudio . /home/rstudio/
 RUN Rscript -e "BiocManager::install(c('xcms', 'MsExperiment', 'mzR', 'remotes', 'pak') , ask = FALSE, dependencies = c('Depends', 'Imports'), build_vignettes = FALSE)"
 
 ## Install MsBackendMassIVE from GitHub; change for RELEASE_3_24
-RUN Rscript -e "BiocManager::install('RforMassSpectrometry/MsBackendMassIVE', ref = 'gabri')"
+RUN Rscript -e "BiocManager::install('RforMassSpectrometry/MsBackendMassIVE')"
 
 ## Cache the MS data set
 USER rstudio

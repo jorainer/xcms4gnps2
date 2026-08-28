@@ -49,6 +49,28 @@ docker run -e PASSWORD=bioc -p 8787:8787 jorainer/xcms4gnps2:latest
 - In the RStudio server version: open any of the Quarto files in the *vignettes*
   folder and evaluate the R code blocks in that document.
 
+ℹ️ macOS users might need to emulate an AMD64 CPU to run the docker image:
+
+```
+docker pull --platform linux/amd64 jorainer/xcms4gnps2:latest
+docker run --platform linux/amd64 -e PASSWORD=bioc -p 8787:8787 jorainer/xcms4gnps2:latest
+```
+
+As an alternative to the docker-based workshop, it is also be possible to run
+and evaluate the workshop *natively* in a local R installation (R version >=
+4.6):
+
+```r
+#' install the workshop and all required dependencies
+install.packages(c("BiocManager", "remotes"))
+BiocManager::install("jorainer/xcms4gnps2", dependencies = TRUE)
+BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
+```
+
+The
+[*vignettes/MSV000090156-preprocessing.qmd*](vignettes/MSV000090156-preprocessing.qmd)
+file could then be opened with any editor (after downloading locally) and the
+individual code lines evaluated in an R session.
 
 ## 🤝 Contribution
 
