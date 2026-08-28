@@ -2,13 +2,18 @@
 
 ## xcms-gnps2 version 1.1
 
-### Changes in version 1.1.0
+### Changes in version 1.1.2
 
-- Use Bioconductor 3.23 packages.
+- Update for use with *MsBackendMassIVE* version 0.99.2 (to be released
+  with Bioconductor 3.24).
 
 ### Changes in version 1.1.1
 
 - Export, next to consensus MS2 spectra, also all MS2 spectra.
+
+### Changes in version 1.1.0
+
+- Use Bioconductor 3.23 packages.
 
 ## xcms-gnps2 version 1.0
 
