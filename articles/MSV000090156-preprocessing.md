@@ -723,7 +723,7 @@ with these updated settings.
 
 ``` r
 
-#' Simulate using a larger value for `ppm`
+#' Simulate using a larger value for `bw`
 pdp@bw <- 5
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
                      peakBg = paste0(col_peak, 40), peakPch = 16, cex = 1.5)
@@ -739,7 +739,7 @@ separate features. We thus increase below `bw` to 7.
 
 ``` r
 
-#' Simulate using an evel larger value for `ppm`
+#' Simulate using an evel larger value for `bw`
 pdp@bw <- 7
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
                      peakBg = paste0(col_peak, 40), peakPch = 16, cex = 1.5)
@@ -1378,9 +1378,9 @@ ms2
     MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
      ... 10 more files
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Tue Sep  8 09:13:00 2026]
-     Filter: select MS level(s) 2 [Tue Sep  8 09:18:23 2026]
-     Filter: select MS level(s) 2 [Tue Sep  8 09:18:24 2026]
+     Filter: select retention time [20..850] on MS level(s)  [Fri Sep 11 10:57:14 2026]
+     Filter: select MS level(s) 2 [Fri Sep 11 11:01:47 2026]
+     Filter: select MS level(s) 2 [Fri Sep 11 11:01:48 2026]
      ...2 more processings. Use 'processingLog' to list all. 
 
 We can have multiple, or no, MS2 spectra per feature:
@@ -1485,9 +1485,9 @@ ms2_cons
     3091         2   749.801      3791
      ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Tue Sep  8 09:13:00 2026]
-     Filter: select MS level(s) 2 [Tue Sep  8 09:18:23 2026]
-     Filter: select MS level(s) 2 [Tue Sep  8 09:18:24 2026]
+     Filter: select retention time [20..850] on MS level(s)  [Fri Sep 11 10:57:14 2026]
+     Filter: select MS level(s) 2 [Fri Sep 11 11:01:47 2026]
+     Filter: select MS level(s) 2 [Fri Sep 11 11:01:48 2026]
      ...3 more processings. Use 'processingLog' to list all. 
 
 We have thus now one consensus spectrum per feature. A summary of the
@@ -1539,9 +1539,9 @@ ms2_cons
     3089         2   749.801      3791
      ... 43 more variables/columns.
     Processing:
-     Filter: select retention time [20..850] on MS level(s)  [Tue Sep  8 09:13:00 2026]
-     Filter: select MS level(s) 2 [Tue Sep  8 09:18:23 2026]
-     Filter: select MS level(s) 2 [Tue Sep  8 09:18:24 2026]
+     Filter: select retention time [20..850] on MS level(s)  [Fri Sep 11 10:57:14 2026]
+     Filter: select MS level(s) 2 [Fri Sep 11 11:01:47 2026]
+     Filter: select MS level(s) 2 [Fri Sep 11 11:01:48 2026]
      ...3 more processings. Use 'processingLog' to list all. 
 
 > **ℹ️ Additional spectra processing options**

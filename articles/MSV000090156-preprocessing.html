@@ -687,7 +687,7 @@ Figure 13: Correspondence analysis simulation on the second example EIC.
 <p>With the used settings, in particular parameter <code>bw</code>, the present chromatographic peaks would be split into <strong>two separate</strong> LC-MS features (indicated with a grey rectangle in the lower panel). Assuming that all peaks in that region represent signal from ions of the same compound, we however want to group them into the <strong>same</strong> feature. We hence next increase the <code>bw</code> parameter and simulate the correspondence with these updated settings.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' Simulate using a larger value for `ppm`</span></span>
+<code class="sourceCode R"><span><span class="co">#' Simulate using a larger value for `bw`</span></span>
 <span><span class="va">pdp</span><span class="op">@</span><span class="va">bw</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span>, peakPch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
@@ -706,7 +706,7 @@ Figure 14: Correspondence analysis simulation with <code>bw = 5</code>.
 <p>Changing <code>bw</code> to 5 changed the density curve, but we still defined two separate features. We thus increase below <code>bw</code> to 7.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' Simulate using an evel larger value for `ppm`</span></span>
+<code class="sourceCode R"><span><span class="co">#' Simulate using an evel larger value for `bw`</span></span>
 <span><span class="va">pdp</span><span class="op">@</span><span class="va">bw</span> <span class="op">&lt;-</span> <span class="fl">7</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/xcms/man/plotChromPeakDensity.html" class="external-link">plotChromPeakDensity</a></span><span class="op">(</span><span class="va">eic_2</span>, param <span class="op">=</span> <span class="va">pdp</span>, col <span class="op">=</span> <span class="va">col_sample</span>, peakCol <span class="op">=</span> <span class="va">col_peak</span>,</span>
 <span>                     peakBg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">col_peak</span>, <span class="fl">40</span><span class="op">)</span>, peakPch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
@@ -1263,9 +1263,9 @@ MSV000090156_Interlab-LC-MS_Lab2_A15M_Pos_MS2_Rep3.mzML
 MSV000090156_Interlab-LC-MS_Lab2_A45M_Pos_MS2_Rep1.mzML
  ... 10 more files
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Tue Sep  8 09:13:00 2026]
- Filter: select MS level(s) 2 [Tue Sep  8 09:18:23 2026]
- Filter: select MS level(s) 2 [Tue Sep  8 09:18:24 2026]
+ Filter: select retention time [20..850] on MS level(s)  [Fri Sep 11 10:57:14 2026]
+ Filter: select MS level(s) 2 [Fri Sep 11 11:01:47 2026]
+ Filter: select MS level(s) 2 [Fri Sep 11 11:01:48 2026]
  ...2 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1358,9 +1358,9 @@ Figure 34: Pairwise spectra similarity between MS2 spectra of one feature.
 3091         2   749.801      3791
  ... 43 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Tue Sep  8 09:13:00 2026]
- Filter: select MS level(s) 2 [Tue Sep  8 09:18:23 2026]
- Filter: select MS level(s) 2 [Tue Sep  8 09:18:24 2026]
+ Filter: select retention time [20..850] on MS level(s)  [Fri Sep 11 10:57:14 2026]
+ Filter: select MS level(s) 2 [Fri Sep 11 11:01:47 2026]
+ Filter: select MS level(s) 2 [Fri Sep 11 11:01:48 2026]
  ...3 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
@@ -1413,9 +1413,9 @@ Figure 35: Consensus spectrum for the first feature.
 3089         2   749.801      3791
  ... 43 more variables/columns.
 Processing:
- Filter: select retention time [20..850] on MS level(s)  [Tue Sep  8 09:13:00 2026]
- Filter: select MS level(s) 2 [Tue Sep  8 09:18:23 2026]
- Filter: select MS level(s) 2 [Tue Sep  8 09:18:24 2026]
+ Filter: select retention time [20..850] on MS level(s)  [Fri Sep 11 10:57:14 2026]
+ Filter: select MS level(s) 2 [Fri Sep 11 11:01:47 2026]
+ Filter: select MS level(s) 2 [Fri Sep 11 11:01:48 2026]
  ...3 more processings. Use 'processingLog' to list all. </code></pre>
 </div>
 </div>
