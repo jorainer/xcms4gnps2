@@ -666,7 +666,7 @@ and simulate the correspondence with these updated settings.
 #| label: fig-eic2-chrom-peak-density-2
 #| fig-cap: "Correspondence analysis simulation with `bw = 5`."
 
-#' Simulate using a larger value for `ppm`
+#' Simulate using a larger value for `bw`
 pdp@bw <- 5
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
                      peakBg = paste0(col_peak, 40), peakPch = 16, cex = 1.5)
@@ -680,7 +680,7 @@ features. We thus increase below `bw` to 7.
 #| label: fig-eic2-chrom-peak-density-3
 #| fig-cap: "Correspondence analysis simulation with `bw = 7`."
 
-#' Simulate using an evel larger value for `ppm`
+#' Simulate using an evel larger value for `bw`
 pdp@bw <- 7
 plotChromPeakDensity(eic_2, param = pdp, col = col_sample, peakCol = col_peak,
                      peakBg = paste0(col_peak, 40), peakPch = 16, cex = 1.5)
