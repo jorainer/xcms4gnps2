@@ -93,6 +93,15 @@ The
 file could then be opened with any editor (after downloading locally) and the
 individual code lines evaluated in an R session.
 
+-------------------------------------------------------------------------------
+
+## 👀 Further reading
+
+For more information, details and more analysis workflows see the
+[👩‍🚀 Metabonaut](https://github.com/RforMassSpectrometry/Metabonaut) resource.
+
+-------------------------------------------------------------------------------
+
 ## 🤝 Contribution
 
 Interested in contributing? Please check out the [**RforMassSpectrometry
